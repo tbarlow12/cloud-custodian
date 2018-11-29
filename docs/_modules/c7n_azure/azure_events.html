@@ -333,8 +333,9 @@
 
 <div class="viewcode-block" id="AzureEventSubscription"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.azure_events.AzureEventSubscription">[docs]</a><span class="k">class</span> <span class="nc">AzureEventSubscription</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-<div class="viewcode-block" id="AzureEventSubscription.create"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.azure_events.AzureEventSubscription.create">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">event_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AzureEventSubscription.create"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.azure_events.AzureEventSubscription.create">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">event_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
         <span class="n">s</span> <span class="o">=</span> <span class="n">session</span> <span class="ow">or</span> <span class="n">local_session</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>
         <span class="n">event_filter</span> <span class="o">=</span> <span class="n">event_filter</span> <span class="ow">or</span> <span class="n">EventSubscriptionFilter</span><span class="p">()</span>
 

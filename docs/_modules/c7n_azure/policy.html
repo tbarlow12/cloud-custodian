@@ -206,7 +206,7 @@
 
 <span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">from</span> <span class="nn">azure.mgmt.eventgrid.models</span> <span class="k">import</span> \
-    <span class="n">StorageQueueEventSubscriptionDestination</span>
+    <span class="n">StorageQueueEventSubscriptionDestination</span><span class="p">,</span> <span class="n">StringInAdvancedFilter</span><span class="p">,</span> <span class="n">EventSubscriptionFilter</span>
 
 <span class="kn">from</span> <span class="nn">c7n</span> <span class="k">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">EventAction</span>
@@ -524,8 +524,14 @@
         <span class="n">destination</span> <span class="o">=</span> <span class="n">StorageQueueEventSubscriptionDestination</span><span class="p">(</span><span class="n">resource_id</span><span class="o">=</span><span class="n">storage_account</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                                                                <span class="n">queue_name</span><span class="o">=</span><span class="n">queue_name</span><span class="p">)</span>
 
+        <span class="c1"># filter specific events</span>
+        <span class="n">subscribed_events</span> <span class="o">=</span> <span class="n">AzureEvents</span><span class="o">.</span><span class="n">get_event_operations</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;events&#39;</span><span class="p">))</span>
+        <span class="n">advance_filter</span> <span class="o">=</span> <span class="n">StringInAdvancedFilter</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;Data.OperationName&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">subscribed_events</span><span class="p">)</span>
+        <span class="n">event_filter</span> <span class="o">=</span> <span class="n">EventSubscriptionFilter</span><span class="p">(</span><span class="n">advanced_filters</span><span class="o">=</span><span class="p">[</span><span class="n">advance_filter</span><span class="p">])</span>
+
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">AzureEventSubscription</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span>
+            <span class="n">AzureEventSubscription</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">queue_name</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">event_filter</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Event grid subscription creation succeeded&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Event Subscription creation failed with error: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
