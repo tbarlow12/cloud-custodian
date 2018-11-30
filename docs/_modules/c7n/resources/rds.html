@@ -1758,6 +1758,107 @@
                     <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
                     <span class="k">break</span>
         <span class="k">return</span> <span class="n">results</span></div></div>
+
+
+<div class="viewcode-block" id="ModifyDb"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rds.ModifyDb">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;modify-db&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ModifyDb</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Modifies an RDS instance based on specified parameter</span>
+<span class="sd">    using ModifyDbInstance.</span>
+
+<span class="sd">    &#39;Update&#39; is an array with with key value pairs that should be set to</span>
+<span class="sd">    the property and value you wish to modify.</span>
+<span class="sd">    &#39;Immediate&quot; determines whether the modification is applied immediately</span>
+<span class="sd">    or not. If &#39;immediate&#39; is not specified, default is false.</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: disable-rds-deletion-protection</span>
+<span class="sd">                resource: rds</span>
+<span class="sd">                filters:</span>
+<span class="sd">                  - DeletionProtection: true</span>
+<span class="sd">                  - PubliclyAccessible: true</span>
+<span class="sd">                actions:</span>
+<span class="sd">                  - type: modify-db</span>
+<span class="sd">                    update:</span>
+<span class="sd">                      - property: &#39;DeletionProtection&#39;</span>
+<span class="sd">                        value: false</span>
+<span class="sd">                      - property: &#39;PubliclyAccessible&#39;</span>
+<span class="sd">                        value: false</span>
+<span class="sd">                    immediate: true</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;modify-db&#39;</span><span class="p">,</span>
+        <span class="n">immediate</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;property&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s1">&#39;AllocatedStorage&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;DBInstanceClass&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;DBSubnetGroupName&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;DBSecurityGroups&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;VpcSecurityGroupIds&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;MasterUserPassword&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;DBParameterGroupName&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;BackupRetentionPeriod&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;PreferredBackupWindow&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;PreferredMaintenanceWindow&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;MultiAZ&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;EngineVersion&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;AllowMajorVersionUpgrade&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;AutoMinorVersionUpgrade&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;LicenseModel&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Iops&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;OptionGroupName&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;NewDBInstanceIdentifier&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;StorageType&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;TdeCredentialArn&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;TdeCredentialPassword&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;CACertificateIdentifier&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Domain&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;CopyTagsToSnapshot&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;MonitoringInterval&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;DBPortNumber&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;PubliclyAccessible&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;DomainIAMRoleName&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;PromotionTier&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;EnableIAMDatabaseAuthentication&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;EnablePerformanceInsights&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;PerformanceInsightsKMSKeyId&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;PerformanceInsightsRetentionPeriod&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;CloudwatchLogsExportConfiguration&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;UseDefaultProcessorFeatures&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;DeletionProtection&#39;</span><span class="p">]},</span>
+                    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">{}</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="n">required</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,))</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;rds:ModifyDBInstance&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="ModifyDb.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rds.ModifyDb.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;rds&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">param</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">update</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="n">update</span><span class="p">[</span><span class="s1">&#39;property&#39;</span><span class="p">]]</span> <span class="o">!=</span> <span class="n">update</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]:</span>
+                    <span class="n">param</span><span class="p">[</span><span class="n">update</span><span class="p">[</span><span class="s1">&#39;property&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">update</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">param</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">param</span><span class="p">[</span><span class="s1">&#39;ApplyImmediately&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;immediate&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">param</span><span class="p">[</span><span class="s1">&#39;DBInstanceIdentifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;DBInstanceIdentifier&#39;</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">modify_db_instance</span><span class="p">(</span><span class="o">**</span><span class="n">param</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">c</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DBInstanceNotFoundFault</span><span class="p">:</span>
+                <span class="k">raise</span></div></div>
 </pre></div>
 
            </div>
