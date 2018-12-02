@@ -477,7 +477,7 @@
             <span class="c1"># By forcing use of a filter we ensure both getting to right set of</span>
             <span class="c1"># resources as well avoiding an extra api call here, as we&#39;ll reuse</span>
             <span class="c1"># the annotation from the filter for logging config.</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">filters</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">iter_filters</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
                     <span class="n">f</span><span class="p">,</span> <span class="n">IsQueryLoggingEnabled</span><span class="p">)]:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;set-query-logging when deleting requires &quot;</span>
