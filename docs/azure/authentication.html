@@ -115,8 +115,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#azure-cli">Azure CLI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#service-principal">Service Principal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#access-token">Access Token</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#managed-service-identity">Managed Service Identity</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
@@ -193,8 +195,14 @@
             
   <div class="section" id="authentication">
 <span id="azure-authentication"></span><h1>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h1>
-<p>The plugin supports three distinct authentication types, including Azure CLI integration, service principal,
-and raw tokens.</p>
+<p>The plugin supports four distinct authentication types, including Azure CLI integration, service principal,
+MSI, and raw tokens.</p>
+<div class="section" id="azure-cli">
+<h2>Azure CLI<a class="headerlink" href="#azure-cli" title="Permalink to this headline">¶</a></h2>
+<p>If none of the below environment variables are set, Custodian will attempt to pull credentials and the default
+subscription from Azure CLI.  This requires that you have run <code class="code docutils literal notranslate"><span class="pre">az</span> <span class="pre">login</span></code> and selected your subscription in
+Azure CLI first.</p>
+</div>
 <div class="section" id="service-principal">
 <h2>Service Principal<a class="headerlink" href="#service-principal" title="Permalink to this headline">¶</a></h2>
 <p>Service principal must be provided via environment variables.</p>
@@ -252,6 +260,20 @@ level or resource group/storage account level.</p>
 </pre></div>
 </div>
 <p>You will also find this configuration in tox.ini.</p>
+</div>
+<div class="section" id="managed-service-identity">
+<h2>Managed Service Identity<a class="headerlink" href="#managed-service-identity" title="Permalink to this headline">¶</a></h2>
+<p>Learn about MSI in the
+<a class="reference external" href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">Azure Documentation</a>.</p>
+<p>If <cite>AZURE_USE_MSI</cite> is set to any value, Custodian will attempt to use MSI.</p>
+<p>If <cite>AZURE_CLIENT_ID</cite> is not set, Custodian will use the System Identity.</p>
+<p>If <cite>AZURE_CLIENT_ID</cite> is set, Custodian will use the User Identity which matches the client id.</p>
+<p>You must set <cite>AZURE_SUBSCRIPTION_ID</cite> as with the other authentication types.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">AZURE_USE_MSI</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">AZURE_SUBSCRIPTION_ID</span><span class="o">=</span>subscriptionId
+<span class="nv">AZURE_CLIENT_ID</span><span class="o">=</span>clientId
+</pre></div>
+</div>
 </div>
 </div>
 
