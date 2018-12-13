@@ -221,13 +221,14 @@
 
 
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">BaseAction</span>
+<span class="kn">from</span> <span class="nn">c7n.actions.securityhub</span> <span class="k">import</span> <span class="n">OtherResourcePostFinding</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
 <span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">ValueFilter</span><span class="p">,</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">OPERATORS</span>
 <span class="kn">from</span> <span class="nn">c7n.filters.iamaccess</span> <span class="k">import</span> <span class="n">CrossAccountAccessFilter</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span><span class="p">,</span> <span class="n">DescribeSource</span>
 <span class="kn">from</span> <span class="nn">c7n.resolver</span> <span class="k">import</span> <span class="n">ValuesFrom</span>
-<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">chunks</span>
+<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">filter_empty</span>
 
 
 <div class="viewcode-block" id="Group"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.Group">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;iam-group&#39;</span><span class="p">)</span>
@@ -1306,6 +1307,29 @@
                 <span class="n">matched</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">matched</span></div></div>
+
+
+<div class="viewcode-block" id="UserFinding"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.UserFinding">[docs]</a><span class="nd">@User</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;post-finding&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UserFinding</span><span class="p">(</span><span class="n">OtherResourcePostFinding</span><span class="p">):</span>
+
+<div class="viewcode-block" id="UserFinding.format_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.UserFinding.format_resource">[docs]</a>    <span class="k">def</span> <span class="nf">format_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">UserAccessKey</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">iter_filters</span><span class="p">())):</span>
+            <span class="n">details</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;UserName&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws::</span><span class="si">{}</span><span class="s2">:user/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;c7n:AccessKeys&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;UserName&quot;</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;c7n:AccessKeys&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;Status&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;CreatedAt&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;c7n:AccessKeys&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;CreateDate&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="p">}</span>
+            <span class="n">accesskey</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;AwsIamAccessKey&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;c7n:AccessKeys&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;AccessKeyId&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;Region&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
+                <span class="s2">&quot;Details&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;AwsIamAccessKey&quot;</span><span class="p">:</span> <span class="n">filter_empty</span><span class="p">(</span><span class="n">details</span><span class="p">)},</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">filter_empty</span><span class="p">(</span><span class="n">accesskey</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserFinding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">format_resource</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="UserDelete"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.UserDelete">[docs]</a><span class="nd">@User</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>

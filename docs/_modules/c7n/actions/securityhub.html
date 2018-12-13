@@ -207,10 +207,9 @@
 <span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">.core</span> <span class="k">import</span> <span class="n">BaseAction</span>
-<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">chunks</span>
+<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">dumps</span><span class="p">,</span> <span class="n">filter_empty</span>
 
-<span class="kn">from</span> <span class="nn">c7n.resources.ec2</span> <span class="k">import</span> <span class="n">EC2</span>
-<span class="kn">from</span> <span class="nn">c7n.resources.s3</span> <span class="k">import</span> <span class="n">S3</span><span class="p">,</span> <span class="n">get_region</span>
+<span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span> <span class="k">as</span> <span class="n">aws_resources</span>
 <span class="kn">from</span> <span class="nn">c7n.version</span> <span class="k">import</span> <span class="n">version</span>
 
 
@@ -277,19 +276,38 @@
     <span class="k">return</span> <span class="n">vocab</span></div>
 
 
-<div class="viewcode-block" id="filter_empty"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.filter_empty">[docs]</a><span class="k">def</span> <span class="nf">filter_empty</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="p">:</span>
-            <span class="k">del</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">d</span></div>
-
-
 <div class="viewcode-block" id="PostFinding"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.PostFinding">[docs]</a><span class="k">class</span> <span class="nc">PostFinding</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Report a finding to AWS Security Hub.</span>
 
 <span class="sd">    Custodian acts as a finding provider, allowing users to craft</span>
 <span class="sd">    policies that report to the AWS SecurityHub.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="sd">    For resources that are taggable, we will tag the resource with an identifier</span>
+<span class="sd">    such that further findings generate updates.</span>
+
+<span class="sd">    Example generate a finding for accounts that don&#39;t have shield enabled.</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">      policies:</span>
+
+<span class="sd">       - name: account-shield-enabled</span>
+<span class="sd">         resource: account</span>
+<span class="sd">         filters:</span>
+<span class="sd">           - shield-enabled</span>
+<span class="sd">         actions:</span>
+<span class="sd">           - type: post-finding</span>
+<span class="sd">             severity_normalized: 6</span>
+<span class="sd">             types:</span>
+<span class="sd">               - &quot;Software and Configuration Checks/Industry and Regulatory Standards/NIST CSF Controls (USA)&quot;</span>
+<span class="sd">             recommendation: &quot;Enable shield&quot;</span>
+<span class="sd">             recommendation_url: &quot;https://www.example.com/policies/AntiDDoS.html&quot;</span>
+<span class="sd">             confidence: 100</span>
+<span class="sd">             compliance_status: FAILED</span>
+
+<span class="sd">    &quot;&quot;&quot;</span> <span class="c1"># NOQA</span>
 
     <span class="n">FindingVersion</span> <span class="o">=</span> <span class="s2">&quot;2018-10-08&quot;</span>
     <span class="n">ProductName</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
@@ -303,6 +321,8 @@
         <span class="n">severity_normalized</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
         <span class="n">confidence</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
         <span class="n">criticality</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
+        <span class="c1"># Cross region aggregation</span>
+        <span class="n">region</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;cross-region aggregation target&#39;</span><span class="p">},</span>
         <span class="n">recommendation</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
         <span class="n">recommendation_url</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
         <span class="n">fields</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">},</span>
@@ -317,7 +337,9 @@
     <span class="p">)</span>
 
 <div class="viewcode-block" id="PostFinding.process"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.PostFinding.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;securityhub&quot;</span><span class="p">)</span>
+        <span class="n">region_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">)</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;securityhub&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">resource_set</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
             <span class="n">finding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_finding</span><span class="p">(</span><span class="n">resource_set</span><span class="p">)</span>
             <span class="n">client</span><span class="o">.</span><span class="n">batch_import_findings</span><span class="p">(</span><span class="n">Findings</span><span class="o">=</span><span class="p">[</span><span class="n">finding</span><span class="p">])</span></div>
@@ -408,57 +430,56 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;subclass responsibility&quot;</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BucketFinding"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.BucketFinding">[docs]</a><span class="nd">@S3</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;post-finding&quot;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">BucketFinding</span><span class="p">(</span><span class="n">PostFinding</span><span class="p">):</span>
-<div class="viewcode-block" id="BucketFinding.format_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.BucketFinding.format_resource">[docs]</a>    <span class="k">def</span> <span class="nf">format_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
-        <span class="n">owner</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Acl&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Owner&quot;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">resource</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;AwsS3Bucket&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:::</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">]),</span>
-            <span class="s2">&quot;Region&quot;</span><span class="p">:</span> <span class="n">get_region</span><span class="p">(</span><span class="n">r</span><span class="p">),</span>
-            <span class="s2">&quot;Tags&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">]:</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Tags&quot;</span><span class="p">,</span> <span class="p">[])},</span>
-            <span class="s2">&quot;Details&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;AwsS3Bucket&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;OwnerId&quot;</span><span class="p">:</span> <span class="n">owner</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">)}}</span>
+<div class="viewcode-block" id="OtherResourcePostFinding"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.OtherResourcePostFinding">[docs]</a><span class="k">class</span> <span class="nc">OtherResourcePostFinding</span><span class="p">(</span><span class="n">PostFinding</span><span class="p">):</span>
+
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">()</span>
+
+<div class="viewcode-block" id="OtherResourcePostFinding.format_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.OtherResourcePostFinding.format_resource">[docs]</a>    <span class="k">def</span> <span class="nf">format_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="n">details</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)):</span>
+                <span class="k">continue</span>
+            <span class="n">details</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;expr&#39;</span><span class="p">],</span> <span class="n">r</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">details</span><span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">details</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)):</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">dumps</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)):</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">details</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="n">details</span><span class="p">[</span><span class="s1">&#39;c7n:resource-type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">type</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Type&#39;</span><span class="p">:</span> <span class="s1">&#39;Other&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_arns</span><span class="p">([</span><span class="n">r</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s1">&#39;Region&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
+            <span class="s1">&#39;Details&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Other&#39;</span><span class="p">:</span> <span class="n">filter_empty</span><span class="p">(</span><span class="n">details</span><span class="p">)}</span>
         <span class="p">}</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">]:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Tags&#39;</span><span class="p">,</span> <span class="p">[])}</span>
+        <span class="k">if</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="n">other</span><span class="p">[</span><span class="s1">&#39;Tags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tags</span>
+        <span class="k">return</span> <span class="n">other</span></div>
 
-        <span class="k">if</span> <span class="s2">&quot;DisplayName&quot;</span> <span class="ow">in</span> <span class="n">owner</span><span class="p">:</span>
-            <span class="n">resource</span><span class="p">[</span><span class="s2">&quot;Details&quot;</span><span class="p">][</span><span class="s2">&quot;AwsS3Bucket&quot;</span><span class="p">][</span><span class="s2">&quot;OwnerName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">owner</span><span class="p">[</span><span class="s1">&#39;DisplayName&#39;</span><span class="p">]</span>
+<div class="viewcode-block" id="OtherResourcePostFinding.register_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.OtherResourcePostFinding.register_resource">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">register_resource</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">rtype</span><span class="p">,</span> <span class="n">resource_manager</span> <span class="ow">in</span> <span class="n">registry</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;post-finding&#39;</span> <span class="ow">in</span> <span class="n">resource_manager</span><span class="o">.</span><span class="n">action_registry</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">resource_manager</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;post-finding&#39;</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span></div></div>
 
-        <span class="k">return</span> <span class="n">filter_empty</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span></div></div>
 
-
-<div class="viewcode-block" id="InstanceFinding"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.InstanceFinding">[docs]</a><span class="nd">@EC2</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;post-finding&quot;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">InstanceFinding</span><span class="p">(</span><span class="n">PostFinding</span><span class="p">):</span>
-<div class="viewcode-block" id="InstanceFinding.format_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.InstanceFinding.format_resource">[docs]</a>    <span class="k">def</span> <span class="nf">format_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
-        <span class="n">details</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;InstanceType&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ImageId&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;ImageId&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;IpV4Addresses&quot;</span><span class="p">:</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
-                <span class="s2">&quot;NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress&quot;</span><span class="p">,</span> <span class="n">r</span>
-            <span class="p">),</span>
-            <span class="s2">&quot;KeyName&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;KeyName&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;VpcId&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;VpcId&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;SubnetId&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;SubnetId&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;LaunchedAt&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;LaunchTime&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
-        <span class="p">}</span>
-
-        <span class="k">if</span> <span class="s2">&quot;IamInstanceProfile&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
-            <span class="n">details</span><span class="p">[</span><span class="s2">&quot;IamInstanceProfileArn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;IamInstanceProfile&quot;</span><span class="p">][</span><span class="s2">&quot;Arn&quot;</span><span class="p">]</span>
-
-        <span class="n">details</span> <span class="o">=</span> <span class="n">filter_empty</span><span class="p">(</span><span class="n">details</span><span class="p">)</span>
-
-        <span class="n">instance</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;AwsEc2Instance&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">:instance/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
-                <span class="n">r</span><span class="p">[</span><span class="s2">&quot;InstanceId&quot;</span><span class="p">]),</span>
-            <span class="s2">&quot;Region&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
-            <span class="s2">&quot;Tags&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">]:</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Tags&quot;</span><span class="p">,</span> <span class="p">[])},</span>
-            <span class="s2">&quot;Details&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;AwsEc2Instance&quot;</span><span class="p">:</span> <span class="n">details</span><span class="p">},</span>
-        <span class="p">}</span>
-
-        <span class="n">instance</span> <span class="o">=</span> <span class="n">filter_empty</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">instance</span></div></div>
+<span class="n">aws_resources</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+    <span class="n">aws_resources</span><span class="o">.</span><span class="n">EVENT_FINAL</span><span class="p">,</span> <span class="n">OtherResourcePostFinding</span><span class="o">.</span><span class="n">register_resource</span><span class="p">)</span>
 </pre></div>
 
            </div>

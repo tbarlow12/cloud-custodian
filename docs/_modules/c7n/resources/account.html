@@ -213,6 +213,7 @@
 <span class="kn">from</span> <span class="nn">dateutil.tz</span> <span class="k">import</span> <span class="n">tzutc</span>
 
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">ActionRegistry</span><span class="p">,</span> <span class="n">BaseAction</span>
+<span class="kn">from</span> <span class="nn">c7n.actions.securityhub</span> <span class="k">import</span> <span class="n">OtherResourcePostFinding</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
 <span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">FilterRegistry</span><span class="p">,</span> <span class="n">ValueFilter</span>
 <span class="kn">from</span> <span class="nn">c7n.filters.missing</span> <span class="k">import</span> <span class="n">Missing</span>
@@ -253,6 +254,9 @@
 <div class="viewcode-block" id="Account.get_permissions"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.account.Account.get_permissions">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;iam:ListAccountAliases&#39;</span><span class="p">,)</span></div>
+
+<div class="viewcode-block" id="Account.get_arns"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.account.Account.get_arns">[docs]</a>    <span class="k">def</span> <span class="nf">get_arns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;arn:::</span><span class="si">{account_id}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Account.get_model"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.account.Account.get_model">[docs]</a>    <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_type</span></div>
@@ -800,6 +804,12 @@
         <span class="k">if</span> <span class="n">cta</span><span class="p">[</span><span class="s1">&#39;Action&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">original_actions</span><span class="p">:</span>
             <span class="n">policy</span><span class="p">[</span><span class="s1">&#39;Statement&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cta</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">policy</span><span class="p">)</span></div>
+
+
+<span class="c1"># AWS Account doesn&#39;t participate in events (not based on query resource manager)</span>
+<span class="c1"># so the event subscriber used by postfinding to register doesn&#39;t apply, manually</span>
+<span class="c1"># register it.</span>
+<span class="n">Account</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;post-finding&#39;</span><span class="p">,</span> <span class="n">OtherResourcePostFinding</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="EnableTrail"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.account.EnableTrail">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;enable-cloudtrail&#39;</span><span class="p">)</span>

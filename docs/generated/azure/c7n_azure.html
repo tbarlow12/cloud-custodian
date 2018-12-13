@@ -339,7 +339,7 @@ in the activity logs for a particular resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.actions.AutoTagUser.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['auto-tag-user']}, 'tag': {'type': 'string'}, 'update': {'type': 'boolean'}, 'days': {'type': 'integer'}}, u'required': ['tag', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.actions.AutoTagUser.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'update': {'type': 'boolean'}, u'type': {u'enum': ['auto-tag-user']}, 'tag': {'type': 'string'}, 'days': {'type': 'integer'}}, u'required': ['tag', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.actions.AutoTagUser.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -439,7 +439,7 @@ the stack trace</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.actions.Notify.schema">
-<code class="descname">schema</code><em class="property"> = {'anyOf': [{'required': ['type', 'transport', 'to']}, {'required': ['type', 'transport', 'to_from']}], 'properties': {'template': {'type': 'string'}, 'cc': {'type': 'array', 'items': {'type': 'string'}}, 'cc_from': {u'type': u'object', u'properties': {u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}, u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}}, u'required': [u'url'], u'additionalProperties': u'False'}, 'type': {'enum': ['notify']}, 'to': {'type': 'array', 'items': {'type': 'string'}}, 'to_from': {u'type': u'object', u'properties': {u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}, u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}}, u'required': [u'url'], u'additionalProperties': u'False'}, 'from': {'type': 'string'}, 'transport': {'oneOf': [{'type': 'object', 'properties': {'type': {'enum': ['asq']}, 'queue': {'type': 'string'}}, 'required': ['type', 'queue']}]}, 'subject': {'type': 'string'}, 'cc_manager': {'type': 'boolean'}, 'owner_absent_contact': {'type': 'array', 'items': {'type': 'string'}}}, 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.actions.Notify.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'anyOf': [{'required': ['type', 'transport', 'to']}, {'required': ['type', 'transport', 'to_from']}], 'properties': {'template': {'type': 'string'}, 'to_from': {u'type': u'object', u'properties': {u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}, u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}}, u'required': [u'url'], u'additionalProperties': u'False'}, 'cc': {'type': 'array', 'items': {'type': 'string'}}, 'owner_absent_contact': {'type': 'array', 'items': {'type': 'string'}}, 'transport': {'oneOf': [{'type': 'object', 'properties': {'type': {'enum': ['asq']}, 'queue': {'type': 'string'}}, 'required': ['type', 'queue']}]}, 'from': {'type': 'string'}, 'type': {'enum': ['notify']}, 'to': {'type': 'array', 'items': {'type': 'string'}}, 'cc_from': {u'type': u'object', u'properties': {u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}, u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}}, u'required': [u'url'], u'additionalProperties': u'False'}, 'subject': {'type': 'string'}, 'cc_manager': {'type': 'boolean'}}, 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.actions.Notify.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -557,7 +557,7 @@ to marking the resource for action 4 days in the future.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.actions.TagDelayedAction.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'msg': {'type': 'string'}, u'type': {u'enum': ['mark-for-op']}, 'hours': {'type': 'integer', 'exclusiveMinimum': False, 'minimum': 0}, 'tag': {'type': 'string'}, 'op': {'type': 'string'}, 'days': {'type': 'integer', 'exclusiveMinimum': False, 'minimum': 0}, 'tz': {'type': 'string'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.actions.TagDelayedAction.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'op': {'type': 'string'}, 'msg': {'type': 'string'}, u'type': {u'enum': ['mark-for-op']}, 'days': {'type': 'integer', 'exclusiveMinimum': False, 'minimum': 0}, 'hours': {'type': 'integer', 'exclusiveMinimum': False, 'minimum': 0}, 'tz': {'type': 'string'}, 'tag': {'type': 'string'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.actions.TagDelayedAction.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -781,7 +781,7 @@ listed to preserve.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.filters.DiagnosticSettingsFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'value_type': {u'enum': [u'age', u'integer', u'expiration', u'normalize', u'size', u'cidr', u'cidr_size', u'swap', u'resource_count', u'expr', u'unique_size']}, u'type': {u'enum': ['diagnostic-settings']}, u'value': {u'oneOf': [{u'type': u'array'}, {u'type': u'string'}, {u'type': u'boolean'}, {u'type': u'number'}, {u'type': u'null'}]}, u'key': {u'type': u'string'}, u'default': {u'type': u'object'}, u'op': {u'enum': [u'lt', u'gte', u'lte', u'ni', u'ge', u'le', u'in', u'glob', u'regex', u'eq', u'ne', u'not-in', u'greater-than', u'gt', u'contains', u'equal', u'intersect', u'not-equal', u'less-than', u'difference']}, u'value_from': {u'type': u'object', u'properties': {u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}, u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}}, u'required': [u'url'], u'additionalProperties': u'False'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.filters.DiagnosticSettingsFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'value': {u'oneOf': [{u'type': u'array'}, {u'type': u'string'}, {u'type': u'boolean'}, {u'type': u'number'}, {u'type': u'null'}]}, u'type': {u'enum': ['diagnostic-settings']}, u'op': {u'enum': [u'ni', u'regex', u'intersect', u'eq', u'ne', u'gte', u'lte', u'lt', u'ge', u'le', u'contains', u'equal', u'glob', u'not-equal', u'in', u'not-in', u'difference', u'greater-than', u'gt', u'less-than']}, u'value_from': {u'type': u'object', u'properties': {u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}, u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}}, u'required': [u'url'], u'additionalProperties': u'False'}, u'value_type': {u'enum': [u'age', u'integer', u'expiration', u'normalize', u'size', u'cidr', u'cidr_size', u'swap', u'resource_count', u'expr', u'unique_size']}, u'default': {u'type': u'object'}, u'key': {u'type': u'string'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.filters.DiagnosticSettingsFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -828,7 +828,7 @@ listed to preserve.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.filters.MetricFilter.aggregation_funcs">
-<code class="descname">aggregation_funcs</code><em class="property"> = {'average': &lt;function mean at 0x7ff419eafb18&gt;, 'total': &lt;function sum at 0x7ff419eafb90&gt;}</em><a class="headerlink" href="#c7n_azure.filters.MetricFilter.aggregation_funcs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">aggregation_funcs</code><em class="property"> = {'average': &lt;function mean at 0x7f8f74bc0b90&gt;, 'total': &lt;function sum at 0x7f8f74bc0c08&gt;}</em><a class="headerlink" href="#c7n_azure.filters.MetricFilter.aggregation_funcs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -858,7 +858,7 @@ listed to preserve.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.filters.MetricFilter.schema">
-<code class="descname">schema</code><em class="property"> = {'properties': {'threshold': {'type': 'number'}, 'metric': {'type': 'string'}, 'aggregation': {'enum': ['total', 'average']}, 'interval': {'enum': ['PT1M', 'PT5M', 'PT15M', 'PT30M', 'PT1H', 'PT6H', 'PT12H', 'P1D']}, 'op': {'enum': ['gte', 'le', 'ne', 'lt', 'equal', 'not-equal', 'lte', 'ge', 'eq', 'gt', 'greater-than', 'less-than']}, 'timeframe': {'type': 'number'}}, 'required': ['type', 'metric', 'op', 'threshold'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.filters.MetricFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'properties': {'metric': {'type': 'string'}, 'threshold': {'type': 'number'}, 'op': {'enum': ['less-than', 'lte', 'ge', 'equal', 'not-equal', 'greater-than', 'gt', 'eq', 'ne', 'gte', 'le', 'lt']}, 'interval': {'enum': ['PT1M', 'PT5M', 'PT15M', 'PT30M', 'PT1H', 'PT6H', 'PT12H', 'P1D']}, 'timeframe': {'type': 'number'}, 'aggregation': {'enum': ['total', 'average']}}, 'required': ['type', 'metric', 'op', 'threshold'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.filters.MetricFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -941,7 +941,7 @@ in which to interpret the clock (default value is ‘utc’)</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.filters.TagActionFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'skew': {'type': 'number', 'minimum': 0}, u'type': {u'enum': ['marked-for-op']}, 'tag': {'type': 'string'}, 'op': {'type': 'string'}, 'tz': {'type': 'string'}, 'skew_hours': {'type': 'number', 'minimum': 0}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.filters.TagActionFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'op': {'type': 'string'}, 'skew_hours': {'type': 'number', 'minimum': 0}, 'skew': {'type': 'number', 'minimum': 0}, u'type': {u'enum': ['marked-for-op']}, 'tz': {'type': 'string'}, 'tag': {'type': 'string'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.filters.TagActionFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1168,7 +1168,7 @@ azure event.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.policy.AzureFunctionMode.schema">
-<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'provision-options': {'type': 'object', 'servicePlan': {'type': 'object', 'oneOf': [{'type': 'string'}, {'type': 'object', 'properties': {'skuTier': 'string', 'resourceGroupName': 'string', 'location': 'string', 'name': 'string', 'skuName': 'string'}}]}, 'storageAccount': {'type': 'object', 'oneOf': [{'type': 'string'}, {'type': 'object', 'properties': {'resourceGroupName': 'string', 'location': 'string', 'name': 'string'}}]}, 'appInsights': {'type': 'object', 'oneOf': [{'type': 'string'}, {'type': 'object', 'properties': {'resourceGroupName': 'string', 'location': 'string', 'name': 'string'}}]}}, 'execution-options': {'type': 'object'}}, 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.policy.AzureFunctionMode.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'provision-options': {'type': 'object', 'servicePlan': {'type': 'object', 'oneOf': [{'type': 'string'}, {'type': 'object', 'properties': {'location': 'string', 'resourceGroupName': 'string', 'name': 'string', 'skuName': 'string', 'skuTier': 'string'}}]}, 'storageAccount': {'type': 'object', 'oneOf': [{'type': 'string'}, {'type': 'object', 'properties': {'location': 'string', 'resourceGroupName': 'string', 'name': 'string'}}]}, 'appInsights': {'type': 'object', 'oneOf': [{'type': 'string'}, {'type': 'object', 'properties': {'location': 'string', 'resourceGroupName': 'string', 'name': 'string'}}]}}, 'execution-options': {'type': 'object'}}, 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.policy.AzureFunctionMode.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

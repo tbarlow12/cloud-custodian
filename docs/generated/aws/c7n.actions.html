@@ -291,7 +291,7 @@ attempting to tag it.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.autotag.AutoTagUser.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['auto-tag-user']}, 'user-type': {'type': 'array', 'items': {'type': 'string', 'enum': ['IAMUser', 'AssumedRole', 'FederatedUser']}}, 'principal_id_tag': {'type': 'string'}, 'update': {'type': 'boolean'}, 'tag': {'type': 'string'}}, u'required': ['tag', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.actions.autotag.AutoTagUser.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'update': {'type': 'boolean'}, u'type': {u'enum': ['auto-tag-user']}, 'user-type': {'type': 'array', 'items': {'type': 'string', 'enum': ['IAMUser', 'AssumedRole', 'FederatedUser']}}, 'principal_id_tag': {'type': 'string'}, 'tag': {'type': 'string'}}, u'required': ['tag', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.actions.autotag.AutoTagUser.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -505,7 +505,7 @@ invoke.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.metric.PutMetric.schema">
-<code class="descname">schema</code><em class="property"> = {'properties': {'units': {'enum': ['Seconds', 'Microseconds', 'Milliseconds', 'Bytes', 'Kilobytes', 'Megabytes', 'Gigabytes', 'Terabytes', 'Bits', 'Kilobits', 'Megabits', 'Gigabits', 'Terabits', 'Bytes/Second', 'Kilobytes/Second', 'Megabytes/Second', 'Gigabytes/Second', 'Terabytes/Second', 'Bits/Second', 'Kilobits/Second', 'Megabits/Second', 'Gigabits/Second', 'Terabits/Second', 'Count/Second', 'Percent', 'Count', 'None']}, 'type': {'enum': ['put-metric']}, 'namespace': {'type': 'string'}, 'key': {'type': 'string'}, 'dimensions': {'type': 'array', 'items': {'type': 'object'}}, 'metric_name': {'type': 'string'}, 'op': {'enum': ['distinct_count', 'average', 'count', 'sum']}}, 'required': ['type', 'key', 'namespace', 'metric_name'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.metric.PutMetric.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'properties': {'namespace': {'type': 'string'}, 'units': {'enum': ['Seconds', 'Microseconds', 'Milliseconds', 'Bytes', 'Kilobytes', 'Megabytes', 'Gigabytes', 'Terabytes', 'Bits', 'Kilobits', 'Megabits', 'Gigabits', 'Terabits', 'Bytes/Second', 'Kilobytes/Second', 'Megabytes/Second', 'Gigabytes/Second', 'Terabytes/Second', 'Bits/Second', 'Kilobits/Second', 'Megabits/Second', 'Gigabits/Second', 'Terabits/Second', 'Count/Second', 'Percent', 'Count', 'None']}, 'type': {'enum': ['put-metric']}, 'metric_name': {'type': 'string'}, 'op': {'enum': ['distinct_count', 'average', 'count', 'sum']}, 'dimensions': {'type': 'array', 'items': {'type': 'object'}}, 'key': {'type': 'string'}}, 'required': ['type', 'key', 'namespace', 'metric_name'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.metric.PutMetric.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -725,7 +725,7 @@ transport.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.notify.Notify.schema">
-<code class="descname">schema</code><em class="property"> = {'anyOf': [{'required': ['type', 'transport', 'to']}, {'required': ['type', 'transport', 'to_from']}], 'properties': {'template': {'type': 'string'}, 'cc': {'type': 'array', 'items': {'type': 'string'}}, 'cc_from': {u'type': u'object', u'properties': {u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}, u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}}, u'required': [u'url'], u'additionalProperties': u'False'}, 'type': {'enum': ['notify']}, 'to': {'type': 'array', 'items': {'type': 'string'}}, 'to_from': {u'type': u'object', u'properties': {u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}, u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}}, u'required': [u'url'], u'additionalProperties': u'False'}, 'from': {'type': 'string'}, 'transport': {'oneOf': [{'type': 'object', 'properties': {'type': {'enum': ['sqs']}, 'queue': {'type': 'string'}}, 'required': ['type', 'queue']}, {'type': 'object', 'properties': {'topic': {'type': 'string'}, 'type': {'enum': ['sns']}, 'attributes': {'type': 'object'}}, 'required': ['type', 'topic']}]}, 'subject': {'type': 'string'}, 'cc_manager': {'type': 'boolean'}, 'owner_absent_contact': {'type': 'array', 'items': {'type': 'string'}}, 'assume_role': {'type': 'boolean'}}, 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.notify.Notify.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'anyOf': [{'required': ['type', 'transport', 'to']}, {'required': ['type', 'transport', 'to_from']}], 'properties': {'template': {'type': 'string'}, 'to_from': {u'type': u'object', u'properties': {u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}, u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}}, u'required': [u'url'], u'additionalProperties': u'False'}, 'cc': {'type': 'array', 'items': {'type': 'string'}}, 'owner_absent_contact': {'type': 'array', 'items': {'type': 'string'}}, 'transport': {'oneOf': [{'type': 'object', 'properties': {'type': {'enum': ['sqs']}, 'queue': {'type': 'string'}}, 'required': ['type', 'queue']}, {'type': 'object', 'properties': {'topic': {'type': 'string'}, 'type': {'enum': ['sns']}, 'attributes': {'type': 'object'}}, 'required': ['type', 'topic']}]}, 'from': {'type': 'string'}, 'type': {'enum': ['notify']}, 'to': {'type': 'array', 'items': {'type': 'string'}}, 'cc_from': {u'type': u'object', u'properties': {u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}, u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}}, u'required': [u'url'], u'additionalProperties': u'False'}, 'assume_role': {'type': 'boolean'}, 'subject': {'type': 'string'}, 'cc_manager': {'type': 'boolean'}}, 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.notify.Notify.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -814,33 +814,22 @@ transport.</p>
 <div class="section" id="module-c7n.actions.securityhub">
 <span id="c7n-actions-securityhub-module"></span><h2>c7n.actions.securityhub module<a class="headerlink" href="#module-c7n.actions.securityhub" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="c7n.actions.securityhub.BucketFinding">
-<em class="property">class </em><code class="descclassname">c7n.actions.securityhub.</code><code class="descname">BucketFinding</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#BucketFinding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.BucketFinding" title="Permalink to this definition">¶</a></dt>
+<dt id="c7n.actions.securityhub.OtherResourcePostFinding">
+<em class="property">class </em><code class="descclassname">c7n.actions.securityhub.</code><code class="descname">OtherResourcePostFinding</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#OtherResourcePostFinding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.OtherResourcePostFinding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#c7n.actions.securityhub.PostFinding" title="c7n.actions.securityhub.PostFinding"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.securityhub.PostFinding</span></code></a></p>
-<dl class="method">
-<dt id="c7n.actions.securityhub.BucketFinding.format_resource">
-<code class="descname">format_resource</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#BucketFinding.format_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.BucketFinding.format_resource" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
-<dt id="c7n.actions.securityhub.BucketFinding.type">
-<code class="descname">type</code><em class="property"> = 'post-finding'</em><a class="headerlink" href="#c7n.actions.securityhub.BucketFinding.type" title="Permalink to this definition">¶</a></dt>
+<dt id="c7n.actions.securityhub.OtherResourcePostFinding.fields">
+<code class="descname">fields</code><em class="property"> = ()</em><a class="headerlink" href="#c7n.actions.securityhub.OtherResourcePostFinding.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="c7n.actions.securityhub.InstanceFinding">
-<em class="property">class </em><code class="descclassname">c7n.actions.securityhub.</code><code class="descname">InstanceFinding</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#InstanceFinding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.InstanceFinding" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#c7n.actions.securityhub.PostFinding" title="c7n.actions.securityhub.PostFinding"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.securityhub.PostFinding</span></code></a></p>
 <dl class="method">
-<dt id="c7n.actions.securityhub.InstanceFinding.format_resource">
-<code class="descname">format_resource</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#InstanceFinding.format_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.InstanceFinding.format_resource" title="Permalink to this definition">¶</a></dt>
+<dt id="c7n.actions.securityhub.OtherResourcePostFinding.format_resource">
+<code class="descname">format_resource</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#OtherResourcePostFinding.format_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.OtherResourcePostFinding.format_resource" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="c7n.actions.securityhub.InstanceFinding.type">
-<code class="descname">type</code><em class="property"> = 'post-finding'</em><a class="headerlink" href="#c7n.actions.securityhub.InstanceFinding.type" title="Permalink to this definition">¶</a></dt>
+<dl class="classmethod">
+<dt id="c7n.actions.securityhub.OtherResourcePostFinding.register_resource">
+<em class="property">classmethod </em><code class="descname">register_resource</code><span class="sig-paren">(</span><em>registry</em>, <em>event</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#OtherResourcePostFinding.register_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.OtherResourcePostFinding.register_resource" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -852,6 +841,34 @@ transport.</p>
 <p>Report a finding to AWS Security Hub.</p>
 <p>Custodian acts as a finding provider, allowing users to craft
 policies that report to the AWS SecurityHub.</p>
+<p>For resources that are taggable, we will tag the resource with an identifier
+such that further findings generate updates.</p>
+<p>Example generate a finding for accounts that don’t have shield enabled.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+
+ <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">account-shield-enabled</span>
+   <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">account</span>
+   <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">shield-enabled</span>
+   <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">post-finding</span>
+       <span class="l l-Scalar l-Scalar-Plain">severity_normalized</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">6</span>
+       <span class="l l-Scalar l-Scalar-Plain">types</span><span class="p p-Indicator">:</span>
+         <span class="p p-Indicator">-</span> <span class="s">&quot;Software</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">Configuration</span><span class="nv"> </span><span class="s">Checks/Industry</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">Regulatory</span><span class="nv"> </span><span class="s">Standards/NIST</span><span class="nv"> </span><span class="s">CSF</span><span class="nv"> </span><span class="s">Controls</span><span class="nv"> </span><span class="s">(USA)&quot;</span>
+       <span class="l l-Scalar l-Scalar-Plain">recommendation</span><span class="p p-Indicator">:</span> <span class="s">&quot;Enable</span><span class="nv"> </span><span class="s">shield&quot;</span>
+       <span class="l l-Scalar l-Scalar-Plain">recommendation_url</span><span class="p p-Indicator">:</span> <span class="s">&quot;https://www.example.com/policies/AntiDDoS.html&quot;</span>
+       <span class="l l-Scalar l-Scalar-Plain">confidence</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
+       <span class="l l-Scalar l-Scalar-Plain">compliance_status</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">FAILED</span>
+</pre></div>
+</div>
 <dl class="attribute">
 <dt id="c7n.actions.securityhub.PostFinding.FindingVersion">
 <code class="descname">FindingVersion</code><em class="property"> = '2018-10-08'</em><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.FindingVersion" title="Permalink to this definition">¶</a></dt>
@@ -884,7 +901,7 @@ policies that report to the AWS SecurityHub.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.securityhub.PostFinding.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['post-finding']}, 'fields': {'type': 'object'}, 'severity': {'type': 'number', 'default': 0}, 'types': {'type': 'array', 'items': {'type': 'string', 'enum': ['Software and Configuration Checks/Vulnerabilities', 'Software and Configuration Checks/Vulnerabilities/CVE', 'Software and Configuration Checks/AWS Security Best Practices', 'Software and Configuration Checks/AWS Security Best Practices/Network Reachability', 'Software and Configuration Checks/Industry and Regulatory Standards', 'Software and Configuration Checks/Industry and Regulatory Standards/CIS Host Hardening Benchmarks', 'Software and Configuration Checks/Industry and Regulatory Standards/CIS AWS Foundations Benchmark', 'Software and Configuration Checks/Industry and Regulatory Standards/PCI-DSS Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/Cloud Security Alliance Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 90001 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27001 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27017 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27018 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/SOC 1', 'Software and Configuration Checks/Industry and Regulatory Standards/SOC 2', 'Software and Configuration Checks/Industry and Regulatory Standards/HIPAA Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/NIST 800-53 Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/NIST CSF Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/IRAP Controls (Australia)', 'Software and Configuration Checks/Industry and Regulatory Standards/K-ISMS Controls (Korea)', 'Software and Configuration Checks/Industry and Regulatory Standards/MTCS Controls (Singapore)', 'Software and Configuration Checks/Industry and Regulatory Standards/FISC Controls (Japan)', 'Software and Configuration Checks/Industry and Regulatory Standards/My Number Act Controls (Japan)', 'Software and Configuration Checks/Industry and Regulatory Standards/ENS Controls (Spain)', 'Software and Configuration Checks/Industry and Regulatory Standards/Cyber Essentials Plus Controls (UK)', 'Software and Configuration Checks/Industry and Regulatory Standards/G-Cloud Controls (UK)', 'Software and Configuration Checks/Industry and Regulatory Standards/C5 Controls (Germany)', 'Software and Configuration Checks/Industry and Regulatory Standards/IT-Grundschutz Controls (Germany)', 'Software and Configuration Checks/Industry and Regulatory Standards/GDPR Controls (Europe)', 'Software and Configuration Checks/Industry and Regulatory Standards/TISAX Controls (Europe)', 'TTPs/Initial Access', 'TTPs/Execution', 'TTPs/Persistence', 'TTPs/Privilege Escalation', 'TTPs/Defense Evasion', 'TTPs/Credential Access', 'TTPs/Discovery', 'TTPs/Lateral Movement', 'TTPs/Collection', 'TTPs/Command and Control', 'Effects/Data Exposure', 'Effects/Data Exfiltration', 'Effects/Data Destruction', 'Effects/Denial of Service', 'Effects/Resource Consumption']}}, 'criticality': {'type': 'number', 'min': 0, 'max': 100}, 'severity_normalized': {'type': 'number', 'min': 0, 'default': 0, 'max': 100}, 'compliance_status': {'type': 'string', 'enum': ['PASSED', 'WARNING', 'FAILED', 'NOT_AVAILABLE']}, 'confidence': {'type': 'number', 'min': 0, 'max': 100}, 'recommendation_url': {'type': 'string'}, 'recommendation': {'type': 'string'}}, u'required': ['types', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'severity': {'type': 'number', 'default': 0}, u'type': {u'enum': ['post-finding']}, 'fields': {'type': 'object'}, 'confidence': {'type': 'number', 'min': 0, 'max': 100}, 'severity_normalized': {'type': 'number', 'min': 0, 'default': 0, 'max': 100}, 'types': {'type': 'array', 'items': {'type': 'string', 'enum': ['Software and Configuration Checks/Vulnerabilities', 'Software and Configuration Checks/Vulnerabilities/CVE', 'Software and Configuration Checks/AWS Security Best Practices', 'Software and Configuration Checks/AWS Security Best Practices/Network Reachability', 'Software and Configuration Checks/Industry and Regulatory Standards', 'Software and Configuration Checks/Industry and Regulatory Standards/CIS Host Hardening Benchmarks', 'Software and Configuration Checks/Industry and Regulatory Standards/CIS AWS Foundations Benchmark', 'Software and Configuration Checks/Industry and Regulatory Standards/PCI-DSS Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/Cloud Security Alliance Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 90001 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27001 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27017 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27018 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/SOC 1', 'Software and Configuration Checks/Industry and Regulatory Standards/SOC 2', 'Software and Configuration Checks/Industry and Regulatory Standards/HIPAA Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/NIST 800-53 Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/NIST CSF Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/IRAP Controls (Australia)', 'Software and Configuration Checks/Industry and Regulatory Standards/K-ISMS Controls (Korea)', 'Software and Configuration Checks/Industry and Regulatory Standards/MTCS Controls (Singapore)', 'Software and Configuration Checks/Industry and Regulatory Standards/FISC Controls (Japan)', 'Software and Configuration Checks/Industry and Regulatory Standards/My Number Act Controls (Japan)', 'Software and Configuration Checks/Industry and Regulatory Standards/ENS Controls (Spain)', 'Software and Configuration Checks/Industry and Regulatory Standards/Cyber Essentials Plus Controls (UK)', 'Software and Configuration Checks/Industry and Regulatory Standards/G-Cloud Controls (UK)', 'Software and Configuration Checks/Industry and Regulatory Standards/C5 Controls (Germany)', 'Software and Configuration Checks/Industry and Regulatory Standards/IT-Grundschutz Controls (Germany)', 'Software and Configuration Checks/Industry and Regulatory Standards/GDPR Controls (Europe)', 'Software and Configuration Checks/Industry and Regulatory Standards/TISAX Controls (Europe)', 'TTPs/Initial Access', 'TTPs/Execution', 'TTPs/Persistence', 'TTPs/Privilege Escalation', 'TTPs/Defense Evasion', 'TTPs/Credential Access', 'TTPs/Discovery', 'TTPs/Lateral Movement', 'TTPs/Collection', 'TTPs/Command and Control', 'Effects/Data Exposure', 'Effects/Data Exfiltration', 'Effects/Data Destruction', 'Effects/Denial of Service', 'Effects/Resource Consumption']}}, 'recommendation_url': {'type': 'string'}, 'recommendation': {'type': 'string'}, 'region': {'description': 'cross-region aggregation target', 'type': 'string'}, 'compliance_status': {'type': 'string', 'enum': ['PASSED', 'WARNING', 'FAILED', 'NOT_AVAILABLE']}, 'criticality': {'type': 'number', 'min': 0, 'max': 100}}, u'required': ['types', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -892,11 +909,6 @@ policies that report to the AWS SecurityHub.</p>
 <dl class="function">
 <dt id="c7n.actions.securityhub.build_vocabulary">
 <code class="descclassname">c7n.actions.securityhub.</code><code class="descname">build_vocabulary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#build_vocabulary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.build_vocabulary" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="c7n.actions.securityhub.filter_empty">
-<code class="descclassname">c7n.actions.securityhub.</code><code class="descname">filter_empty</code><span class="sig-paren">(</span><em>d</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#filter_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.filter_empty" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

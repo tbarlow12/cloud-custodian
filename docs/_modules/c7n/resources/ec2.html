@@ -214,10 +214,12 @@
 <span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="k">import</span> <span class="n">ClientError</span>
 <span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="k">import</span> <span class="n">parse</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">as_completed</span>
+<span class="kn">import</span> <span class="nn">jmespath</span>
 
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">ActionRegistry</span><span class="p">,</span> <span class="n">BaseAction</span><span class="p">,</span> <span class="n">ModifyVpcSecurityGroupsAction</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">c7n.actions.securityhub</span> <span class="k">import</span> <span class="n">PostFinding</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
 <span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">FilterRegistry</span><span class="p">,</span> <span class="n">AgeFilter</span><span class="p">,</span> <span class="n">ValueFilter</span><span class="p">,</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">OPERATORS</span><span class="p">,</span> <span class="n">DefaultVpcBase</span>
@@ -229,7 +231,7 @@
 <span class="kn">from</span> <span class="nn">c7n</span> <span class="k">import</span> <span class="n">query</span>
 
 <span class="kn">from</span> <span class="nn">c7n</span> <span class="k">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">type_schema</span>
+<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">filter_empty</span>
 
 
 <span class="n">filters</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="p">(</span><span class="s1">&#39;ec2.filters&#39;</span><span class="p">)</span>
@@ -989,6 +991,39 @@
                     <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="InstanceFinding"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.InstanceFinding">[docs]</a><span class="nd">@EC2</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;post-finding&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">InstanceFinding</span><span class="p">(</span><span class="n">PostFinding</span><span class="p">):</span>
+<div class="viewcode-block" id="InstanceFinding.format_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.InstanceFinding.format_resource">[docs]</a>    <span class="k">def</span> <span class="nf">format_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="n">details</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;InstanceType&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;ImageId&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;ImageId&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;IpV4Addresses&quot;</span><span class="p">:</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                <span class="s2">&quot;NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress&quot;</span><span class="p">,</span> <span class="n">r</span>
+            <span class="p">),</span>
+            <span class="s2">&quot;KeyName&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;KeyName&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;VpcId&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;VpcId&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;SubnetId&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;SubnetId&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;LaunchedAt&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;LaunchTime&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="s2">&quot;IamInstanceProfile&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+            <span class="n">details</span><span class="p">[</span><span class="s2">&quot;IamInstanceProfileArn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;IamInstanceProfile&quot;</span><span class="p">][</span><span class="s2">&quot;Arn&quot;</span><span class="p">]</span>
+
+        <span class="n">instance</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;AwsEc2Instance&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">:instance/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                <span class="n">r</span><span class="p">[</span><span class="s2">&quot;InstanceId&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;Region&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
+            <span class="s2">&quot;Tags&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">]:</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Tags&quot;</span><span class="p">,</span> <span class="p">[])},</span>
+            <span class="s2">&quot;Details&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;AwsEc2Instance&quot;</span><span class="p">:</span> <span class="n">filter_empty</span><span class="p">(</span><span class="n">details</span><span class="p">)},</span>
+        <span class="p">}</span>
+
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">filter_empty</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instance</span></div></div>
 
 
 <div class="viewcode-block" id="Start"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.Start">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>

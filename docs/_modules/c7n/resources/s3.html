@@ -255,6 +255,7 @@
 
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">ActionRegistry</span><span class="p">,</span> <span class="n">BaseAction</span><span class="p">,</span> <span class="n">PutMetric</span><span class="p">,</span> <span class="n">RemovePolicyBase</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">c7n.actions.securityhub</span> <span class="k">import</span> <span class="n">PostFinding</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
 <span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">FilterRegistry</span><span class="p">,</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">CrossAccountAccessFilter</span><span class="p">,</span> <span class="n">MetricsFilter</span><span class="p">,</span>
@@ -263,7 +264,7 @@
 <span class="kn">from</span> <span class="nn">c7n</span> <span class="k">import</span> <span class="n">query</span>
 <span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">RemoveTag</span><span class="p">,</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">,</span> <span class="n">TagDelayedAction</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">chunks</span><span class="p">,</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">set_annotation</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span>
+    <span class="n">chunks</span><span class="p">,</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">set_annotation</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">filter_empty</span><span class="p">,</span>
     <span class="n">dumps</span><span class="p">,</span> <span class="n">format_string_values</span><span class="p">,</span> <span class="n">get_account_alias_from_sts</span><span class="p">)</span>
 
 
@@ -914,6 +915,24 @@
                                    <span class="n">b</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">],</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span>
                 <span class="n">results</span> <span class="o">+=</span> <span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">result</span><span class="p">()])</span>
             <span class="k">return</span> <span class="n">results</span></div></div>
+
+
+<div class="viewcode-block" id="BucketFinding"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.BucketFinding">[docs]</a><span class="nd">@S3</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;post-finding&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BucketFinding</span><span class="p">(</span><span class="n">PostFinding</span><span class="p">):</span>
+<div class="viewcode-block" id="BucketFinding.format_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.BucketFinding.format_resource">[docs]</a>    <span class="k">def</span> <span class="nf">format_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Acl&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Owner&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">resource</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;AwsS3Bucket&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:::</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;Region&quot;</span><span class="p">:</span> <span class="n">get_region</span><span class="p">(</span><span class="n">r</span><span class="p">),</span>
+            <span class="s2">&quot;Tags&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">]:</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Tags&quot;</span><span class="p">,</span> <span class="p">[])},</span>
+            <span class="s2">&quot;Details&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;AwsS3Bucket&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;OwnerId&quot;</span><span class="p">:</span> <span class="n">owner</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">)}}</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="s2">&quot;DisplayName&quot;</span> <span class="ow">in</span> <span class="n">owner</span><span class="p">:</span>
+            <span class="n">resource</span><span class="p">[</span><span class="s2">&quot;Details&quot;</span><span class="p">][</span><span class="s2">&quot;AwsS3Bucket&quot;</span><span class="p">][</span><span class="s2">&quot;OwnerName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">owner</span><span class="p">[</span><span class="s1">&#39;DisplayName&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">filter_empty</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="HasStatementFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.HasStatementFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;has-statement&#39;</span><span class="p">)</span>
