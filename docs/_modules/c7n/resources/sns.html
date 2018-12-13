@@ -205,9 +205,9 @@
 
 <span class="kn">import</span> <span class="nn">json</span>
 
-
-<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">RemovePolicyBase</span><span class="p">,</span> <span class="n">ModifyPolicyBase</span>
+<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">RemovePolicyBase</span><span class="p">,</span> <span class="n">ModifyPolicyBase</span><span class="p">,</span> <span class="n">BaseAction</span>
 <span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">CrossAccountAccessFilter</span><span class="p">,</span> <span class="n">PolicyChecker</span>
+<span class="kn">from</span> <span class="nn">c7n.filters.kms</span> <span class="k">import</span> <span class="n">KmsRelatedFilter</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
 <span class="kn">from</span> <span class="nn">c7n.resolver</span> <span class="k">import</span> <span class="n">ValuesFrom</span>
@@ -442,6 +442,73 @@
                 <span class="n">AttributeValue</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">policy</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">results</span></div></div>
+
+
+<div class="viewcode-block" id="KmsFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.sns.KmsFilter">[docs]</a><span class="nd">@SNS</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;kms-key&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">KmsFilter</span><span class="p">(</span><span class="n">KmsRelatedFilter</span><span class="p">):</span>
+
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s1">&#39;KmsMasterKeyId&#39;</span></div>
+
+
+<div class="viewcode-block" id="SetEncryption"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.sns.SetEncryption">[docs]</a><span class="nd">@SNS</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;set-encryption&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SetEncryption</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set Encryption on SNS Topics</span>
+
+<span class="sd">    By default if no key is specified, alias/aws/sns is used</span>
+
+<span class="sd">    key can either be a KMS key ARN, key id, or an alias</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">            - name: set-sns-topic-encryption</span>
+<span class="sd">              resource: sns</span>
+<span class="sd">              actions:</span>
+<span class="sd">                - type: set-encryption</span>
+<span class="sd">                  key: alias/cmk/key</span>
+<span class="sd">                  enabled: True</span>
+
+<span class="sd">            - name: set-sns-topic-encryption-with-id</span>
+<span class="sd">              resource: sns</span>
+<span class="sd">              actions:</span>
+<span class="sd">                - type: set-encryption</span>
+<span class="sd">                  key: abcdefgh-1234-1234-1234-123456789012</span>
+<span class="sd">                  enabled: True</span>
+
+<span class="sd">            - name: set-sns-topic-encryption-with-arn</span>
+<span class="sd">              resource: sns</span>
+<span class="sd">              actions:</span>
+<span class="sd">                - type: set-encryption</span>
+<span class="sd">                  key: arn:aws:kms:us-west-1:123456789012:key/abcdefgh-1234-1234-1234-123456789012</span>
+<span class="sd">                  enabled: True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;set-encryption&#39;</span><span class="p">,</span>
+        <span class="n">enabled</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+        <span class="n">key</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;sns:SetTopicAttributes&#39;</span><span class="p">,</span> <span class="s1">&#39;kms:DescribeKey&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="SetEncryption.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.sns.SetEncryption.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">sns</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;sns&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;alias/aws/sns&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">sns</span><span class="o">.</span><span class="n">set_topic_attributes</span><span class="p">(</span>
+                <span class="n">TopicArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;TopicArn&#39;</span><span class="p">],</span>
+                <span class="n">AttributeName</span><span class="o">=</span><span class="s1">&#39;KmsMasterKeyId&#39;</span><span class="p">,</span>
+                <span class="n">AttributeValue</span><span class="o">=</span><span class="n">key</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resources</span></div></div>
 </pre></div>
 
            </div>
