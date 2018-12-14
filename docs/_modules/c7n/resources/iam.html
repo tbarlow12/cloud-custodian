@@ -655,6 +655,58 @@
         <span class="k">return</span> <span class="p">[]</span></div></div>
 
 
+<div class="viewcode-block" id="SetPolicy"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.SetPolicy">[docs]</a><span class="nd">@Role</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;set-policy&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SetPolicy</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set a specific IAM policy as attached or detached on a role.</span>
+
+<span class="sd">    You will identify the policy by its arn.</span>
+
+<span class="sd">    Returns a list of roles modified by the action.</span>
+
+<span class="sd">    For example, if you want to automatically attach a policy to all roles which don&#39;t have it...</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">      .. code-block:: yaml</span>
+
+<span class="sd">        - name: iam-attach-role-policy</span>
+<span class="sd">          resource: iam-role</span>
+<span class="sd">          filters:</span>
+<span class="sd">            - type: no-specific-managed-policy</span>
+<span class="sd">              value: my-iam-policy</span>
+<span class="sd">          actions:</span>
+<span class="sd">            - type: set-policy</span>
+<span class="sd">              state: attached</span>
+<span class="sd">              arn: arn:aws:iam::123456789012:policy/my-iam-policy</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;set-policy&#39;</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;attached&#39;</span><span class="p">,</span> <span class="s1">&#39;detached&#39;</span><span class="p">]},</span>
+        <span class="n">arn</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+        <span class="n">required</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;arn&#39;</span><span class="p">])</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;iam:AttachRolePolicy&#39;</span><span class="p">,</span> <span class="s1">&#39;iam:DetachRolePolicy&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="SetPolicy.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.SetPolicy.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;iam&#39;</span><span class="p">)</span>
+        <span class="n">policy_arn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;arn&#39;</span><span class="p">]</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s1">&#39;attached&#39;</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">attach_role_policy</span><span class="p">(</span>
+                    <span class="n">RoleName</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;RoleName&#39;</span><span class="p">],</span>
+                    <span class="n">PolicyArn</span><span class="o">=</span><span class="n">policy_arn</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="s1">&#39;detached&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">client</span><span class="o">.</span><span class="n">detach_role_policy</span><span class="p">(</span>
+                        <span class="n">RoleName</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;RoleName&#39;</span><span class="p">],</span>
+                        <span class="n">PolicyArn</span><span class="o">=</span><span class="n">policy_arn</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoSuchEntityException</span><span class="p">:</span>
+                    <span class="k">pass</span></div></div>
+
+
 <span class="c1">######################</span>
 <span class="c1">#    IAM Policies    #</span>
 <span class="c1">######################</span>
