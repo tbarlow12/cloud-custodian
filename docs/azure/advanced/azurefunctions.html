@@ -115,6 +115,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../policy/index.html">Policies</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Advanced Usage</a><ul class="current">
@@ -130,9 +131,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="multiplesubs.html">Advanced Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bloboutput.html">Blob Storage Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appinsightslogging.html">App Insights Logging &amp; Metrics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -226,9 +230,12 @@ yet supported.</p>
 <li>Application Service Plan (shared across functions)</li>
 <li>Application Service (per function)</li>
 </ul>
-<p>A single Application Service Plan (Basic, Standard or Premium) can service a large number
-of Application Service Instances.  If you provide the same servicePlanName with all policies or
-use the default name then only new Applications will be created during deployment, all using the same
+<p>Functions can be deployed in either a dedicated Application Service Plan (Basic, Standard or Premium) or in a Consumption plan.
+More details on the different hosting models offered by Azure Functions can be found in the <a class="reference external" href="https://docs.microsoft.com/en-us/azure/azure-functions/functions-scale">Azure Functions documentation</a>.
+By default, we will run all Custodian policies using the Consumption hosting model. (i.e. skuTier=dynamic)
+Linux Consumption is currently only available in the following regions: East Asia, East US, West Europe, and West US</p>
+<p>A dedicated plan can service multiple Function Applications.  If you provide the same servicePlanName with all policies or
+use the default name then only new Function Applications will be created during deployment, all using the same
 shared plan resources.</p>
 <p>Execution in Azure functions comes with a default set of configurations for the provisioned
 resources. To override these settings you must set ‘provision-options’ with one of the following
@@ -236,10 +243,10 @@ keys:</p>
 <ul class="simple">
 <li>servicePlan
 - name (default: cloud-custodian)
-- location (default: West US 2)
+- location (default: East US)
 - resourceGroupName (default: cloud-custodian)
-- skuTier (default: Basic)
-- skuName (default: B1)</li>
+- skuTier (default: Dynamic) # consumption
+- skuName (default: Y1)</li>
 <li>storageAccount
 - name (default: custodian + sha256(resourceGroupName+subscription_id)[:8])
 - location (default: servicePlan location)
@@ -255,7 +262,7 @@ region as the other resources: West US 2, East US, North Europe, South Central U
 West Europe. The sku, skuCode, and workerSize correlate to scaling up the App Service Plan.</p>
 <p>If specified resources already exist in the subscription (discoverable by resource group name and resource name), Cloud Custodian won’t make any changes (location, sku)
 and will use existing resources as-is. If resource doesn’t exist, it will be provisioned using provided configuration.</p>
-<p>If you have existing infrastructure, you can specify resource ids for the following itesm (instead of applying previous schema):</p>
+<p>If you have existing infrastructure, you can specify resource ids for the following items (instead of applying previous schema):</p>
 <ul class="simple">
 <li>storageAccount</li>
 <li>servicePlan</li>
@@ -380,7 +387,6 @@ of one of the <a class="reference external" href="https://github.com/capitalone/
       <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
         <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">auto-tag-user</span>
           <span class="l l-Scalar l-Scalar-Plain">tag</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">CreatorEmail</span>
-          <span class="l l-Scalar l-Scalar-Plain">days</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
 </pre></div>
 </div>
 </div>
@@ -423,7 +429,7 @@ used for deployment.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -442,21 +448,15 @@ used for deployment.</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

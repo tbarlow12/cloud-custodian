@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -209,6 +212,7 @@
 <span class="kn">import</span> <span class="nn">six</span>
 
 <span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="k">import</span> <span class="n">ClientError</span>
+<span class="kn">from</span> <span class="nn">botocore.paginate</span> <span class="k">import</span> <span class="n">Paginator</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">as_completed</span>
 
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">ActionRegistry</span><span class="p">,</span> <span class="n">BaseAction</span><span class="p">,</span> <span class="n">RemovePolicyBase</span>
@@ -285,22 +289,6 @@
         <span class="k">return</span> <span class="n">resource</span></div></div>
 
 
-<div class="viewcode-block" id="tag_function"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.tag_function">[docs]</a><span class="k">def</span> <span class="nf">tag_function</span><span class="p">(</span><span class="n">session_factory</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">log</span><span class="p">):</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">)</span>
-    <span class="n">tag_dict</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
-        <span class="n">tag_dict</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
-        <span class="n">arn</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;FunctionArn&#39;</span><span class="p">]</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">tag_resource</span><span class="p">(</span><span class="n">Resource</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tag_dict</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
-                <span class="s1">&#39;Exception tagging lambda function </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="n">f</span><span class="p">[</span><span class="s1">&#39;FunctionName&#39;</span><span class="p">],</span> <span class="n">err</span><span class="p">)</span>
-            <span class="k">continue</span></div>
-
-
 <div class="viewcode-block" id="SecurityGroupFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.SecurityGroupFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;security-group&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">SecurityGroupFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">SecurityGroupFilter</span><span class="p">):</span>
 
@@ -311,6 +299,12 @@
 <span class="k">class</span> <span class="nc">SubnetFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">SubnetFilter</span><span class="p">):</span>
 
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;VpcConfig.SubnetIds[]&quot;</span></div>
+
+
+<div class="viewcode-block" id="VpcFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.VpcFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;vpc&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VpcFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">VpcFilter</span><span class="p">):</span>
+
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;VpcConfig.VpcId&quot;</span></div>
 
 
 <span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;network-location&#39;</span><span class="p">,</span> <span class="n">net_filters</span><span class="o">.</span><span class="n">NetworkLocation</span><span class="p">)</span>
@@ -538,12 +532,7 @@
 <span class="sd">                    msg: &quot;Unused lambda&quot;</span>
 <span class="sd">                    op: delete</span>
 <span class="sd">                    days: 7</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;lambda:TagResource&#39;</span><span class="p">,)</span>
-
-<div class="viewcode-block" id="TagDelayedAction.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.TagDelayedAction.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">tag_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">)</span></div></div>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Tag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.Tag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
@@ -567,8 +556,14 @@
 
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;lambda:TagResource&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="Tag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.Tag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">tag_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="Tag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.Tag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">tag_resource</span><span class="p">(</span>
+                    <span class="n">Resource</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;FunctionArn&#39;</span><span class="p">],</span>
+                    <span class="n">Tags</span><span class="o">=</span><span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">]:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">})</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ResourceNotFoundException</span><span class="p">:</span>
+                <span class="k">continue</span></div></div>
 
 
 <div class="viewcode-block" id="RemoveTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.RemoveTag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
@@ -591,11 +586,10 @@
 
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;lambda:UntagResource&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="RemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.RemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.RemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
-            <span class="n">arn</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;FunctionArn&#39;</span><span class="p">]</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">untag_resource</span><span class="p">(</span><span class="n">Resource</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">TagKeys</span><span class="o">=</span><span class="n">tag_keys</span><span class="p">)</span></div></div>
+            <span class="n">client</span><span class="o">.</span><span class="n">untag_resource</span><span class="p">(</span>
+                <span class="n">Resource</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;FunctionArn&#39;</span><span class="p">],</span> <span class="n">TagKeys</span><span class="o">=</span><span class="n">tag_keys</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="SetConcurrency"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.SetConcurrency">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;set-concurrency&#39;</span><span class="p">)</span>
@@ -682,6 +676,154 @@
                     <span class="k">continue</span>
                 <span class="k">raise</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Deleted </span><span class="si">%d</span><span class="s2"> functions&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">functions</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="LambdaLayerVersion"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LambdaLayerVersion">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;lambda-layer&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LambdaLayerVersion</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">QueryResourceManager</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Note custodian models the lambda layer version.</span>
+
+<span class="sd">    Layers end up being a logical asset, the physical asset for use</span>
+<span class="sd">    and management is the layer verison.</span>
+
+<span class="sd">    To ease that distinction, we support querying just the latest</span>
+<span class="sd">    layer version or having a policy against all layer versions.</span>
+
+<span class="sd">    By default we query all versions, the following is an example</span>
+<span class="sd">    to query just the latest.</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">          - name: lambda-layer</span>
+<span class="sd">            query:</span>
+<span class="sd">              - version: latest</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LambdaLayerVersion.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LambdaLayerVersion.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;lambda&#39;</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;function&#39;</span>
+        <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;list_layers&#39;</span><span class="p">,</span> <span class="s1">&#39;Layers&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;LayerName&#39;</span>
+        <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;CreatedDate&#39;</span>
+        <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">config_type</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="LambdaLayerVersion.augment"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LambdaLayerVersion.augment">[docs]</a>    <span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">versions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">versions</span><span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LayerName&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">v</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;LatestMatchingVersion&#39;</span><span class="p">]</span>
+            <span class="n">v</span><span class="p">[</span><span class="s1">&#39;LayerName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;LayerName&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="p">{</span><span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="s1">&#39;latest&#39;</span><span class="p">}</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">versions</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="n">layer_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">versions</span><span class="p">)</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">)</span>
+
+        <span class="n">versions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">layer_name</span> <span class="ow">in</span> <span class="n">layer_names</span><span class="p">:</span>
+            <span class="n">pager</span> <span class="o">=</span> <span class="n">get_layer_version_paginator</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pager</span><span class="o">.</span><span class="n">paginate</span><span class="p">(</span>
+                    <span class="n">LayerName</span><span class="o">=</span><span class="n">layer_name</span><span class="p">)</span><span class="o">.</span><span class="n">build_full_result</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LayerVersions&#39;</span><span class="p">):</span>
+                <span class="n">v</span><span class="p">[</span><span class="s1">&#39;LayerName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer_name</span>
+                <span class="n">versions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">versions</span></div></div>
+
+
+<div class="viewcode-block" id="get_layer_version_paginator"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.get_layer_version_paginator">[docs]</a><span class="k">def</span> <span class="nf">get_layer_version_paginator</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
+    <span class="n">pager</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">list_layer_versions</span><span class="p">,</span>
+        <span class="p">{</span><span class="s1">&#39;input_token&#39;</span><span class="p">:</span> <span class="s1">&#39;NextToken&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;output_token&#39;</span><span class="p">:</span> <span class="s1">&#39;NextToken&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;result_key&#39;</span><span class="p">:</span> <span class="s1">&#39;LayerVersions&#39;</span><span class="p">},</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">service_model</span><span class="o">.</span><span class="n">operation_model</span><span class="p">(</span><span class="s1">&#39;ListLayerVersions&#39;</span><span class="p">))</span>
+    <span class="n">pager</span><span class="o">.</span><span class="n">PAGE_ITERATOR_CLS</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">RetryPageIterator</span>
+    <span class="k">return</span> <span class="n">pager</span></div>
+
+
+<div class="viewcode-block" id="LayerCrossAccount"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LayerCrossAccount">[docs]</a><span class="nd">@LambdaLayerVersion</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;cross-account&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LayerCrossAccount</span><span class="p">(</span><span class="n">CrossAccountAccessFilter</span><span class="p">):</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;lambda:GetLayerVersionPolicy&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="LayerCrossAccount.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LayerCrossAccount.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">r</span><span class="p">[</span><span class="s1">&#39;c7n:Policy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">get_layer_version_policy</span><span class="p">,</span>
+                <span class="n">LayerName</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LayerName&#39;</span><span class="p">],</span>
+                <span class="n">VersionNumber</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;Version&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Policy&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">LayerCrossAccount</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LayerCrossAccount.get_resource_policy"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LayerCrossAccount.get_resource_policy">[docs]</a>    <span class="k">def</span> <span class="nf">get_resource_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;c7n:Policy&#39;</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="LayerRemovePermissions"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LayerRemovePermissions">[docs]</a><span class="nd">@LambdaLayerVersion</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-statements&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LayerRemovePermissions</span><span class="p">(</span><span class="n">RemovePolicyBase</span><span class="p">):</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;remove-statements&#39;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;statement_ids&#39;</span><span class="p">],</span>
+        <span class="n">statement_ids</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;oneOf&#39;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;matched&#39;</span><span class="p">]},</span>
+            <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}}]})</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;lambda:GetLayerVersionPolicy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lambda:RemoveLayerVersionPermission&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LayerRemovePermissions.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LayerRemovePermissions.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_resource</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LayerRemovePermissions.process_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LayerRemovePermissions.process_resource">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;c7n:Policy&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">r</span><span class="p">[</span><span class="s1">&#39;c7n:Policy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
+                    <span class="n">client</span><span class="o">.</span><span class="n">get_layer_version_policy</span><span class="p">,</span>
+                    <span class="n">LayerName</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LayerName&#39;</span><span class="p">],</span>
+                    <span class="n">VersionNumber</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;Version&#39;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ResourceNotFound</span><span class="p">:</span>
+                <span class="k">return</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;c7n:Policy&#39;</span><span class="p">])</span>
+
+        <span class="n">statements</span><span class="p">,</span> <span class="n">found</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_policy</span><span class="p">(</span>
+            <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">CrossAccountAccessFilter</span><span class="o">.</span><span class="n">annotation_key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">found</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">remove_layer_version_permission</span><span class="p">,</span>
+                <span class="n">LayerName</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LayerName&#39;</span><span class="p">],</span>
+                <span class="n">StatementId</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;Sid&#39;</span><span class="p">],</span>
+                <span class="n">VersionNumber</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;Version&#39;</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="DeleteLayerVersion"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.DeleteLayerVersion">[docs]</a><span class="nd">@LambdaLayerVersion</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DeleteLayerVersion</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;lambda:DeleteLayerVersion&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="DeleteLayerVersion.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.DeleteLayerVersion.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
+                    <span class="n">client</span><span class="o">.</span><span class="n">delete_layer_version</span><span class="p">,</span>
+                    <span class="n">LayerName</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LayerName&#39;</span><span class="p">],</span>
+                    <span class="n">VersionNumber</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;Version&#39;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ResourceNotFound</span><span class="p">:</span>
+                <span class="k">continue</span></div></div>
 </pre></div>
 
            </div>
@@ -694,7 +836,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -713,21 +855,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

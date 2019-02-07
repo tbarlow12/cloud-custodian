@@ -115,10 +115,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul class="current">
@@ -232,14 +235,9 @@
 <dt id="c7n_azure.resources.access_control.DeleteAssignmentAction">
 <em class="property">class </em><code class="descclassname">c7n_azure.resources.access_control.</code><code class="descname">DeleteAssignmentAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/access_control.html#DeleteAssignmentAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.access_control.DeleteAssignmentAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n_azure.html#c7n_azure.actions.AzureBaseAction" title="c7n_azure.actions.AzureBaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_azure.actions.AzureBaseAction</span></code></a></p>
-<dl class="method">
-<dt id="c7n_azure.resources.access_control.DeleteAssignmentAction.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>assignments</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/access_control.html#DeleteAssignmentAction.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.access_control.DeleteAssignmentAction.process_resource_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="c7n_azure.resources.access_control.DeleteAssignmentAction.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['delete']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.access_control.DeleteAssignmentAction.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['delete']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.access_control.DeleteAssignmentAction.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -299,7 +297,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.access_control.ResourceAccessFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'key': {u'type': u'string'}, u'default': {u'type': u'object'}, u'type': {u'enum': ['resource-access']}, u'value': {u'oneOf': [{u'type': u'array'}, {u'type': u'string'}, {u'type': u'boolean'}, {u'type': u'number'}, {u'type': u'null'}]}, 'relatedResource': {'type': 'string'}, u'value_type': {u'enum': [u'age', u'integer', u'expiration', u'normalize', u'size', u'cidr', u'cidr_size', u'swap', u'resource_count', u'expr', u'unique_size']}, u'value_from': {u'required': [u'url'], u'additionalProperties': u'False', u'type': u'object', u'properties': {u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}, u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}}}, u'op': {u'enum': [u'regex', u'not-equal', u'ne', u'gte', u'gt', u'eq', u'difference', u'lt', u'ni', u'ge', u'intersect', u'in', u'equal', u'lte', u'le', u'greater-than', u'less-than', u'contains', u'glob', u'not-in']}}, u'required': ['relatedResource', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.access_control.ResourceAccessFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'default': {'type': 'object'}, 'key': {'type': 'string'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'relatedResource': {'type': 'string'}, 'type': {'enum': ['resource-access']}, 'value': {'oneOf': [{'type': 'array'}, {'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}]}, 'value_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'value_type': {'enum': ['age', 'integer', 'expiration', 'normalize', 'size', 'cidr', 'cidr_size', 'swap', 'resource_count', 'expr', 'unique_size']}}, 'required': ['relatedResource', 'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.access_control.ResourceAccessFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -310,7 +308,8 @@ type of azure resource.</p>
 <dl class="method">
 <dt id="c7n_azure.resources.access_control.ResourceAccessFilter.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/access_control.html#ResourceAccessFilter.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.access_control.ResourceAccessFilter.validate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>validate filter config, return validation error or self</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -473,7 +472,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.access_control.RoleFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'key': {u'type': u'string'}, u'default': {u'type': u'object'}, u'type': {u'enum': ['role']}, u'value': {u'oneOf': [{u'type': u'array'}, {u'type': u'string'}, {u'type': u'boolean'}, {u'type': u'number'}, {u'type': u'null'}]}, u'value_type': {u'enum': [u'age', u'integer', u'expiration', u'normalize', u'size', u'cidr', u'cidr_size', u'swap', u'resource_count', u'expr', u'unique_size']}, u'value_from': {u'required': [u'url'], u'additionalProperties': u'False', u'type': u'object', u'properties': {u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}, u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}}}, u'op': {u'enum': [u'regex', u'not-equal', u'ne', u'gte', u'gt', u'eq', u'difference', u'lt', u'ni', u'ge', u'intersect', u'in', u'equal', u'lte', u'le', u'greater-than', u'less-than', u'contains', u'glob', u'not-in']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.access_control.RoleFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'default': {'type': 'object'}, 'key': {'type': 'string'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'type': {'enum': ['role']}, 'value': {'oneOf': [{'type': 'array'}, {'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}]}, 'value_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'value_type': {'enum': ['age', 'integer', 'expiration', 'normalize', 'size', 'cidr', 'cidr_size', 'swap', 'resource_count', 'expr', 'unique_size']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.access_control.RoleFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -507,11 +506,12 @@ type of azure resource.</p>
 <dl class="method">
 <dt id="c7n_azure.resources.access_control.ScopeFilter.process">
 <code class="descname">process</code><span class="sig-paren">(</span><em>data</em>, <em>event=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/access_control.html#ScopeFilter.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.access_control.ScopeFilter.process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Bulk process resources and return filtered set.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.access_control.ScopeFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'value': {'enum': ['subscription', 'resource-group'], 'type': 'string'}, u'type': {u'enum': ['scope']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.access_control.ScopeFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['scope']}, 'value': {'enum': ['subscription', 'resource-group'], 'type': 'string'}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.access_control.ScopeFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -600,14 +600,9 @@ type of azure resource.</p>
 <em class="property">static </em><code class="descname">get_sku_name</code><span class="sig-paren">(</span><em>tier</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/appserviceplan.html#ResizePlan.get_sku_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.appserviceplan.ResizePlan.get_sku_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="c7n_azure.resources.appserviceplan.ResizePlan.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>plans</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/appserviceplan.html#ResizePlan.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.appserviceplan.ResizePlan.process_resource_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="c7n_azure.resources.appserviceplan.ResizePlan.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'count': {'type': 'integer'}, 'size': {'enum': ['F1', 'B1', 'B2', 'B3', 'D1', 'S1', 'S2', 'S3', 'P1', 'P2', 'P3', 'P1V2', 'P2V2', 'P3v2', 'PC2', 'PC3', 'PC4'], 'type': 'string'}, u'type': {u'enum': ['resize-plan']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.appserviceplan.ResizePlan.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'count': {'type': 'integer'}, 'size': {'enum': ['F1', 'B1', 'B2', 'B3', 'D1', 'S1', 'S2', 'S3', 'P1', 'P2', 'P3', 'P1V2', 'P2V2', 'P3v2', 'PC2', 'PC3', 'PC4'], 'type': 'string'}, 'type': {'enum': ['resize-plan']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.appserviceplan.ResizePlan.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -642,7 +637,8 @@ type of azure resource.</p>
 <dl class="method">
 <dt id="c7n_azure.resources.arm.ArmResourceManager.get_resources">
 <code class="descname">get_resources</code><span class="sig-paren">(</span><em>resource_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/arm.html#ArmResourceManager.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.arm.ArmResourceManager.get_resources" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve a set of resources by id.</p>
+</dd></dl>
 
 <dl class="staticmethod">
 <dt id="c7n_azure.resources.arm.ArmResourceManager.register_arm_specific">
@@ -843,6 +839,56 @@ type of azure resource.</p>
 <dl class="attribute">
 <dt id="c7n_azure.resources.cognitive_service.CognitiveService.type">
 <code class="descname">type</code><em class="property"> = 'cognitiveservice'</em><a class="headerlink" href="#c7n_azure.resources.cognitive_service.CognitiveService.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-c7n_azure.resources.container_registry">
+<span id="c7n-azure-resources-container-registry-module"></span><h2>c7n_azure.resources.container_registry module<a class="headerlink" href="#module-c7n_azure.resources.container_registry" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="c7n_azure.resources.container_registry.ContainerRegistry">
+<em class="property">class </em><code class="descclassname">c7n_azure.resources.container_registry.</code><code class="descname">ContainerRegistry</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/container_registry.html#ContainerRegistry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.container_registry.ContainerRegistry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#c7n_azure.resources.arm.ArmResourceManager" title="c7n_azure.resources.arm.ArmResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_azure.resources.arm.ArmResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_azure.resources.container_registry.ContainerRegistry.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n_azure.resources.container_registry.ContainerRegistry.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_azure.resources.container_registry.ContainerRegistry.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n_azure.resources.container_registry.ContainerRegistry.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n_azure.resources.container_registry.ContainerRegistry.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n_azure/resources/container_registry.html#ContainerRegistry.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.container_registry.ContainerRegistry.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_azure.resources.arm.resource_type</span></code></p>
+<dl class="attribute">
+<dt id="c7n_azure.resources.container_registry.ContainerRegistry.resource_type.client">
+<code class="descname">client</code><em class="property"> = 'ContainerRegistryManagementClient'</em><a class="headerlink" href="#c7n_azure.resources.container_registry.ContainerRegistry.resource_type.client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_azure.resources.container_registry.ContainerRegistry.resource_type.default_report_fields">
+<code class="descname">default_report_fields</code><em class="property"> = ('name', 'location', 'resourceGroup')</em><a class="headerlink" href="#c7n_azure.resources.container_registry.ContainerRegistry.resource_type.default_report_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_azure.resources.container_registry.ContainerRegistry.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('registries', 'list', None)</em><a class="headerlink" href="#c7n_azure.resources.container_registry.ContainerRegistry.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_azure.resources.container_registry.ContainerRegistry.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'azure.mgmt.containerregistry'</em><a class="headerlink" href="#c7n_azure.resources.container_registry.ContainerRegistry.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_azure.resources.container_registry.ContainerRegistry.type">
+<code class="descname">type</code><em class="property"> = 'containerregistry'</em><a class="headerlink" href="#c7n_azure.resources.container_registry.ContainerRegistry.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1104,14 +1150,9 @@ type of azure resource.</p>
 <dt id="c7n_azure.resources.event_subscription.Delete">
 <em class="property">class </em><code class="descclassname">c7n_azure.resources.event_subscription.</code><code class="descname">Delete</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/event_subscription.html#Delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.event_subscription.Delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n_azure.html#c7n_azure.actions.AzureBaseAction" title="c7n_azure.actions.AzureBaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_azure.actions.AzureBaseAction</span></code></a></p>
-<dl class="method">
-<dt id="c7n_azure.resources.event_subscription.Delete.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/event_subscription.html#Delete.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.event_subscription.Delete.process_resource_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="c7n_azure.resources.event_subscription.Delete.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['delete']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.event_subscription.Delete.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['delete']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.event_subscription.Delete.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1334,7 +1375,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.key_vault.WhiteListFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'key': {'type': 'string'}, 'users': {'type': 'array'}, u'type': {u'enum': ['whitelist']}, 'permissions': {'secrets': {'type': 'array'}, 'keys': {'type': 'array'}, 'certificates': {'type': 'array'}}}, u'required': ['key', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.key_vault.WhiteListFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'key': {'type': 'string'}, 'permissions': {'certificates': {'type': 'array'}, 'keys': {'type': 'array'}, 'secrets': {'type': 'array'}}, 'type': {'enum': ['whitelist']}, 'users': {'type': 'array'}}, 'required': ['key', 'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.key_vault.WhiteListFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1383,7 +1424,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.load_balancer.FrontEndIp.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'key': {u'type': u'string'}, u'default': {u'type': u'object'}, u'type': {u'enum': ['frontend-public-ip']}, u'value': {u'oneOf': [{u'type': u'array'}, {u'type': u'string'}, {u'type': u'boolean'}, {u'type': u'number'}, {u'type': u'null'}]}, u'value_type': {u'enum': [u'age', u'integer', u'expiration', u'normalize', u'size', u'cidr', u'cidr_size', u'swap', u'resource_count', u'expr', u'unique_size']}, u'value_from': {u'required': [u'url'], u'additionalProperties': u'False', u'type': u'object', u'properties': {u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}, u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}}}, u'op': {u'enum': [u'regex', u'not-equal', u'ne', u'gte', u'gt', u'eq', u'difference', u'lt', u'ni', u'ge', u'intersect', u'in', u'equal', u'lte', u'le', u'greater-than', u'less-than', u'contains', u'glob', u'not-in']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.load_balancer.FrontEndIp.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'default': {'type': 'object'}, 'key': {'type': 'string'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'type': {'enum': ['frontend-public-ip']}, 'value': {'oneOf': [{'type': 'array'}, {'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}]}, 'value_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'value_type': {'enum': ['age', 'integer', 'expiration', 'normalize', 'size', 'cidr', 'cidr_size', 'swap', 'resource_count', 'expr', 'unique_size']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.load_balancer.FrontEndIp.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1515,7 +1556,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.network_security_group.CloseRules.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, 'properties': {'ports': {'type': 'string'}, 'type': {u'enum': ['close']}, 'exceptPorts': {'type': 'string'}, 'direction': {'enum': ['Inbound', 'Outbound'], 'type': 'string'}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}}, 'required': [u'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.CloseRules.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'direction': {'enum': ['Inbound', 'Outbound'], 'type': 'string'}, 'exceptPorts': {'type': 'string'}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}, 'ports': {'type': 'string'}, 'type': {'enum': ['close']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.CloseRules.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1536,7 +1577,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.network_security_group.EgressFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, 'properties': {'match': {'enum': ['all', 'any'], 'type': 'string'}, 'access': {'enum': ['Allow', 'Deny'], 'type': 'string'}, 'type': {u'enum': ['egress']}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}, 'ports': {'type': 'string'}, 'exceptPorts': {'type': 'string'}}, 'required': [u'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.EgressFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'access': {'enum': ['Allow', 'Deny'], 'type': 'string'}, 'exceptPorts': {'type': 'string'}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}, 'match': {'enum': ['all', 'any'], 'type': 'string'}, 'ports': {'type': 'string'}, 'type': {'enum': ['egress']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.EgressFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1557,7 +1598,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.network_security_group.IngressFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, 'properties': {'match': {'enum': ['all', 'any'], 'type': 'string'}, 'access': {'enum': ['Allow', 'Deny'], 'type': 'string'}, 'type': {u'enum': ['ingress']}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}, 'ports': {'type': 'string'}, 'exceptPorts': {'type': 'string'}}, 'required': [u'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.IngressFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'access': {'enum': ['Allow', 'Deny'], 'type': 'string'}, 'exceptPorts': {'type': 'string'}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}, 'match': {'enum': ['all', 'any'], 'type': 'string'}, 'ports': {'type': 'string'}, 'type': {'enum': ['ingress']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.IngressFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1632,17 +1673,19 @@ type of azure resource.</p>
 <dl class="method">
 <dt id="c7n_azure.resources.network_security_group.NetworkSecurityGroupFilter.process">
 <code class="descname">process</code><span class="sig-paren">(</span><em>network_security_groups</em>, <em>event=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/network_security_group.html#NetworkSecurityGroupFilter.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.network_security_group.NetworkSecurityGroupFilter.process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Bulk process resources and return filtered set.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.network_security_group.NetworkSecurityGroupFilter.schema">
-<code class="descname">schema</code><em class="property"> = {'properties': {'match': {'enum': ['all', 'any'], 'type': 'string'}, 'access': {'enum': ['Allow', 'Deny'], 'type': 'string'}, 'type': {'enum': []}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}, 'ports': {'type': 'string'}, 'exceptPorts': {'type': 'string'}}, 'required': ['type', 'access'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.NetworkSecurityGroupFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'properties': {'access': {'enum': ['Allow', 'Deny'], 'type': 'string'}, 'exceptPorts': {'type': 'string'}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}, 'match': {'enum': ['all', 'any'], 'type': 'string'}, 'ports': {'type': 'string'}, 'type': {'enum': []}}, 'required': ['type', 'access'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.NetworkSecurityGroupFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="c7n_azure.resources.network_security_group.NetworkSecurityGroupFilter.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/network_security_group.html#NetworkSecurityGroupFilter.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.network_security_group.NetworkSecurityGroupFilter.validate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>validate filter config, return validation error or self</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1658,7 +1701,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.network_security_group.NetworkSecurityGroupPortsAction.schema">
-<code class="descname">schema</code><em class="property"> = {'properties': {'ports': {'type': 'string'}, 'direction': {'enum': ['Inbound', 'Outbound'], 'type': 'string'}, 'exceptPorts': {'type': 'string'}, 'type': {'enum': []}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}}, 'required': ['type', 'direction'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.NetworkSecurityGroupPortsAction.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'properties': {'direction': {'enum': ['Inbound', 'Outbound'], 'type': 'string'}, 'exceptPorts': {'type': 'string'}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}, 'ports': {'type': 'string'}, 'type': {'enum': []}}, 'required': ['type', 'direction'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.NetworkSecurityGroupPortsAction.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1680,7 +1723,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.network_security_group.OpenRules.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, 'properties': {'ports': {'type': 'string'}, 'type': {u'enum': ['open']}, 'exceptPorts': {'type': 'string'}, 'direction': {'enum': ['Inbound', 'Outbound'], 'type': 'string'}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}}, 'required': [u'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.OpenRules.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'direction': {'enum': ['Inbound', 'Outbound'], 'type': 'string'}, 'exceptPorts': {'type': 'string'}, 'ipProtocol': {'enum': ['TCP', 'UDP', '*'], 'type': 'string'}, 'ports': {'type': 'string'}, 'type': {'enum': ['open']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.network_security_group.OpenRules.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1859,7 +1902,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.resourcegroup.DeleteResourceGroup.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['delete']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.resourcegroup.DeleteResourceGroup.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['delete']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.resourcegroup.DeleteResourceGroup.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1897,7 +1940,8 @@ type of azure resource.</p>
 <dl class="method">
 <dt id="c7n_azure.resources.resourcegroup.ResourceGroup.get_resources">
 <code class="descname">get_resources</code><span class="sig-paren">(</span><em>resource_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/resourcegroup.html#ResourceGroup.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.resourcegroup.ResourceGroup.get_resources" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve a set of resources by id.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="c7n_azure.resources.resourcegroup.ResourceGroup.resource_type">
@@ -2031,7 +2075,7 @@ type of azure resource.</p>
 <dd><p>Bases: <a class="reference internal" href="../aws/c7n.actions.html#c7n.actions.core.Action" title="c7n.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.core.Action</span></code></a></p>
 <dl class="attribute">
 <dt id="c7n_azure.resources.subscription.AddPolicy.policyDefinitionPrefix">
-<code class="descname">policyDefinitionPrefix</code><em class="property"> = u'/providers/Microsoft.Authorization/policyDefinitions/'</em><a class="headerlink" href="#c7n_azure.resources.subscription.AddPolicy.policyDefinitionPrefix" title="Permalink to this definition">¶</a></dt>
+<code class="descname">policyDefinitionPrefix</code><em class="property"> = '/providers/Microsoft.Authorization/policyDefinitions/'</em><a class="headerlink" href="#c7n_azure.resources.subscription.AddPolicy.policyDefinitionPrefix" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2041,12 +2085,12 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.subscription.AddPolicy.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'display_name': {u'type': u'string'}, 'definition_name': {u'type': u'string'}, 'scope': {u'type': u'string'}, u'type': {u'enum': [u'add-policy']}, 'name': {u'type': u'string'}}, u'required': [u'name', u'display_name', u'definition_name', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.subscription.AddPolicy.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'definition_name': {'type': 'string'}, 'display_name': {'type': 'string'}, 'name': {'type': 'string'}, 'scope': {'type': 'string'}, 'type': {'enum': ['add-policy']}}, 'required': ['name', 'display_name', 'definition_name', 'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.subscription.AddPolicy.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.subscription.AddPolicy.type">
-<code class="descname">type</code><em class="property"> = u'add-policy'</em><a class="headerlink" href="#c7n_azure.resources.subscription.AddPolicy.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'add-policy'</em><a class="headerlink" href="#c7n_azure.resources.subscription.AddPolicy.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2068,12 +2112,14 @@ type of azure resource.</p>
 <dl class="method">
 <dt id="c7n_azure.resources.subscription.Subscription.get_model">
 <code class="descname">get_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/subscription.html#Subscription.get_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.subscription.Subscription.get_model" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the resource meta-model.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n_azure.resources.subscription.Subscription.get_resources">
 <code class="descname">get_resources</code><span class="sig-paren">(</span><em>resource_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/subscription.html#Subscription.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.subscription.Subscription.get_resources" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve a set of resources by id.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="c7n_azure.resources.subscription.Subscription.resource_type">
@@ -2086,12 +2132,12 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.subscription.Subscription.resource_type.id">
-<code class="descname">id</code><em class="property"> = u'subscriptionId'</em><a class="headerlink" href="#c7n_azure.resources.subscription.Subscription.resource_type.id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">id</code><em class="property"> = 'subscriptionId'</em><a class="headerlink" href="#c7n_azure.resources.subscription.Subscription.resource_type.id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.subscription.Subscription.resource_type.name">
-<code class="descname">name</code><em class="property"> = u'displayName'</em><a class="headerlink" href="#c7n_azure.resources.subscription.Subscription.resource_type.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><em class="property"> = 'displayName'</em><a class="headerlink" href="#c7n_azure.resources.subscription.Subscription.resource_type.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2103,7 +2149,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.subscription.Subscription.type">
-<code class="descname">type</code><em class="property"> = u'subscription'</em><a class="headerlink" href="#c7n_azure.resources.subscription.Subscription.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'subscription'</em><a class="headerlink" href="#c7n_azure.resources.subscription.Subscription.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2117,7 +2163,7 @@ type of azure resource.</p>
 <dd><p>Bases: <a class="reference internal" href="../aws/c7n.filters.html#c7n.filters.core.ValueFilter" title="c7n.filters.core.ValueFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.ValueFilter</span></code></a></p>
 <dl class="attribute">
 <dt id="c7n_azure.resources.vm.InstanceViewFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'key': {u'type': u'string'}, u'default': {u'type': u'object'}, u'type': {u'enum': ['instance-view']}, u'value': {u'oneOf': [{u'type': u'array'}, {u'type': u'string'}, {u'type': u'boolean'}, {u'type': u'number'}, {u'type': u'null'}]}, u'value_type': {u'enum': [u'age', u'integer', u'expiration', u'normalize', u'size', u'cidr', u'cidr_size', u'swap', u'resource_count', u'expr', u'unique_size']}, u'value_from': {u'required': [u'url'], u'additionalProperties': u'False', u'type': u'object', u'properties': {u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}, u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}}}, u'op': {u'enum': [u'regex', u'not-equal', u'ne', u'gte', u'gt', u'eq', u'difference', u'lt', u'ni', u'ge', u'intersect', u'in', u'equal', u'lte', u'le', u'greater-than', u'less-than', u'contains', u'glob', u'not-in']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.InstanceViewFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'default': {'type': 'object'}, 'key': {'type': 'string'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'type': {'enum': ['instance-view']}, 'value': {'oneOf': [{'type': 'array'}, {'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}]}, 'value_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'value_type': {'enum': ['age', 'integer', 'expiration', 'normalize', 'size', 'cidr', 'cidr_size', 'swap', 'resource_count', 'expr', 'unique_size']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.InstanceViewFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2143,7 +2189,7 @@ type of azure resource.</p>
 
 <dl class="attribute">
 <dt id="c7n_azure.resources.vm.NetworkInterfaceFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'key': {u'type': u'string'}, u'default': {u'type': u'object'}, u'type': {u'enum': ['network-interface']}, u'value': {u'oneOf': [{u'type': u'array'}, {u'type': u'string'}, {u'type': u'boolean'}, {u'type': u'number'}, {u'type': u'null'}]}, u'value_type': {u'enum': [u'age', u'integer', u'expiration', u'normalize', u'size', u'cidr', u'cidr_size', u'swap', u'resource_count', u'expr', u'unique_size']}, u'value_from': {u'required': [u'url'], u'additionalProperties': u'False', u'type': u'object', u'properties': {u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}, u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}}}, u'op': {u'enum': [u'regex', u'not-equal', u'ne', u'gte', u'gt', u'eq', u'difference', u'lt', u'ni', u'ge', u'intersect', u'in', u'equal', u'lte', u'le', u'greater-than', u'less-than', u'contains', u'glob', u'not-in']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.NetworkInterfaceFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'default': {'type': 'object'}, 'key': {'type': 'string'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'type': {'enum': ['network-interface']}, 'value': {'oneOf': [{'type': 'array'}, {'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}]}, 'value_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'value_type': {'enum': ['age', 'integer', 'expiration', 'normalize', 'size', 'cidr', 'cidr_size', 'swap', 'resource_count', 'expr', 'unique_size']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.NetworkInterfaceFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2214,14 +2260,9 @@ type of azure resource.</p>
 <dt id="c7n_azure.resources.vm.VmPowerOffAction">
 <em class="property">class </em><code class="descclassname">c7n_azure.resources.vm.</code><code class="descname">VmPowerOffAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/vm.html#VmPowerOffAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.vm.VmPowerOffAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n_azure.html#c7n_azure.actions.AzureBaseAction" title="c7n_azure.actions.AzureBaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_azure.actions.AzureBaseAction</span></code></a></p>
-<dl class="method">
-<dt id="c7n_azure.resources.vm.VmPowerOffAction.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>vms</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/vm.html#VmPowerOffAction.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.vm.VmPowerOffAction.process_resource_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="c7n_azure.resources.vm.VmPowerOffAction.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['poweroff']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.VmPowerOffAction.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['poweroff']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.VmPowerOffAction.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2235,14 +2276,9 @@ type of azure resource.</p>
 <dt id="c7n_azure.resources.vm.VmRestartAction">
 <em class="property">class </em><code class="descclassname">c7n_azure.resources.vm.</code><code class="descname">VmRestartAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/vm.html#VmRestartAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.vm.VmRestartAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n_azure.html#c7n_azure.actions.AzureBaseAction" title="c7n_azure.actions.AzureBaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_azure.actions.AzureBaseAction</span></code></a></p>
-<dl class="method">
-<dt id="c7n_azure.resources.vm.VmRestartAction.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>vms</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/vm.html#VmRestartAction.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.vm.VmRestartAction.process_resource_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="c7n_azure.resources.vm.VmRestartAction.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['restart']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.VmRestartAction.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['restart']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.VmRestartAction.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2256,14 +2292,9 @@ type of azure resource.</p>
 <dt id="c7n_azure.resources.vm.VmStartAction">
 <em class="property">class </em><code class="descclassname">c7n_azure.resources.vm.</code><code class="descname">VmStartAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/vm.html#VmStartAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.vm.VmStartAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n_azure.html#c7n_azure.actions.AzureBaseAction" title="c7n_azure.actions.AzureBaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_azure.actions.AzureBaseAction</span></code></a></p>
-<dl class="method">
-<dt id="c7n_azure.resources.vm.VmStartAction.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>vms</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/vm.html#VmStartAction.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.vm.VmStartAction.process_resource_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="c7n_azure.resources.vm.VmStartAction.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['start']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.VmStartAction.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['start']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.VmStartAction.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2277,14 +2308,9 @@ type of azure resource.</p>
 <dt id="c7n_azure.resources.vm.VmStopAction">
 <em class="property">class </em><code class="descclassname">c7n_azure.resources.vm.</code><code class="descname">VmStopAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/vm.html#VmStopAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.vm.VmStopAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n_azure.html#c7n_azure.actions.AzureBaseAction" title="c7n_azure.actions.AzureBaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_azure.actions.AzureBaseAction</span></code></a></p>
-<dl class="method">
-<dt id="c7n_azure.resources.vm.VmStopAction.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>vms</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_azure/resources/vm.html#VmStopAction.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_azure.resources.vm.VmStopAction.process_resource_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="c7n_azure.resources.vm.VmStopAction.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['stop']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.VmStopAction.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['stop']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_azure.resources.vm.VmStopAction.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2465,7 +2491,7 @@ type of azure resource.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -2484,21 +2510,15 @@ type of azure resource.</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

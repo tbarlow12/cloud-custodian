@@ -6,19 +6,12 @@ Subpackages
 
 .. toctree::
 
+    c7n_gcp.actions
     c7n_gcp.filters
     c7n_gcp.resources
 
 Submodules
 ----------
-
-c7n\_gcp.actions module
------------------------
-
-.. automodule:: c7n_gcp.actions
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 c7n\_gcp.client module
 ----------------------

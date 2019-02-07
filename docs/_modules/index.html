@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -213,6 +216,7 @@
 <li><a href="c7n/filters/offhours.html">c7n.filters.offhours</a></li>
 <li><a href="c7n/filters/related.html">c7n.filters.related</a></li>
 <li><a href="c7n/filters/revisions.html">c7n.filters.revisions</a></li>
+<li><a href="c7n/filters/securityhub.html">c7n.filters.securityhub</a></li>
 <li><a href="c7n/filters/vpc.html">c7n.filters.vpc</a></li>
 <li><a href="c7n/handler.html">c7n.handler</a></li>
 <li><a href="c7n/log.html">c7n.log</a></li>
@@ -235,6 +239,7 @@
 <li><a href="c7n/resources/asg.html">c7n.resources.asg</a></li>
 <li><a href="c7n/resources/aws.html">c7n.resources.aws</a></li>
 <li><a href="c7n/resources/awslambda.html">c7n.resources.awslambda</a></li>
+<li><a href="c7n/resources/backup.html">c7n.resources.backup</a></li>
 <li><a href="c7n/resources/batch.html">c7n.resources.batch</a></li>
 <li><a href="c7n/resources/cfn.html">c7n.resources.cfn</a></li>
 <li><a href="c7n/resources/cloudfront.html">c7n.resources.cloudfront</a></li>
@@ -247,6 +252,7 @@
 <li><a href="c7n/resources/datapipeline.html">c7n.resources.datapipeline</a></li>
 <li><a href="c7n/resources/directconnect.html">c7n.resources.directconnect</a></li>
 <li><a href="c7n/resources/directory.html">c7n.resources.directory</a></li>
+<li><a href="c7n/resources/dlm.html">c7n.resources.dlm</a></li>
 <li><a href="c7n/resources/dms.html">c7n.resources.dms</a></li>
 <li><a href="c7n/resources/dynamodb.html">c7n.resources.dynamodb</a></li>
 <li><a href="c7n/resources/ebs.html">c7n.resources.ebs</a></li>
@@ -268,6 +274,7 @@
 <li><a href="c7n/resources/hsm.html">c7n.resources.hsm</a></li>
 <li><a href="c7n/resources/iam.html">c7n.resources.iam</a></li>
 <li><a href="c7n/resources/iot.html">c7n.resources.iot</a></li>
+<li><a href="c7n/resources/kafka.html">c7n.resources.kafka</a></li>
 <li><a href="c7n/resources/kinesis.html">c7n.resources.kinesis</a></li>
 <li><a href="c7n/resources/kms.html">c7n.resources.kms</a></li>
 <li><a href="c7n/resources/ml.html">c7n.resources.ml</a></li>
@@ -324,6 +331,7 @@
 <li><a href="c7n_azure/resources/batch.html">c7n_azure.resources.batch</a></li>
 <li><a href="c7n_azure/resources/cdn.html">c7n_azure.resources.cdn</a></li>
 <li><a href="c7n_azure/resources/cognitive_service.html">c7n_azure.resources.cognitive_service</a></li>
+<li><a href="c7n_azure/resources/container_registry.html">c7n_azure.resources.container_registry</a></li>
 <li><a href="c7n_azure/resources/container_service.html">c7n_azure.resources.container_service</a></li>
 <li><a href="c7n_azure/resources/cosmos_db.html">c7n_azure.resources.cosmos_db</a></li>
 <li><a href="c7n_azure/resources/data_factory.html">c7n_azure.resources.data_factory</a></li>
@@ -351,7 +359,8 @@
 <li><a href="c7n_azure/storage_utils.html">c7n_azure.storage_utils</a></li>
 <li><a href="c7n_azure/tags.html">c7n_azure.tags</a></li>
 <li><a href="c7n_azure/utils.html">c7n_azure.utils</a></li>
-<li><a href="c7n_gcp/actions.html">c7n_gcp.actions</a></li>
+<li><a href="c7n_gcp/actions/core.html">c7n_gcp.actions.core</a></li>
+<li><a href="c7n_gcp/actions/cscc.html">c7n_gcp.actions.cscc</a></li>
 <li><a href="c7n_gcp/client.html">c7n_gcp.client</a></li>
 <li><a href="c7n_gcp/entry.html">c7n_gcp.entry</a></li>
 <li><a href="c7n_gcp/handler.html">c7n_gcp.handler</a></li>
@@ -360,10 +369,12 @@
 <li><a href="c7n_gcp/policy.html">c7n_gcp.policy</a></li>
 <li><a href="c7n_gcp/provider.html">c7n_gcp.provider</a></li>
 <li><a href="c7n_gcp/query.html">c7n_gcp.query</a></li>
+<li><a href="c7n_gcp/resources/bigquery.html">c7n_gcp.resources.bigquery</a></li>
 <li><a href="c7n_gcp/resources/build.html">c7n_gcp.resources.build</a></li>
 <li><a href="c7n_gcp/resources/compute.html">c7n_gcp.resources.compute</a></li>
 <li><a href="c7n_gcp/resources/function.html">c7n_gcp.resources.function</a></li>
 <li><a href="c7n_gcp/resources/gke.html">c7n_gcp.resources.gke</a></li>
+<li><a href="c7n_gcp/resources/iam.html">c7n_gcp.resources.iam</a></li>
 <li><a href="c7n_gcp/resources/logging.html">c7n_gcp.resources.logging</a></li>
 <li><a href="c7n_gcp/resources/network.html">c7n_gcp.resources.network</a></li>
 <li><a href="c7n_gcp/resources/pubsub.html">c7n_gcp.resources.pubsub</a></li>
@@ -372,7 +383,6 @@
 <li><a href="c7n_gcp/resources/source.html">c7n_gcp.resources.source</a></li>
 <li><a href="c7n_gcp/resources/sql.html">c7n_gcp.resources.sql</a></li>
 <li><a href="c7n_gcp/resources/storage.html">c7n_gcp.resources.storage</a></li>
-<li><a href="collections.html">collections</a></li>
 <li><a href="concurrent/futures/thread.html">concurrent.futures.thread</a></li>
 <li><a href="jmespath/parser.html">jmespath.parser</a></li>
 <li><a href="logging.html">logging</a></li>
@@ -388,7 +398,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -407,21 +417,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="../_static/js/expand.js"></script>
+    
 
   
 

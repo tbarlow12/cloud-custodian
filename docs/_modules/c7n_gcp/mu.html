@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -213,6 +216,9 @@
 <span class="kn">from</span> <span class="nn">googleapiclient.errors</span> <span class="k">import</span> <span class="n">HttpError</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;c7n_gcp.mu&#39;</span><span class="p">)</span>
+
+
+<span class="n">DEFAULT_REGION</span> <span class="o">=</span> <span class="s1">&#39;us-central1&#39;</span>
 
 
 <div class="viewcode-block" id="custodian_archive"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.custodian_archive">[docs]</a><span class="k">def</span> <span class="nf">custodian_archive</span><span class="p">(</span><span class="n">packages</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -408,6 +414,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;memory-size&#39;</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">service_account</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;service-account&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">runtime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runtime&#39;</span><span class="p">,</span> <span class="s1">&#39;python37&#39;</span><span class="p">)</span>
 
@@ -454,6 +464,9 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_instances</span><span class="p">:</span>
             <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;maxInstances&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_instances</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_account</span><span class="p">:</span>
+            <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;serviceAccountEmail&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_account</span>
+
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
             <span class="n">conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">conf</span></div></div>
@@ -471,12 +484,20 @@
 
 <span class="s2">def run(event, context=None):</span>
 <span class="s2">    logging.info(&quot;starting function execution&quot;)</span>
-<span class="s2">    event = json.loads(base64.b64decode(event[&#39;data&#39;]).decode(&#39;utf-8&#39;))</span>
+
+<span class="s2">    trigger_type = os.environ.get(&#39;FUNCTION_TRIGGER_TYPE&#39;, &#39;&#39;)</span>
+<span class="s2">    if trigger_type == &#39;HTTP_TRIGGER&#39;:</span>
+<span class="s2">        event = {&#39;request&#39;: event}</span>
+<span class="s2">    else:</span>
+<span class="s2">        event = json.loads(base64.b64decode(event[&#39;data&#39;]).decode(&#39;utf-8&#39;))</span>
 <span class="s2">    print(&quot;Event: </span><span class="si">%s</span><span class="s2">&quot; % (event,))</span>
+
 <span class="s2">    try:</span>
 <span class="s2">        from c7n_gcp.handler import run</span>
 <span class="s2">        result = run(event, context)</span>
 <span class="s2">        logging.info(&quot;function execution complete&quot;)</span>
+<span class="s2">        if trigger_type == &#39;HTTP_TRIGGER&#39;:</span>
+<span class="s2">            return json.dumps(result), 200, ((&#39;Content-Type&#39;, &#39;application/json&#39;),)</span>
 <span class="s2">        return result</span>
 <span class="s2">    except Exception as e:</span>
 <span class="s2">        traceback.print_exc()</span>
@@ -519,6 +540,10 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prefix&#39;</span><span class="p">,</span> <span class="s1">&#39;custodian-auto-&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EventSource.add"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.EventSource.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Default no-op</span>
@@ -626,10 +651,123 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ensure_topic</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PubSubSource.remove"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.PubSubSource.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;topic&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;custodian-auto&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;topic&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">):</span>
             <span class="k">return</span>
         <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;topic&#39;</span><span class="p">,</span> <span class="s1">&#39;v1&#39;</span><span class="p">,</span> <span class="s1">&#39;projects.topics&#39;</span><span class="p">)</span>
         <span class="n">client</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;topic&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_topic_param</span><span class="p">()})</span></div></div>
+
+
+<div class="viewcode-block" id="PeriodicEvent"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.PeriodicEvent">[docs]</a><span class="k">class</span> <span class="nc">PeriodicEvent</span><span class="p">(</span><span class="n">EventSource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Periodic serverless execution.</span>
+
+<span class="sd">    Supports both http and pub/sub triggers.</span>
+
+<span class="sd">    Note periodic requires the setup of app engine and is restricted</span>
+<span class="sd">    to app engine locations.</span>
+<span class="sd">    https://cloud.google.com/scheduler/docs/setup</span>
+
+<span class="sd">    Schedule can be specified in either cron syntax or app engine schedule expression.</span>
+<span class="sd">    https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules</span>
+
+<span class="sd">    Examples of schedule expressions.</span>
+<span class="sd">    https://cloud.google.com/appengine/docs/standard/python/config/cronref</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">target_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;target-type&#39;</span><span class="p">,</span> <span class="s1">&#39;http&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PeriodicEvent.get_config"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.PeriodicEvent.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_target</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="n">func</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PeriodicEvent.add"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.PeriodicEvent.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_target</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="n">target</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_job_config</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+            <span class="s1">&#39;cloudscheduler&#39;</span><span class="p">,</span> <span class="s1">&#39;v1beta1&#39;</span><span class="p">,</span> <span class="s1">&#39;projects.locations.jobs&#39;</span><span class="p">)</span>
+
+        <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diff_job</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">job</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">delta</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;update periodic function - </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">delta</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span>
+                <span class="s1">&#39;patch&#39;</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">job</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;updateMask&#39;</span><span class="p">:</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">delta</span><span class="p">),</span>
+                    <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="n">job</span><span class="p">})</span>
+        <span class="k">elif</span> <span class="n">delta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span>
+            <span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="s1">&#39;projects/</span><span class="si">{}</span><span class="s1">/locations/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_default_project</span><span class="p">(),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="n">DEFAULT_REGION</span><span class="p">)),</span>
+                <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="n">job</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="PeriodicEvent.remove"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.PeriodicEvent.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_target</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="n">target</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_job_config</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">job</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+            <span class="s1">&#39;cloudscheduler&#39;</span><span class="p">,</span> <span class="s1">&#39;v1beta1&#39;</span><span class="p">,</span> <span class="s1">&#39;projects.locations.jobs&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">job</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]})</span></div>
+
+    <span class="c1"># Periodic impl</span>
+
+<div class="viewcode-block" id="PeriodicEvent.diff_job"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.PeriodicEvent.diff_job">[docs]</a>    <span class="k">def</span> <span class="nf">diff_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">target_job</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">job</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">target_job</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]})</span>
+        <span class="k">except</span> <span class="n">HttpError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="mi">404</span><span class="p">:</span>
+                <span class="k">raise</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">delta_resource</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">target_job</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;httpTarget&#39;</span><span class="p">,</span> <span class="s1">&#39;pubSubTarget&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">delta</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">delta</span></div>
+
+<div class="viewcode-block" id="PeriodicEvent.get_target"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.PeriodicEvent.get_target">[docs]</a>    <span class="k">def</span> <span class="nf">get_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_type</span> <span class="o">==</span> <span class="s1">&#39;http&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HTTPEvent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_type</span> <span class="o">==</span> <span class="s1">&#39;pubsub&#39;</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">config</span><span class="p">[</span><span class="s1">&#39;topic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">PubSubSource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown periodic target: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PeriodicEvent.get_job_config"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.PeriodicEvent.get_job_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_job_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;projects/</span><span class="si">{}</span><span class="s2">/locations/</span><span class="si">{}</span><span class="s2">/jobs/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_default_project</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="n">DEFAULT_REGION</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">name</span><span class="p">))),</span>
+            <span class="s1">&#39;schedule&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;schedule&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;timeZone&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tz&#39;</span><span class="p">,</span> <span class="s1">&#39;Etc/UTC&#39;</span><span class="p">)}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_type</span> <span class="o">==</span> <span class="s1">&#39;http&#39;</span><span class="p">:</span>
+            <span class="n">job</span><span class="p">[</span><span class="s1">&#39;httpTarget&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;uri&#39;</span><span class="p">:</span> <span class="s1">&#39;https://</span><span class="si">{}</span><span class="s1">-</span><span class="si">{}</span><span class="s1">.cloudfunctions.net/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="n">DEFAULT_REGION</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_default_project</span><span class="p">(),</span>
+                    <span class="n">func</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_type</span> <span class="o">==</span> <span class="s1">&#39;pubsub&#39;</span><span class="p">:</span>
+            <span class="n">job</span><span class="p">[</span><span class="s1">&#39;pubsubTarget&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;topicName&#39;</span><span class="p">:</span> <span class="n">target</span><span class="o">.</span><span class="n">get_topic_param</span><span class="p">(),</span>
+            <span class="p">}</span>
+        <span class="k">return</span> <span class="n">job</span></div></div>
 
 
 <span class="n">LogInfo</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;LogInfo&#39;</span><span class="p">,</span> <span class="s1">&#39;name scope_type scope_id id&#39;</span><span class="p">)</span>
@@ -738,7 +876,7 @@
 
 <div class="viewcode-block" id="LogSubscriber.remove"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.mu.LogSubscriber.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Remove any provisioned log sink if auto created&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;custodian-auto&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">):</span>
             <span class="k">return</span>
         <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_log</span><span class="p">())</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">sink_path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sink</span><span class="p">()</span>
@@ -777,8 +915,8 @@
         <span class="n">log_filter</span> <span class="o">+=</span> <span class="s2">&quot; AND protoPayload.methodName = (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="s1">&#39; OR &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;methods&#39;</span><span class="p">]]))</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;topic&#39;</span><span class="p">:</span> <span class="s1">&#39;custodian-auto-audit-</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">func</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;custodian-auto-audit-</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">func</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;topic&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">audit-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">audit-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
             <span class="s1">&#39;log&#39;</span><span class="p">:</span> <span class="n">log_name</span><span class="p">,</span>
             <span class="s1">&#39;filter&#39;</span><span class="p">:</span> <span class="n">log_filter</span><span class="p">}</span></div>
 
@@ -802,7 +940,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -821,21 +959,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

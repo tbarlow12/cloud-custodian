@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -648,7 +651,8 @@
         <span class="c1"># As soon as we learn location (which generally works)</span>
         <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;Location&#39;</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">b_location</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LocationConstraint&#39;</span><span class="p">)</span>
-            <span class="c1"># Location == region for all cases but EU per https://goo.gl/iXdpnl</span>
+            <span class="c1"># Location == region for all cases but EU</span>
+            <span class="c1"># https://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketGETlocation.html</span>
             <span class="k">if</span> <span class="n">b_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">b_location</span> <span class="o">=</span> <span class="s2">&quot;us-east-1&quot;</span>
             <span class="k">elif</span> <span class="n">b_location</span> <span class="o">==</span> <span class="s1">&#39;EU&#39;</span><span class="p">:</span>
@@ -769,11 +773,14 @@
 <div class="viewcode-block" id="S3CrossAccountFilter.get_accounts"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.S3CrossAccountFilter.get_accounts">[docs]</a>    <span class="k">def</span> <span class="nf">get_accounts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;add in elb access by default</span>
 
-<span class="sd">        ELB Accounts by region http://goo.gl/a8MXxd</span>
+<span class="sd">        ELB Accounts by region</span>
+<span class="sd">         https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-access-logs.html</span>
 
-<span class="sd">        Redshift Accounts by region https://goo.gl/MKWPTT</span>
+<span class="sd">        Redshift Accounts by region</span>
+<span class="sd">         https://docs.aws.amazon.com/redshift/latest/mgmt/db-auditing.html#rs-db-auditing-cloud-trail-rs-acct-ids</span>
 
-<span class="sd">        Cloudtrail Accounts by region https://goo.gl/kWQk9D</span>
+<span class="sd">        Cloudtrail Accounts by region</span>
+<span class="sd">         https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-supported-regions.html</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">accounts</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">S3CrossAccountFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_accounts</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">accounts</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
@@ -923,7 +930,7 @@
         <span class="n">owner</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Acl&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Owner&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">resource</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;AwsS3Bucket&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:::</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:s3:::</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">]),</span>
             <span class="s2">&quot;Region&quot;</span><span class="p">:</span> <span class="n">get_region</span><span class="p">(</span><span class="n">r</span><span class="p">),</span>
             <span class="s2">&quot;Tags&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">]:</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Tags&quot;</span><span class="p">,</span> <span class="p">[])},</span>
             <span class="s2">&quot;Details&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;AwsS3Bucket&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;OwnerId&quot;</span><span class="p">:</span> <span class="n">owner</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">)}}</span>
@@ -1432,7 +1439,7 @@
 
 <span class="sd">    Target bucket ACL must allow for WRITE and READ_ACP Permissions</span>
 <span class="sd">    Not specifying a target_prefix will default to the current bucket name.</span>
-<span class="sd">    http://goo.gl/PiWWU2</span>
+<span class="sd">    https://docs.aws.amazon.com/AmazonS3/latest/dev/enable-logging-programming.html</span>
 
 <span class="sd">    :example:</span>
 
@@ -1473,7 +1480,7 @@
 
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
             <span class="n">client</span> <span class="o">=</span> <span class="n">bucket_client</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-            <span class="n">is_logging</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;Logging&#39;</span><span class="p">])</span>
+            <span class="n">is_logging</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Logging&#39;</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">enabled</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_logging</span><span class="p">:</span>
                 <span class="n">variables</span> <span class="o">=</span> <span class="p">{</span>
@@ -2212,7 +2219,7 @@
     <span class="k">def</span> <span class="nf">get_s3_bucket_locations</span><span class="p">(</span><span class="n">buckets</span><span class="p">,</span> <span class="n">self_log</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;return (bucket_name, prefix) for all s3 logging targets&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buckets</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="s1">&#39;Logging&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Logging&#39;</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">self_log</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">b</span><span class="p">[</span><span class="s1">&#39;Logging&#39;</span><span class="p">][</span><span class="s1">&#39;TargetBucket&#39;</span><span class="p">]:</span>
                         <span class="k">continue</span>
@@ -2371,7 +2378,7 @@
 <span class="sd">                    value: us-east-1</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BucketTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.BucketTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+<div class="viewcode-block" id="BucketTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.BucketTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
         <span class="n">modify_bucket_tags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span></div></div>
 
 
@@ -2397,10 +2404,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
-        <span class="s1">&#39;mark-for-op&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">TagDelayedAction</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
-
-<div class="viewcode-block" id="MarkBucketForOp.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.MarkBucketForOp.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">modify_bucket_tags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span></div></div>
+        <span class="s1">&#39;mark-for-op&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">TagDelayedAction</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RemoveBucketTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.RemoveBucketTag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;unmark&#39;</span><span class="p">)</span>
@@ -2424,7 +2428,7 @@
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
         <span class="s1">&#39;unmark&#39;</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">,),</span> <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">})</span>
 
-<div class="viewcode-block" id="RemoveBucketTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.RemoveBucketTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+<div class="viewcode-block" id="RemoveBucketTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.RemoveBucketTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
         <span class="n">modify_bucket_tags</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">remove_tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
 
@@ -2496,6 +2500,7 @@
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
                 <span class="n">b</span> <span class="o">=</span> <span class="n">futures</span><span class="p">[</span><span class="n">f</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
+                    <span class="n">b</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;c7n:DeniedMethods&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;GetInventoryConfiguration&#39;</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                         <span class="s2">&quot;Error processing bucket: </span><span class="si">%s</span><span class="s2"> error: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="n">b</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">],</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span>
@@ -2757,7 +2762,8 @@
 <span class="k">class</span> <span class="nc">Lifecycle</span><span class="p">(</span><span class="n">BucketActionBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action applies a lifecycle policy to versioned S3 buckets</span>
 
-<span class="sd">    The schema to supply to the rule follows the schema here: goo.gl/yULzNc</span>
+<span class="sd">    The schema to supply to the rule follows the schema here:</span>
+<span class="sd">     https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.put_bucket_lifecycle_configuration</span>
 
 <span class="sd">    To delete a lifecycle rule, supply Status=absent</span>
 
@@ -3179,7 +3185,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -3198,21 +3204,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -204,6 +207,8 @@
 <span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">bytes</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">as_completed</span>
 
@@ -215,6 +220,8 @@
 <span class="kn">from</span> <span class="nn">msrestazure.tools</span> <span class="k">import</span> <span class="n">parse_resource_id</span>
 
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">chunks</span>
+
+<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span>
 
 
 <div class="viewcode-block" id="ResourceIdParser"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.utils.ResourceIdParser">[docs]</a><span class="k">class</span> <span class="nc">ResourceIdParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -284,36 +291,79 @@
     <span class="k">return</span> <span class="n">NameValuePair</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span></div>
 
 
+<span class="n">send_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;custodian.azure.utils.ServiceClient.send&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="custodian_azure_send_override"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.utils.custodian_azure_send_override">[docs]</a><span class="k">def</span> <span class="nf">custodian_azure_send_override</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Overrides ServiceClient.send() function to implement retries &amp; log headers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">retries</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">max_retries</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">while</span> <span class="n">retries</span> <span class="o">&lt;</span> <span class="n">max_retries</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orig_send</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">send_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;x-ms-ratelimit&#39;</span><span class="p">):</span>
+                <span class="n">send_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="c1"># Retry codes from urllib3/util/retry.py</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">413</span><span class="p">,</span> <span class="mi">429</span><span class="p">,</span> <span class="mi">503</span><span class="p">]:</span>
+            <span class="n">retry_after</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">StringUtils</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="s1">&#39;retry-after&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+                    <span class="n">retry_after</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">retry_after</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">retry_after</span> <span class="o">&lt;</span> <span class="n">constants</span><span class="o">.</span><span class="n">DEFAULT_MAX_RETRY_AFTER</span><span class="p">:</span>
+                <span class="n">send_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Received retriable error code </span><span class="si">%i</span><span class="s1">. Retry-After: </span><span class="si">%i</span><span class="s1">&#39;</span>
+                                    <span class="o">%</span> <span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">retry_after</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">retry_after</span><span class="p">)</span>
+                <span class="n">retries</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">send_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Received throttling error, retry time is </span><span class="si">%i</span><span class="s2">&quot;</span>
+                                  <span class="s2">&quot;(retry only if &lt; </span><span class="si">%i</span><span class="s2"> seconds).&quot;</span>
+                                  <span class="o">%</span> <span class="p">(</span><span class="n">retry_after</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">DEFAULT_MAX_RETRY_AFTER</span><span class="p">))</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">response</span></div>
+
+
 <div class="viewcode-block" id="ThreadHelper"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.utils.ThreadHelper">[docs]</a><span class="k">class</span> <span class="nc">ThreadHelper</span><span class="p">:</span>
 
     <span class="n">disable_multi_threading</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="ThreadHelper.execute_in_parallel"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.utils.ThreadHelper.execute_in_parallel">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">execute_in_parallel</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="n">execution_method</span><span class="p">,</span> <span class="n">executor_factory</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">execute_in_parallel</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">execution_method</span><span class="p">,</span> <span class="n">executor_factory</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span>
                             <span class="n">max_workers</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DEFAULT_MAX_THREAD_WORKERS</span><span class="p">,</span>
                             <span class="n">chunk_size</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DEFAULT_CHUNK_SIZE</span><span class="p">):</span>
         <span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">exceptions</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">max_num_workers</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">ThreadHelper</span><span class="o">.</span><span class="n">disable_multi_threading</span> <span class="k">else</span> <span class="n">max_workers</span>
+        <span class="k">if</span> <span class="n">ThreadHelper</span><span class="o">.</span><span class="n">disable_multi_threading</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">execution_method</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">exceptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">resource_set</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">):</span>
+                    <span class="n">futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">execution_method</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">event</span><span class="p">))</span>
 
-        <span class="k">with</span> <span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">max_num_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">resource_set</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">):</span>
-                <span class="n">futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">execution_method</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                            <span class="s2">&quot;Execution failed with error: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span>
+                        <span class="n">exceptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+                            <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
-                    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                        <span class="s2">&quot;Execution failed with error: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span>
-                    <span class="n">exceptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span>
-                    <span class="k">continue</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
-                        <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">results</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">exceptions</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="n">results</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">exceptions</span><span class="p">))</span></div></div>
 
 
 <div class="viewcode-block" id="Math"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.utils.Math">[docs]</a><span class="k">class</span> <span class="nc">Math</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -489,6 +539,36 @@
                     <span class="n">ports</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">IsAllowed</span>
 
         <span class="k">return</span> <span class="n">ports</span></div></div>
+
+
+<div class="viewcode-block" id="AppInsightsHelper"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.utils.AppInsightsHelper">[docs]</a><span class="k">class</span> <span class="nc">AppInsightsHelper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;custodian.azure.utils.AppInsightsHelper&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AppInsightsHelper.get_instrumentation_key"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.utils.AppInsightsHelper.get_instrumentation_key">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_instrumentation_key</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;//&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">AppInsightsHelper</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Bad format: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">url</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">AppInsightsHelper</span><span class="o">.</span><span class="n">_get_instrumentation_key</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_instrumentation_key</span><span class="p">(</span><span class="n">resource_group_name</span><span class="p">,</span> <span class="n">resource_name</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.session</span> <span class="k">import</span> <span class="n">Session</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;azure.mgmt.applicationinsights.ApplicationInsightsManagementClient&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">insights</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">resource_group_name</span><span class="p">,</span> <span class="n">resource_name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">insights</span><span class="o">.</span><span class="n">instrumentation_key</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">AppInsightsHelper</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Failed to retrieve App Insights instrumentation key.&quot;</span>
+                                          <span class="s2">&quot;Resource Group name: </span><span class="si">%s</span><span class="s2">, App Insights name: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+                                          <span class="p">(</span><span class="n">resource_group_name</span><span class="p">,</span> <span class="n">resource_name</span><span class="p">))</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
 </pre></div>
 
            </div>
@@ -501,7 +581,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -520,21 +600,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

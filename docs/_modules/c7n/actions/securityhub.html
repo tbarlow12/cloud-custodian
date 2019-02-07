@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -199,6 +202,7 @@
 <span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
 <span class="c1"># See the License for the specific language governing permissions and</span>
 <span class="c1"># limitations under the License.</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">dateutil.tz</span> <span class="k">import</span> <span class="n">tzutc</span>
 
@@ -314,6 +318,7 @@
 
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;securityhub:BatchImportFindings&#39;</span><span class="p">,)</span>
 
+    <span class="n">schema_alias</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
         <span class="s2">&quot;post-finding&quot;</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;types&quot;</span><span class="p">],</span>
@@ -336,19 +341,103 @@
         <span class="p">},</span>
     <span class="p">)</span>
 
+    <span class="n">NEW_FINDING</span> <span class="o">=</span> <span class="s1">&#39;New&#39;</span>
+
+<div class="viewcode-block" id="PostFinding.get_finding_tag"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.PostFinding.get_finding_tag">[docs]</a>    <span class="k">def</span> <span class="nf">get_finding_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="n">finding_tag</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Tags&#39;</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="n">finding_key</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;c7n:FindingId&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="c1"># Support Tags as dictionary</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">tags</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">finding_key</span><span class="p">)</span>
+
+        <span class="c1"># Support Tags as list of {&#39;Key&#39;: &#39;Value&#39;}</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">]</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">finding_key</span><span class="p">:</span>
+                <span class="n">finding_tag</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="n">finding_tag</span></div>
+
+<div class="viewcode-block" id="PostFinding.group_resources"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.PostFinding.group_resources">[docs]</a>    <span class="k">def</span> <span class="nf">group_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">grouped_resources</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">finding_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_finding_tag</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">NEW_FINDING</span>
+            <span class="n">grouped_resources</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">finding_tag</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">grouped_resources</span></div>
+
 <div class="viewcode-block" id="PostFinding.process"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.PostFinding.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">region_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">)</span>
         <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;securityhub&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">resource_set</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-            <span class="n">finding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_finding</span><span class="p">(</span><span class="n">resource_set</span><span class="p">)</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">batch_import_findings</span><span class="p">(</span><span class="n">Findings</span><span class="o">=</span><span class="p">[</span><span class="n">finding</span><span class="p">])</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+                <span class="s2">&quot;securityhub&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">)</span>
 
-<div class="viewcode-block" id="PostFinding.get_finding"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.PostFinding.get_finding">[docs]</a>    <span class="k">def</span> <span class="nf">get_finding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">tzutc</span><span class="p">())</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">grouped_resources</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_resources</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">resource_set</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">(</span><span class="n">grouped_resources</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;Finding&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">NEW_FINDING</span><span class="p">:</span>
+                    <span class="n">finding_id</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">created_at</span> <span class="o">=</span> <span class="n">now</span>
+                    <span class="n">updated_at</span> <span class="o">=</span> <span class="n">now</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">finding_id</span><span class="p">,</span> <span class="n">created_at</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_finding_tag</span><span class="p">(</span>
+                        <span class="n">resource_set</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">updated_at</span> <span class="o">=</span> <span class="n">now</span>
+
+                <span class="n">finding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_finding</span><span class="p">(</span>
+                    <span class="n">resource_set</span><span class="p">,</span> <span class="n">finding_id</span><span class="p">,</span> <span class="n">created_at</span><span class="p">,</span> <span class="n">updated_at</span><span class="p">)</span>
+                <span class="n">import_response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">batch_import_findings</span><span class="p">(</span>
+                    <span class="n">Findings</span><span class="o">=</span><span class="p">[</span><span class="n">finding</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">import_response</span><span class="p">[</span><span class="s1">&#39;FailedCount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;Failed&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">import_response</span><span class="p">[</span><span class="s1">&#39;FailedCount&#39;</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="s2">&quot;import_response=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">import_response</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">NEW_FINDING</span><span class="p">:</span>
+                    <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;New&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">resource_set</span><span class="p">)</span>
+                    <span class="c1"># Tag resources with new finding ids</span>
+                    <span class="n">tag_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">tag_action</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">tag_action</span><span class="p">({</span>
+                        <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="s1">&#39;c7n:FindingId&#39;</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                                <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">)),</span>
+                        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">finding</span><span class="p">[</span><span class="s1">&#39;Id&#39;</span><span class="p">],</span> <span class="n">created_at</span><span class="p">)},</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">resource_set</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;Update&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">resource_set</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;policy:</span><span class="si">%s</span><span class="s2"> securityhub </span><span class="si">%d</span><span class="s2"> findings resources </span><span class="si">%d</span><span class="s2"> new </span><span class="si">%d</span><span class="s2"> updated </span><span class="si">%d</span><span class="s2"> failed&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;Finding&#39;</span><span class="p">],</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;New&#39;</span><span class="p">],</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;Update&#39;</span><span class="p">],</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;Failed&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="PostFinding.get_finding"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.PostFinding.get_finding">[docs]</a>    <span class="k">def</span> <span class="nf">get_finding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">existing_finding_id</span><span class="p">,</span> <span class="n">created_at</span><span class="p">,</span> <span class="n">updated_at</span><span class="p">):</span>
         <span class="n">policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">resource_type</span>
 
-        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">tzutc</span><span class="p">())</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">existing_finding_id</span><span class="p">:</span>
+            <span class="n">finding_id</span> <span class="o">=</span> <span class="n">existing_finding_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">finding_id</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+                    <span class="n">policy</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span>
+                <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">])))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+                        <span class="s1">&#39;utf8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
         <span class="n">finding</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;SchemaVersion&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">FindingVersion</span><span class="p">,</span>
             <span class="s2">&quot;ProductArn&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:securityhub:</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">:product/</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -362,19 +451,10 @@
                 <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="n">policy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
             <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
             <span class="s2">&quot;Title&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
-            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
-                <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span>
-                <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span>
-                    <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">])))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-                        <span class="s2">&quot;utf8&quot;</span>
-                    <span class="p">)</span>
-                <span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span>
-            <span class="p">),</span>
+            <span class="s1">&#39;Id&#39;</span><span class="p">:</span> <span class="n">finding_id</span><span class="p">,</span>
             <span class="s2">&quot;GeneratorId&quot;</span><span class="p">:</span> <span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s2">&quot;CreatedAt&quot;</span><span class="p">:</span> <span class="n">now</span><span class="p">,</span>
-            <span class="s2">&quot;UpdatedAt&quot;</span><span class="p">:</span> <span class="n">now</span><span class="p">,</span>
+            <span class="s1">&#39;CreatedAt&#39;</span><span class="p">:</span> <span class="n">created_at</span><span class="p">,</span>
+            <span class="s1">&#39;UpdatedAt&#39;</span><span class="p">:</span> <span class="n">updated_at</span><span class="p">,</span>
             <span class="s2">&quot;RecordState&quot;</span><span class="p">:</span> <span class="s2">&quot;ACTIVE&quot;</span><span class="p">,</span>
         <span class="p">}</span>
 
@@ -424,6 +504,7 @@
             <span class="n">finding_resources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format_resource</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
         <span class="n">finding</span><span class="p">[</span><span class="s2">&quot;Resources&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">finding_resources</span>
         <span class="n">finding</span><span class="p">[</span><span class="s2">&quot;Types&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;types&quot;</span><span class="p">])</span>
+
         <span class="k">return</span> <span class="n">filter_empty</span><span class="p">(</span><span class="n">finding</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PostFinding.format_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.securityhub.PostFinding.format_resource">[docs]</a>    <span class="k">def</span> <span class="nf">format_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
@@ -492,7 +573,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -511,21 +592,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

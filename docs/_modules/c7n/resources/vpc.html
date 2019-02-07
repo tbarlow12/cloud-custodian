@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -290,6 +293,7 @@
            <span class="s1">&#39;set-op&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;or&#39;</span><span class="p">,</span> <span class="s1">&#39;and&#39;</span><span class="p">],</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;or&#39;</span><span class="p">},</span>
            <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;active&#39;</span><span class="p">]},</span>
            <span class="s1">&#39;deliver-status&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">,</span> <span class="s1">&#39;failure&#39;</span><span class="p">]},</span>
+           <span class="s1">&#39;destination&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
            <span class="s1">&#39;destination-type&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="s1">&#39;cloud-watch-logs&#39;</span><span class="p">]},</span>
            <span class="s1">&#39;traffic-type&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accept&#39;</span><span class="p">,</span> <span class="s1">&#39;reject&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">]},</span>
            <span class="s1">&#39;log-group&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}})</span>
@@ -313,6 +317,7 @@
         <span class="n">log_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;log-group&#39;</span><span class="p">)</span>
         <span class="n">traffic_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;traffic-type&#39;</span><span class="p">)</span>
         <span class="n">destination_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;destination-type&#39;</span><span class="p">)</span>
+        <span class="n">destination</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;destination&#39;</span><span class="p">)</span>
         <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
         <span class="n">delivery_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;deliver-status&#39;</span><span class="p">)</span>
         <span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;op&#39;</span><span class="p">,</span> <span class="s1">&#39;equal&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;equal&#39;</span> <span class="ow">and</span> <span class="n">operator</span><span class="o">.</span><span class="n">eq</span> <span class="ow">or</span> <span class="n">operator</span><span class="o">.</span><span class="n">ne</span>
@@ -321,7 +326,6 @@
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># looping over vpc resources</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resource_map</span><span class="p">:</span>
                 <span class="c1"># we didn&#39;t find a flow log for this vpc</span>
                 <span class="k">if</span> <span class="n">enabled</span><span class="p">:</span>
@@ -336,8 +340,10 @@
             <span class="k">if</span> <span class="n">enabled</span><span class="p">:</span>
                 <span class="n">fl_matches</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">flogs</span><span class="p">:</span>
-                    <span class="n">dest_match</span> <span class="o">=</span> <span class="p">(</span><span class="n">destination_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">op</span><span class="p">(</span>
+                    <span class="n">dest_type_match</span> <span class="o">=</span> <span class="p">(</span><span class="n">destination_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">op</span><span class="p">(</span>
                         <span class="n">fl</span><span class="p">[</span><span class="s1">&#39;LogDestinationType&#39;</span><span class="p">],</span> <span class="n">destination_type</span><span class="p">)</span>
+                    <span class="n">dest_match</span> <span class="o">=</span> <span class="p">(</span><span class="n">destination</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">op</span><span class="p">(</span>
+                        <span class="n">fl</span><span class="p">[</span><span class="s1">&#39;LogDestination&#39;</span><span class="p">],</span> <span class="n">destination</span><span class="p">)</span>
                     <span class="n">status_match</span> <span class="o">=</span> <span class="p">(</span><span class="n">status</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">op</span><span class="p">(</span><span class="n">fl</span><span class="p">[</span><span class="s1">&#39;FlowLogStatus&#39;</span><span class="p">],</span> <span class="n">status</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
                     <span class="n">delivery_status_match</span> <span class="o">=</span> <span class="p">(</span><span class="n">delivery_status</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">op</span><span class="p">(</span>
                         <span class="n">fl</span><span class="p">[</span><span class="s1">&#39;DeliverLogsStatus&#39;</span><span class="p">],</span> <span class="n">delivery_status</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
@@ -348,8 +354,8 @@
                     <span class="n">log_group_match</span> <span class="o">=</span> <span class="p">(</span><span class="n">log_group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">op</span><span class="p">(</span><span class="n">fl</span><span class="p">[</span><span class="s1">&#39;LogGroupName&#39;</span><span class="p">],</span> <span class="n">log_group</span><span class="p">)</span>
 
                     <span class="c1"># combine all conditions to check if flow log matches the spec</span>
-                    <span class="n">fl_match</span> <span class="o">=</span> <span class="p">(</span><span class="n">status_match</span> <span class="ow">and</span> <span class="n">traffic_type_match</span> <span class="ow">and</span>
-                                <span class="n">log_group_match</span> <span class="ow">and</span> <span class="n">dest_match</span> <span class="ow">and</span> <span class="n">delivery_status_match</span><span class="p">)</span>
+                    <span class="n">fl_match</span> <span class="o">=</span> <span class="p">(</span><span class="n">status_match</span> <span class="ow">and</span> <span class="n">traffic_type_match</span> <span class="ow">and</span> <span class="n">dest_match</span> <span class="ow">and</span>
+                                <span class="n">log_group_match</span> <span class="ow">and</span> <span class="n">dest_type_match</span> <span class="ow">and</span> <span class="n">delivery_status_match</span><span class="p">)</span>
                     <span class="n">fl_matches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fl_match</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">set_op</span> <span class="o">==</span> <span class="s1">&#39;or&#39;</span><span class="p">:</span>
@@ -911,7 +917,8 @@
 <span class="sd">    a broken vpc peering connection. Note this applies to VPC</span>
 <span class="sd">    Security groups only and will implicitly filter security groups.</span>
 
-<span class="sd">    AWS Docs - https://goo.gl/nSj7VG</span>
+<span class="sd">    AWS Docs:</span>
+<span class="sd">      https://docs.aws.amazon.com/vpc/latest/peering/vpc-peering-security-groups.html</span>
 
 <span class="sd">    :example:</span>
 
@@ -1053,17 +1060,18 @@
 <span class="sd">      - type: ingress</span>
 <span class="sd">        Ports: [22, 3389]</span>
 <span class="sd">        Cidr:</span>
-<span class="sd">          values:</span>
+<span class="sd">          value:</span>
 <span class="sd">            - &quot;0.0.0.0/0&quot;</span>
 <span class="sd">            - &quot;::/0&quot;</span>
 <span class="sd">          op: in</span>
+
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">perm_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span>
         <span class="s1">&#39;IpProtocol&#39;</span><span class="p">,</span> <span class="s1">&#39;FromPort&#39;</span><span class="p">,</span> <span class="s1">&#39;ToPort&#39;</span><span class="p">,</span> <span class="s1">&#39;UserIdGroupPairs&#39;</span><span class="p">,</span>
         <span class="s1">&#39;IpRanges&#39;</span><span class="p">,</span> <span class="s1">&#39;PrefixListIds&#39;</span><span class="p">))</span>
-    <span class="n">filter_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="s1">&#39;Cidr&#39;</span><span class="p">,</span> <span class="s1">&#39;CidrV6&#39;</span><span class="p">,</span> <span class="s1">&#39;Ports&#39;</span><span class="p">,</span> <span class="s1">&#39;OnlyPorts&#39;</span><span class="p">,</span> <span class="s1">&#39;SelfReference&#39;</span><span class="p">))</span>
+    <span class="n">filter_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="s1">&#39;Cidr&#39;</span><span class="p">,</span> <span class="s1">&#39;CidrV6&#39;</span><span class="p">,</span> <span class="s1">&#39;Ports&#39;</span><span class="p">,</span> <span class="s1">&#39;OnlyPorts&#39;</span><span class="p">,</span> <span class="s1">&#39;SelfReference&#39;</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">))</span>
     <span class="n">attrs</span> <span class="o">=</span> <span class="n">perm_attrs</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">filter_attrs</span><span class="p">)</span>
     <span class="n">attrs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;match-operator&#39;</span><span class="p">)</span>
 
@@ -1142,6 +1150,22 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">match_op</span><span class="p">(</span><span class="n">cidr_match</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="SGPermission.process_description"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.SGPermission.process_description">[docs]</a>    <span class="k">def</span> <span class="nf">process_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perm</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;Description&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Description&#39;</span><span class="p">])</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Description&#39;</span>
+
+        <span class="n">vf</span> <span class="o">=</span> <span class="n">ValueFilter</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">vf</span><span class="o">.</span><span class="n">annotate</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;Ipv6Ranges&#39;</span><span class="p">,</span> <span class="s1">&#39;IpRanges&#39;</span><span class="p">,</span> <span class="s1">&#39;UserIdGroupPairs&#39;</span><span class="p">,</span> <span class="s1">&#39;PrefixListIds&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">perm</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">perm</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="k">return</span> <span class="n">vf</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
 <div class="viewcode-block" id="SGPermission.process_self_reference"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.SGPermission.process_self_reference">[docs]</a>    <span class="k">def</span> <span class="nf">process_self_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perm</span><span class="p">,</span> <span class="n">sg_id</span><span class="p">):</span>
         <span class="n">found</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">ref_match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SelfReference&#39;</span><span class="p">)</span>
@@ -1188,6 +1212,7 @@
             <span class="n">perm_matches</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vfilters</span><span class="p">):</span>
                 <span class="n">perm_matches</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">perm</span><span class="p">))</span>
+            <span class="n">perm_matches</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_description</span><span class="p">(</span><span class="n">perm</span><span class="p">)</span>
             <span class="n">perm_matches</span><span class="p">[</span><span class="s1">&#39;ports&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_ports</span><span class="p">(</span><span class="n">perm</span><span class="p">)</span>
             <span class="n">perm_matches</span><span class="p">[</span><span class="s1">&#39;cidrs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_cidrs</span><span class="p">(</span><span class="n">perm</span><span class="p">)</span>
             <span class="n">perm_matches</span><span class="p">[</span><span class="s1">&#39;self-refs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_self_reference</span><span class="p">(</span><span class="n">perm</span><span class="p">,</span> <span class="n">sg_id</span><span class="p">)</span>
@@ -1398,6 +1423,12 @@
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;Groups[].GroupId&quot;</span></div>
 
 
+<div class="viewcode-block" id="InterfaceVpcFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.InterfaceVpcFilter">[docs]</a><span class="nd">@NetworkInterface</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;vpc&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">InterfaceVpcFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">VpcFilter</span><span class="p">):</span>
+
+    <span class="n">RelatedIdsExpress</span> <span class="o">=</span> <span class="s2">&quot;VpcId&quot;</span></div>
+
+
 <div class="viewcode-block" id="InterfaceModifyVpcSecurityGroups"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.InterfaceModifyVpcSecurityGroups">[docs]</a><span class="nd">@NetworkInterface</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;modify-security-groups&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">InterfaceModifyVpcSecurityGroups</span><span class="p">(</span><span class="n">ModifyVpcSecurityGroupsAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Remove security groups from an interface.</span>
@@ -1510,6 +1541,48 @@
                 <span class="n">r</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;c7n:matched-routes&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">matched</span><span class="p">)</span>
                 <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">results</span></div></div>
+
+
+<div class="viewcode-block" id="TransitGateway"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.TransitGateway">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;transit-gateway&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TransitGateway</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">QueryResourceManager</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TransitGateway.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.TransitGateway.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;ec2&#39;</span>
+        <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;describe_transit_gateways&#39;</span><span class="p">,</span> <span class="s1">&#39;TransitGateways&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;TransitGatewayId&#39;</span>
+        <span class="n">filter_name</span> <span class="o">=</span> <span class="s1">&#39;TransitGatewayIds&#39;</span>
+        <span class="n">filter_type</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span></div></div>
+
+
+<div class="viewcode-block" id="TransitGatewayAttachmentQuery"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.TransitGatewayAttachmentQuery">[docs]</a><span class="k">class</span> <span class="nc">TransitGatewayAttachmentQuery</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">ChildResourceQuery</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TransitGatewayAttachmentQuery.get_parent_parameters"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.TransitGatewayAttachmentQuery.get_parent_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_parent_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span> <span class="n">parent_key</span><span class="p">):</span>
+        <span class="n">merged_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">merged_params</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;Filters&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="n">parent_key</span><span class="p">,</span> <span class="s1">&#39;Values&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">parent_id</span><span class="p">]})</span>
+        <span class="k">return</span> <span class="n">merged_params</span></div></div>
+
+
+<div class="viewcode-block" id="TransitAttachmentSource"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.TransitAttachmentSource">[docs]</a><span class="nd">@query</span><span class="o">.</span><span class="n">sources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;transit-attachment&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TransitAttachmentSource</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">ChildDescribeSource</span><span class="p">):</span>
+
+    <span class="n">resource_query_factory</span> <span class="o">=</span> <span class="n">TransitGatewayAttachmentQuery</span></div>
+
+
+<div class="viewcode-block" id="TransitGatewayAttachment"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.TransitGatewayAttachment">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;transit-attachment&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TransitGatewayAttachment</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">ChildResourceManager</span><span class="p">):</span>
+
+    <span class="n">child_source</span> <span class="o">=</span> <span class="s1">&#39;transit-attachment&#39;</span>
+
+<div class="viewcode-block" id="TransitGatewayAttachment.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.TransitGatewayAttachment.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;ec2&#39;</span>
+        <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;describe_transit_gateway_attachments&#39;</span><span class="p">,</span> <span class="s1">&#39;TransitGatewayAttachments&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">parent_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;transit-gateway&#39;</span><span class="p">,</span> <span class="s1">&#39;transit-gateway-id&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;TransitGatewayAttachmentId&#39;</span>
+        <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">filter_type</span> <span class="o">=</span> <span class="kc">None</span></div></div>
 
 
 <div class="viewcode-block" id="PeeringConnection"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.PeeringConnection">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;peering-connection&#39;</span><span class="p">)</span>
@@ -1897,6 +1970,14 @@
         <span class="n">id_prefix</span> <span class="o">=</span> <span class="s2">&quot;vpce-&quot;</span></div></div>
 
 
+<div class="viewcode-block" id="EndpointCrossAccountFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.EndpointCrossAccountFilter">[docs]</a><span class="nd">@VpcEndpoint</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;cross-account&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">EndpointCrossAccountFilter</span><span class="p">(</span><span class="n">CrossAccountAccessFilter</span><span class="p">):</span>
+
+    <span class="n">policy_attribute</span> <span class="o">=</span> <span class="s1">&#39;PolicyDocument&#39;</span>
+    <span class="n">annotation_key</span> <span class="o">=</span> <span class="s1">&#39;c7n:CrossAccountViolations&#39;</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ec2:DescribeVpcEndpoints&#39;</span><span class="p">,)</span></div>
+
+
 <div class="viewcode-block" id="EndpointSecurityGroupFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.EndpointSecurityGroupFilter">[docs]</a><span class="nd">@VpcEndpoint</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;security-group&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">EndpointSecurityGroupFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">SecurityGroupFilter</span><span class="p">):</span>
 
@@ -1907,6 +1988,12 @@
 <span class="k">class</span> <span class="nc">EndpointSubnetFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">SubnetFilter</span><span class="p">):</span>
 
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;SubnetIds[]&quot;</span></div>
+
+
+<div class="viewcode-block" id="EndpointVpcFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.EndpointVpcFilter">[docs]</a><span class="nd">@VpcEndpoint</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;vpc&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">EndpointVpcFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">VpcFilter</span><span class="p">):</span>
+
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;VpcId&quot;</span></div>
 
 
 <div class="viewcode-block" id="KeyPair"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.KeyPair">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;key-pair&#39;</span><span class="p">)</span>
@@ -2047,7 +2134,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -2066,21 +2153,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

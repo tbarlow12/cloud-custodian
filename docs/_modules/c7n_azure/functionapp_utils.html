@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -199,22 +202,29 @@
 <span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
 <span class="c1"># See the License for the specific language governing permissions and</span>
 <span class="c1"># limitations under the License.</span>
-
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">azure.storage.blob</span> <span class="k">import</span> <span class="n">BlobPermissions</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.constants</span> <span class="k">import</span> \
+    <span class="n">FUNCTION_CONSUMPTION_BLOB_CONTAINER</span><span class="p">,</span> <span class="n">FUNCTION_PACKAGE_SAS_EXPIRY_DAYS</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.provisioning.app_insights</span> <span class="k">import</span> <span class="n">AppInsightsUnit</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.provisioning.app_service_plan</span> <span class="k">import</span> <span class="n">AppServicePlanUnit</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.provisioning.function_app</span> <span class="k">import</span> <span class="n">FunctionAppDeploymentUnit</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.provisioning.storage_account</span> <span class="k">import</span> <span class="n">StorageAccountUnit</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.session</span> <span class="k">import</span> <span class="n">Session</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.storage_utils</span> <span class="k">import</span> <span class="n">StorageUtilities</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.utils</span> <span class="k">import</span> <span class="n">ResourceIdParser</span><span class="p">,</span> <span class="n">StringUtils</span>
+<span class="kn">from</span> <span class="nn">msrestazure.azure_exceptions</span> <span class="k">import</span> <span class="n">CloudError</span>
 
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span>
 
-<span class="kn">from</span> <span class="nn">c7n_azure.provisioning.app_insights</span> <span class="k">import</span> <span class="n">AppInsightsUnit</span>
-<span class="kn">from</span> <span class="nn">c7n_azure.provisioning.app_service_plan</span> <span class="k">import</span> <span class="n">AppServicePlanUnit</span>
-<span class="kn">from</span> <span class="nn">c7n_azure.provisioning.storage_account</span> <span class="k">import</span> <span class="n">StorageAccountUnit</span>
-<span class="kn">from</span> <span class="nn">c7n_azure.provisioning.function_app</span> <span class="k">import</span> <span class="n">FunctionAppDeploymentUnit</span>
-<span class="kn">from</span> <span class="nn">c7n_azure.session</span> <span class="k">import</span> <span class="n">Session</span>
-<span class="kn">from</span> <span class="nn">c7n_azure.utils</span> <span class="k">import</span> <span class="n">ResourceIdParser</span>
-
 
 <div class="viewcode-block" id="FunctionAppUtilities"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.functionapp_utils.FunctionAppUtilities">[docs]</a><span class="k">class</span> <span class="nc">FunctionAppUtilities</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;custodian.azure.function_app_utils&#39;</span><span class="p">)</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;custodian.azure.function_app_utils&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FunctionAppUtilities.FunctionAppInfrastructureParameters"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.functionapp_utils.FunctionAppUtilities.FunctionAppInfrastructureParameters">[docs]</a>    <span class="k">class</span> <span class="nc">FunctionAppInfrastructureParameters</span><span class="p">:</span>
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app_insights</span><span class="p">,</span> <span class="n">service_plan</span><span class="p">,</span> <span class="n">storage_account</span><span class="p">,</span>
@@ -239,18 +249,37 @@
 
         <span class="k">return</span> <span class="n">connection_string</span></div>
 
-<div class="viewcode-block" id="FunctionAppUtilities.deploy_dedicated_function_app"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.functionapp_utils.FunctionAppUtilities.deploy_dedicated_function_app">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">deploy_dedicated_function_app</span><span class="p">(</span><span class="n">parameters</span><span class="p">):</span>
+<div class="viewcode-block" id="FunctionAppUtilities.is_consumption_plan"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.functionapp_utils.FunctionAppUtilities.is_consumption_plan">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_consumption_plan</span><span class="p">(</span><span class="n">function_params</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">StringUtils</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">function_params</span><span class="o">.</span><span class="n">service_plan</span><span class="p">[</span><span class="s1">&#39;sku_tier&#39;</span><span class="p">],</span> <span class="s1">&#39;dynamic&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FunctionAppUtilities.deploy_function_app"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.functionapp_utils.FunctionAppUtilities.deploy_function_app">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">deploy_function_app</span><span class="p">(</span><span class="n">parameters</span><span class="p">):</span>
         <span class="n">function_app_unit</span> <span class="o">=</span> <span class="n">FunctionAppDeploymentUnit</span><span class="p">()</span>
         <span class="n">function_app_params</span> <span class="o">=</span> \
             <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">parameters</span><span class="o">.</span><span class="n">function_app_name</span><span class="p">,</span>
              <span class="s1">&#39;resource_group_name&#39;</span><span class="p">:</span> <span class="n">parameters</span><span class="o">.</span><span class="n">function_app_resource_group_name</span><span class="p">}</span>
         <span class="n">function_app</span> <span class="o">=</span> <span class="n">function_app_unit</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">function_app_params</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">function_app</span><span class="p">:</span>
+            <span class="c1"># retrieve the type of app service plan hosting the existing function app</span>
+            <span class="n">session</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>
+            <span class="n">web_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;azure.mgmt.web.WebSiteManagementClient&#39;</span><span class="p">)</span>
+            <span class="n">app_id</span> <span class="o">=</span> <span class="n">function_app</span><span class="o">.</span><span class="n">server_farm_id</span>
+            <span class="n">app_name</span> <span class="o">=</span> <span class="n">ResourceIdParser</span><span class="o">.</span><span class="n">get_resource_name</span><span class="p">(</span><span class="n">app_id</span><span class="p">)</span>
+            <span class="n">app_resource_group_name</span> <span class="o">=</span> <span class="n">ResourceIdParser</span><span class="o">.</span><span class="n">get_resource_group</span><span class="p">(</span><span class="n">app_id</span><span class="p">)</span>
+            <span class="n">app_service_plan</span> <span class="o">=</span> <span class="n">web_client</span><span class="o">.</span><span class="n">app_service_plans</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app_resource_group_name</span><span class="p">,</span> <span class="n">app_name</span><span class="p">)</span>
+
+            <span class="c1"># update the sku tier to properly reflect what is provisioned in Azure</span>
+            <span class="n">parameters</span><span class="o">.</span><span class="n">service_plan</span><span class="p">[</span><span class="s1">&#39;sku_tier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app_service_plan</span><span class="o">.</span><span class="n">sku</span><span class="o">.</span><span class="n">tier</span>
+
             <span class="k">return</span> <span class="n">function_app</span>
 
         <span class="n">sp_unit</span> <span class="o">=</span> <span class="n">AppServicePlanUnit</span><span class="p">()</span>
         <span class="n">app_service_plan</span> <span class="o">=</span> <span class="n">sp_unit</span><span class="o">.</span><span class="n">provision_if_not_exists</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">service_plan</span><span class="p">)</span>
+
+        <span class="c1"># if only resource_id is provided, retrieve existing app plan sku tier</span>
+        <span class="n">parameters</span><span class="o">.</span><span class="n">service_plan</span><span class="p">[</span><span class="s1">&#39;sku_tier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app_service_plan</span><span class="o">.</span><span class="n">sku</span><span class="o">.</span><span class="n">tier</span>
 
         <span class="n">ai_unit</span> <span class="o">=</span> <span class="n">AppInsightsUnit</span><span class="p">()</span>
         <span class="n">app_insights</span> <span class="o">=</span> <span class="n">ai_unit</span><span class="o">.</span><span class="n">provision_if_not_exists</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">app_insights</span><span class="p">)</span>
@@ -259,12 +288,128 @@
         <span class="n">storage_account_id</span> <span class="o">=</span> <span class="n">sa_unit</span><span class="o">.</span><span class="n">provision_if_not_exists</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">storage_account</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
         <span class="n">con_string</span> <span class="o">=</span> <span class="n">FunctionAppUtilities</span><span class="o">.</span><span class="n">get_storage_account_connection_string</span><span class="p">(</span><span class="n">storage_account_id</span><span class="p">)</span>
 
-        <span class="n">function_app_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">app_service_plan</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
-                                    <span class="s1">&#39;app_service_plan_id&#39;</span><span class="p">:</span> <span class="n">app_service_plan</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                    <span class="s1">&#39;app_insights_key&#39;</span><span class="p">:</span> <span class="n">app_insights</span><span class="o">.</span><span class="n">instrumentation_key</span><span class="p">,</span>
-                                    <span class="s1">&#39;storage_account_connection_string&#39;</span><span class="p">:</span> <span class="n">con_string</span><span class="p">})</span>
+        <span class="n">function_app_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span><span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">app_service_plan</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+             <span class="s1">&#39;app_service_plan_id&#39;</span><span class="p">:</span> <span class="n">app_service_plan</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+             <span class="s1">&#39;app_insights_key&#39;</span><span class="p">:</span> <span class="n">app_insights</span><span class="o">.</span><span class="n">instrumentation_key</span><span class="p">,</span>
+             <span class="s1">&#39;is_consumption_plan&#39;</span><span class="p">:</span> <span class="n">FunctionAppUtilities</span><span class="o">.</span><span class="n">is_consumption_plan</span><span class="p">(</span><span class="n">parameters</span><span class="p">),</span>
+             <span class="s1">&#39;storage_account_connection_string&#39;</span><span class="p">:</span> <span class="n">con_string</span><span class="p">})</span>
 
-        <span class="k">return</span> <span class="n">function_app_unit</span><span class="o">.</span><span class="n">provision</span><span class="p">(</span><span class="n">function_app_params</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">function_app_unit</span><span class="o">.</span><span class="n">provision</span><span class="p">(</span><span class="n">function_app_params</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FunctionAppUtilities.validate_function_name"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.functionapp_utils.FunctionAppUtilities.validate_function_name">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">validate_function_name</span><span class="p">(</span><span class="n">function_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">function_name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">function_name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">60</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">function_name</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Function name must be between 1-60 characters. Given name: &quot;&#39;</span> <span class="o">+</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">function_name</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FunctionAppUtilities.get_function_name"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.functionapp_utils.FunctionAppUtilities.get_function_name">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_function_name</span><span class="p">(</span><span class="n">policy_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">):</span>
+        <span class="n">function_app_name</span> <span class="o">=</span> <span class="n">policy_name</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">suffix</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[^A-Za-z0-9</span><span class="se">\\</span><span class="s1">-]&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">function_app_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FunctionAppUtilities.publish_functions_package"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.functionapp_utils.FunctionAppUtilities.publish_functions_package">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">publish_functions_package</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">function_params</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>
+        <span class="n">web_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;azure.mgmt.web.WebSiteManagementClient&#39;</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Publishing Function application&#39;</span><span class="p">)</span>
+
+        <span class="c1"># provision using Kudu Zip-Deploy</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">is_consumption_plan</span><span class="p">(</span><span class="n">function_params</span><span class="p">):</span>
+            <span class="n">publish_creds</span> <span class="o">=</span> <span class="n">web_client</span><span class="o">.</span><span class="n">web_apps</span><span class="o">.</span><span class="n">list_publishing_credentials</span><span class="p">(</span>
+                <span class="n">function_params</span><span class="o">.</span><span class="n">function_app_resource_group_name</span><span class="p">,</span>
+                <span class="n">function_params</span><span class="o">.</span><span class="n">function_app_name</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">package</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span><span class="n">publish_creds</span><span class="p">):</span>
+                <span class="n">package</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">publish_creds</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Aborted deployment, ensure Application Service is healthy.&quot;</span><span class="p">)</span>
+        <span class="c1"># provision using WEBSITE_RUN_FROM_PACKAGE</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># fetch blob client</span>
+            <span class="n">blob_client</span> <span class="o">=</span> <span class="n">StorageUtilities</span><span class="o">.</span><span class="n">get_blob_client_from_storage_account</span><span class="p">(</span>
+                <span class="n">function_params</span><span class="o">.</span><span class="n">storage_account</span><span class="p">[</span><span class="s1">&#39;resource_group_name&#39;</span><span class="p">],</span>
+                <span class="n">function_params</span><span class="o">.</span><span class="n">storage_account</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                <span class="n">session</span><span class="p">,</span>
+                <span class="n">sas_generation</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+
+            <span class="c1"># create container for package</span>
+            <span class="n">blob_client</span><span class="o">.</span><span class="n">create_container</span><span class="p">(</span><span class="n">FUNCTION_CONSUMPTION_BLOB_CONTAINER</span><span class="p">)</span>
+
+            <span class="c1"># upload package</span>
+            <span class="n">blob_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.zip&#39;</span> <span class="o">%</span> <span class="n">function_params</span><span class="o">.</span><span class="n">function_app_name</span>
+            <span class="n">packageToPublish</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">pkg</span><span class="o">.</span><span class="n">get_stream</span><span class="p">()</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">pkg</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+            <span class="n">blob_client</span><span class="o">.</span><span class="n">create_blob_from_stream</span><span class="p">(</span>
+                <span class="n">FUNCTION_CONSUMPTION_BLOB_CONTAINER</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">,</span> <span class="n">packageToPublish</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+            <span class="n">packageToPublish</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="c1"># create blob url for package</span>
+            <span class="n">sas</span> <span class="o">=</span> <span class="n">blob_client</span><span class="o">.</span><span class="n">generate_blob_shared_access_signature</span><span class="p">(</span>
+                <span class="n">FUNCTION_CONSUMPTION_BLOB_CONTAINER</span><span class="p">,</span>
+                <span class="n">blob_name</span><span class="p">,</span>
+                <span class="n">BlobPermissions</span><span class="o">.</span><span class="n">READ</span><span class="p">,</span>
+                <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span>
+                <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">FUNCTION_PACKAGE_SAS_EXPIRY_DAYS</span><span class="p">)</span>
+                <span class="c1"># expire in 10 years</span>
+            <span class="p">)</span>
+            <span class="n">blob_url</span> <span class="o">=</span> <span class="n">blob_client</span><span class="o">.</span><span class="n">make_blob_url</span><span class="p">(</span>
+                <span class="n">FUNCTION_CONSUMPTION_BLOB_CONTAINER</span><span class="p">,</span>
+                <span class="n">blob_name</span><span class="p">,</span>
+                <span class="n">sas_token</span><span class="o">=</span><span class="n">sas</span><span class="p">)</span>
+
+            <span class="c1"># update application settings function package</span>
+            <span class="n">app_settings</span> <span class="o">=</span> <span class="n">web_client</span><span class="o">.</span><span class="n">web_apps</span><span class="o">.</span><span class="n">list_application_settings</span><span class="p">(</span>
+                <span class="n">function_params</span><span class="o">.</span><span class="n">function_app_resource_group_name</span><span class="p">,</span>
+                <span class="n">function_params</span><span class="o">.</span><span class="n">function_app_name</span><span class="p">)</span>
+            <span class="n">app_settings</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;WEBSITE_RUN_FROM_PACKAGE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">blob_url</span>
+            <span class="n">web_client</span><span class="o">.</span><span class="n">web_apps</span><span class="o">.</span><span class="n">update_application_settings</span><span class="p">(</span>
+                <span class="n">function_params</span><span class="o">.</span><span class="n">function_app_resource_group_name</span><span class="p">,</span>
+                <span class="n">function_params</span><span class="o">.</span><span class="n">function_app_name</span><span class="p">,</span>
+                <span class="n">kind</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                <span class="n">properties</span><span class="o">=</span><span class="n">app_settings</span><span class="o">.</span><span class="n">properties</span>
+            <span class="p">)</span>
+
+        <span class="c1"># sync the scale controller for the Function App</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sync_function_triggers</span><span class="p">(</span><span class="n">function_params</span><span class="p">):</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unable to sync triggers...&quot;</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Finished publishing Function application&#39;</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_sync_function_triggers</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">function_params</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Sync Triggers...&#39;</span><span class="p">)</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>
+        <span class="n">web_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;azure.mgmt.web.WebSiteManagementClient&#39;</span><span class="p">)</span>
+
+        <span class="n">max_retry_attempts</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_retry_attempts</span><span class="p">):</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">web_client</span><span class="o">.</span><span class="n">web_apps</span><span class="o">.</span><span class="n">sync_function_triggers</span><span class="p">(</span>
+                    <span class="n">function_params</span><span class="o">.</span><span class="n">function_app_resource_group_name</span><span class="p">,</span>
+                    <span class="n">function_params</span><span class="o">.</span><span class="n">function_app_name</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="n">CloudError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># This appears to be a bug in the API</span>
+                <span class="c1"># Success can be either 200 or 204, which is</span>
+                <span class="c1"># unexpected and gets rethrown as a CloudError</span>
+                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">204</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+
+                <span class="bp">cls</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to sync triggers...&quot;</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">res</span> <span class="ow">and</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">204</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Retrying in 5 seconds...&quot;</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
 </pre></div>
 
            </div>
@@ -277,7 +422,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -296,21 +441,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

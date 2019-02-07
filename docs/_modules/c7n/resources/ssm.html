@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -204,10 +207,14 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span>
 
 
+<span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
-<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">get_retry</span><span class="p">,</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span>
+<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">get_retry</span><span class="p">,</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span>
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">Action</span>
+
+<span class="kn">from</span> <span class="nn">.aws</span> <span class="k">import</span> <span class="n">shape_validate</span>
+<span class="kn">from</span> <span class="nn">.ec2</span> <span class="k">import</span> <span class="n">EC2</span>
 
 
 <div class="viewcode-block" id="SSMParameter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ssm.SSMParameter">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;ssm-parameter&#39;</span><span class="p">)</span>
@@ -237,6 +244,80 @@
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span></div>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ssm:DescribeInstanceInformation&#39;</span><span class="p">,)</span></div>
+
+
+<div class="viewcode-block" id="SendCommand"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ssm.SendCommand">[docs]</a><span class="nd">@EC2</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;send-command&#39;</span><span class="p">)</span>
+<span class="nd">@ManagedInstance</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;send-command&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SendCommand</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run an SSM Automation Document on an instance.</span>
+
+<span class="sd">    :Example:</span>
+
+<span class="sd">    Find ubuntu 18.04 instances are active with ssm.</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">          - name: ec2-osquery-install</span>
+<span class="sd">            resource: ec2</span>
+<span class="sd">            filters:</span>
+<span class="sd">              - type: ssm</span>
+<span class="sd">                key: PingStatus</span>
+<span class="sd">                value: Online</span>
+<span class="sd">              - type: ssm</span>
+<span class="sd">                key: PlatformName</span>
+<span class="sd">                value: Ubuntu</span>
+<span class="sd">              - type: ssm</span>
+<span class="sd">                key: PlatformVersion</span>
+<span class="sd">                value: 18.04</span>
+<span class="sd">            actions:</span>
+<span class="sd">              - type: send-command</span>
+<span class="sd">                command:</span>
+<span class="sd">                  DocumentName: AWS-RunShellScript</span>
+<span class="sd">                  Parameters:</span>
+<span class="sd">                    commands:</span>
+<span class="sd">                      - wget https://pkg.osquery.io/deb/osquery_3.3.0_1.linux.amd64.deb</span>
+<span class="sd">                      - dpkg -i osquery_3.3.0_1.linux.amd64.deb</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;send-command&#39;</span><span class="p">,</span>
+        <span class="n">command</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">},</span>
+        <span class="n">required</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;command&#39;</span><span class="p">,))</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ssm:SendCommand&#39;</span><span class="p">,)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="s2">&quot;SendCommandRequest&quot;</span>
+    <span class="n">annotation</span> <span class="o">=</span> <span class="s1">&#39;c7n:SendCommand&#39;</span>
+
+<div class="viewcode-block" id="SendCommand.validate"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ssm.SendCommand.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">shape_validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;ssm&#39;</span><span class="p">)</span>
+        <span class="c1"># If used against an ec2 resource, require an ssm status filter</span>
+        <span class="c1"># to ensure that we&#39;re not trying to send commands to instances</span>
+        <span class="c1"># that aren&#39;t in ssm.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;ec2&#39;</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">iter_filters</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;ssm&#39;</span><span class="p">:</span>
+                <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
+                <span class="s2">&quot;send-command requires use of ssm filter on ec2 resources&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SendCommand.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ssm.SendCommand.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ssm&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">resource_set</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="mi">50</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_resource_set</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SendCommand.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ssm.SendCommand.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">])</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;InstanceIds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">r</span><span class="p">[</span><span class="s1">&#39;InstanceId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="o">**</span><span class="n">command</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Command&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;c7n:SendCommand&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;CommandId&#39;</span><span class="p">])</span></div></div>
 
 
 <div class="viewcode-block" id="SSMActivation"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ssm.SSMActivation">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;ssm-activation&#39;</span><span class="p">)</span>
@@ -273,7 +354,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -292,21 +373,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

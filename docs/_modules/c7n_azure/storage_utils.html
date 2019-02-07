@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -226,6 +229,25 @@
         <span class="n">blob_service</span><span class="o">.</span><span class="n">create_container</span><span class="p">(</span><span class="n">storage</span><span class="o">.</span><span class="n">container_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">blob_service</span><span class="p">,</span> <span class="n">storage</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">storage</span><span class="o">.</span><span class="n">file_prefix</span></div>
 
+<div class="viewcode-block" id="StorageUtilities.get_blob_client_from_storage_account"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.storage_utils.StorageUtilities.get_blob_client_from_storage_account">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_blob_client_from_storage_account</span><span class="p">(</span><span class="n">resource_group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">sas_generation</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">storage_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;azure.mgmt.storage.StorageManagementClient&#39;</span><span class="p">)</span>
+        <span class="n">storage_account</span> <span class="o">=</span> <span class="n">storage_client</span><span class="o">.</span><span class="n">storage_accounts</span><span class="o">.</span><span class="n">get_properties</span><span class="p">(</span><span class="n">resource_group</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># sas tokens can only be generated from clients created from account keys</span>
+        <span class="n">primary_key</span> <span class="o">=</span> <span class="n">token</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">sas_generation</span><span class="p">:</span>
+            <span class="n">storage_keys</span> <span class="o">=</span> <span class="n">storage_client</span><span class="o">.</span><span class="n">storage_accounts</span><span class="o">.</span><span class="n">list_keys</span><span class="p">(</span><span class="n">resource_group</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">primary_key</span> <span class="o">=</span> <span class="n">storage_keys</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">StorageUtilities</span><span class="o">.</span><span class="n">get_storage_token</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">BlockBlobService</span><span class="p">(</span>
+            <span class="n">account_name</span><span class="o">=</span><span class="n">storage_account</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">account_key</span><span class="o">=</span><span class="n">primary_key</span><span class="p">,</span>
+            <span class="n">token_credential</span><span class="o">=</span><span class="n">token</span>
+        <span class="p">)</span></div>
+
 <div class="viewcode-block" id="StorageUtilities.get_queue_client_by_uri"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.storage_utils.StorageUtilities.get_queue_client_by_uri">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_queue_client_by_uri</span><span class="p">(</span><span class="n">queue_uri</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
         <span class="n">storage</span> <span class="o">=</span> <span class="n">StorageUtilities</span><span class="o">.</span><span class="n">get_storage_from_uri</span><span class="p">(</span><span class="n">queue_uri</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span>
@@ -300,7 +322,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -319,21 +341,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

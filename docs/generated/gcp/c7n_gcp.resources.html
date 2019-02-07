@@ -114,10 +114,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul class="current">
@@ -126,12 +129,12 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">GCP</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="c7n_gcp.html">c7n_gcp package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="c7n_gcp.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="c7n_gcp.actions.html">c7n_gcp.actions package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n_gcp.filters.html">c7n_gcp.filters package</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">c7n_gcp.resources package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.actions">c7n_gcp.actions module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.client">c7n_gcp.client module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.entry">c7n_gcp.entry module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.handler">c7n_gcp.handler module</a></li>
@@ -216,6 +219,81 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-c7n_gcp.resources.bigquery">
+<span id="c7n-gcp-resources-bigquery-module"></span><h2>c7n_gcp.resources.bigquery module<a class="headerlink" href="#module-c7n_gcp.resources.bigquery" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="c7n_gcp.resources.bigquery.DataSet">
+<em class="property">class </em><code class="descclassname">c7n_gcp.resources.bigquery.</code><code class="descname">DataSet</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/bigquery.html#DataSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.DataSet.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.resources.bigquery.DataSet.augment">
+<code class="descname">augment</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/bigquery.html#DataSet.augment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.augment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.DataSet.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.bigquery.DataSet.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n_gcp/resources/bigquery.html#DataSet.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.TypeInfo" title="c7n_gcp.query.TypeInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.TypeInfo</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.DataSet.resource_type.component">
+<code class="descname">component</code><em class="property"> = 'datasets'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.resource_type.component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.DataSet.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('list', 'datasets[]', None)</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="c7n_gcp.resources.bigquery.DataSet.resource_type.get">
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><em>client</em>, <em>event</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/bigquery.html#DataSet.resource_type.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.resource_type.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.DataSet.resource_type.get_requires_event">
+<code class="descname">get_requires_event</code><em class="property"> = True</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.resource_type.get_requires_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.DataSet.resource_type.scope">
+<code class="descname">scope</code><em class="property"> = 'project'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.resource_type.scope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.DataSet.resource_type.scope_key">
+<code class="descname">scope_key</code><em class="property"> = 'projectId'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.resource_type.scope_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.DataSet.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'bigquery'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.DataSet.resource_type.version">
+<code class="descname">version</code><em class="property"> = 'v2'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.resource_type.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.DataSet.type">
+<code class="descname">type</code><em class="property"> = 'bq-dataset'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-c7n_gcp.resources.build">
 <span id="c7n-gcp-resources-build-module"></span><h2>c7n_gcp.resources.build module<a class="headerlink" href="#module-c7n_gcp.resources.build" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -289,12 +367,12 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.Delete.path_param_re">
-<code class="descname">path_param_re</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.compute.Delete.path_param_re" title="Permalink to this definition">¶</a></dt>
+<code class="descname">path_param_re</code><em class="property"> = re.compile('.*?/projects/(.*?)/zones/(.*?)/instances/(.*)')</em><a class="headerlink" href="#c7n_gcp.resources.compute.Delete.path_param_re" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.Delete.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['delete']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.compute.Delete.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['delete']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.compute.Delete.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -307,7 +385,7 @@
 <dl class="class">
 <dt id="c7n_gcp.resources.compute.DeleteSnapshot">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.compute.</code><code class="descname">DeleteSnapshot</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/compute.html#DeleteSnapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.compute.DeleteSnapshot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.actions.MethodAction" title="c7n_gcp.actions.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.MethodAction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.actions.html#c7n_gcp.actions.core.MethodAction" title="c7n_gcp.actions.core.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.core.MethodAction</span></code></a></p>
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.DeleteSnapshot.attr_filter">
 <code class="descname">attr_filter</code><em class="property"> = ('status', ('READY', 'UPLOADING'))</em><a class="headerlink" href="#c7n_gcp.resources.compute.DeleteSnapshot.attr_filter" title="Permalink to this definition">¶</a></dt>
@@ -325,12 +403,12 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.DeleteSnapshot.path_param_re">
-<code class="descname">path_param_re</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.compute.DeleteSnapshot.path_param_re" title="Permalink to this definition">¶</a></dt>
+<code class="descname">path_param_re</code><em class="property"> = re.compile('.*?/projects/(.*?)/global/snapshots/(.*)')</em><a class="headerlink" href="#c7n_gcp.resources.compute.DeleteSnapshot.path_param_re" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.DeleteSnapshot.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['delete']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.compute.DeleteSnapshot.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['delete']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.compute.DeleteSnapshot.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -400,7 +478,7 @@
 <dl class="class">
 <dt id="c7n_gcp.resources.compute.DiskSnapshot">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.compute.</code><code class="descname">DiskSnapshot</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/compute.html#DiskSnapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.compute.DiskSnapshot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.actions.MethodAction" title="c7n_gcp.actions.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.MethodAction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.actions.html#c7n_gcp.actions.core.MethodAction" title="c7n_gcp.actions.core.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.core.MethodAction</span></code></a></p>
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.DiskSnapshot.attr_filter">
 <code class="descname">attr_filter</code><em class="property"> = ('status', ('RUNNING',))</em><a class="headerlink" href="#c7n_gcp.resources.compute.DiskSnapshot.attr_filter" title="Permalink to this definition">¶</a></dt>
@@ -413,12 +491,12 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.DiskSnapshot.path_param_re">
-<code class="descname">path_param_re</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.compute.DiskSnapshot.path_param_re" title="Permalink to this definition">¶</a></dt>
+<code class="descname">path_param_re</code><em class="property"> = re.compile('.*?/projects/(.*?)/zones/(.*?)/instances/(.*)')</em><a class="headerlink" href="#c7n_gcp.resources.compute.DiskSnapshot.path_param_re" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.DiskSnapshot.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['snapshot']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.compute.DiskSnapshot.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['snapshot']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.compute.DiskSnapshot.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -535,7 +613,7 @@
 <dl class="class">
 <dt id="c7n_gcp.resources.compute.InstanceAction">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.compute.</code><code class="descname">InstanceAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/compute.html#InstanceAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.compute.InstanceAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.actions.MethodAction" title="c7n_gcp.actions.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.MethodAction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.actions.html#c7n_gcp.actions.core.MethodAction" title="c7n_gcp.actions.core.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.core.MethodAction</span></code></a></p>
 <dl class="method">
 <dt id="c7n_gcp.resources.compute.InstanceAction.get_resource_params">
 <code class="descname">get_resource_params</code><span class="sig-paren">(</span><em>model</em>, <em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/compute.html#InstanceAction.get_resource_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.compute.InstanceAction.get_resource_params" title="Permalink to this definition">¶</a></dt>
@@ -550,7 +628,8 @@
 <dl class="method">
 <dt id="c7n_gcp.resources.compute.InstanceOffHour.get_tag_value">
 <code class="descname">get_tag_value</code><span class="sig-paren">(</span><em>instance</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/compute.html#InstanceOffHour.get_tag_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.compute.InstanceOffHour.get_tag_value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get the resource’s tag value specifying its schedule.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.InstanceOffHour.type">
@@ -566,7 +645,8 @@
 <dl class="method">
 <dt id="c7n_gcp.resources.compute.InstanceOnHour.get_tag_value">
 <code class="descname">get_tag_value</code><span class="sig-paren">(</span><em>instance</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/compute.html#InstanceOnHour.get_tag_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.compute.InstanceOnHour.get_tag_value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get the resource’s tag value specifying its schedule.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.InstanceOnHour.type">
@@ -643,12 +723,12 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.Start.path_param_re">
-<code class="descname">path_param_re</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.compute.Start.path_param_re" title="Permalink to this definition">¶</a></dt>
+<code class="descname">path_param_re</code><em class="property"> = re.compile('.*?/projects/(.*?)/zones/(.*?)/instances/(.*)')</em><a class="headerlink" href="#c7n_gcp.resources.compute.Start.path_param_re" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.Start.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['start']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.compute.Start.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['start']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.compute.Start.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -674,12 +754,12 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.Stop.path_param_re">
-<code class="descname">path_param_re</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.compute.Stop.path_param_re" title="Permalink to this definition">¶</a></dt>
+<code class="descname">path_param_re</code><em class="property"> = re.compile('.*?/projects/(.*?)/zones/(.*?)/instances/(.*)')</em><a class="headerlink" href="#c7n_gcp.resources.compute.Stop.path_param_re" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.compute.Stop.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['stop']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.compute.Stop.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['stop']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.compute.Stop.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -695,7 +775,7 @@
 <dl class="class">
 <dt id="c7n_gcp.resources.function.Delete">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.function.</code><code class="descname">Delete</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/function.html#Delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.function.Delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.actions.MethodAction" title="c7n_gcp.actions.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.MethodAction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.actions.html#c7n_gcp.actions.core.MethodAction" title="c7n_gcp.actions.core.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.core.MethodAction</span></code></a></p>
 <dl class="method">
 <dt id="c7n_gcp.resources.function.Delete.get_resource_params">
 <code class="descname">get_resource_params</code><span class="sig-paren">(</span><em>model</em>, <em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/function.html#Delete.get_resource_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.function.Delete.get_resource_params" title="Permalink to this definition">¶</a></dt>
@@ -708,7 +788,7 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.function.Delete.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['delete']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.function.Delete.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['delete']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.function.Delete.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -744,6 +824,11 @@
 <dl class="attribute">
 <dt id="c7n_gcp.resources.function.Function.resource_type.enum_spec">
 <code class="descname">enum_spec</code><em class="property"> = ('list', 'functions[]', None)</em><a class="headerlink" href="#c7n_gcp.resources.function.Function.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.function.Function.resource_type.events">
+<code class="descname">events</code><em class="property"> = {'create': 'google.cloud.functions.v1.CloudFunctionsService.CreateFunction', 'delete': 'google.cloud.functions.v1.CloudFunctionsService.DeleteFunction', 'update': 'google.cloud.functions.v1.CloudFunctionsService.UpdateFunction'}</em><a class="headerlink" href="#c7n_gcp.resources.function.Function.resource_type.events" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
@@ -846,6 +931,143 @@
 <dl class="attribute">
 <dt id="c7n_gcp.resources.gke.KubernetesCluster.type">
 <code class="descname">type</code><em class="property"> = 'gke-cluster'</em><a class="headerlink" href="#c7n_gcp.resources.gke.KubernetesCluster.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-c7n_gcp.resources.iam">
+<span id="c7n-gcp-resources-iam-module"></span><h2>c7n_gcp.resources.iam module<a class="headerlink" href="#module-c7n_gcp.resources.iam" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="c7n_gcp.resources.iam.ProjectRole">
+<em class="property">class </em><code class="descclassname">c7n_gcp.resources.iam.</code><code class="descname">ProjectRole</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/iam.html#ProjectRole"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ProjectRole.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ProjectRole.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.iam.ProjectRole.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n_gcp/resources/iam.html#ProjectRole.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.TypeInfo" title="c7n_gcp.query.TypeInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.TypeInfo</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ProjectRole.resource_type.component">
+<code class="descname">component</code><em class="property"> = 'projects.roles'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.resource_type.component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ProjectRole.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('list', 'roles[]', None)</em><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="c7n_gcp.resources.iam.ProjectRole.resource_type.get">
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><em>client</em>, <em>resource_info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/iam.html#ProjectRole.resource_type.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.resource_type.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ProjectRole.resource_type.scope">
+<code class="descname">scope</code><em class="property"> = 'project'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.resource_type.scope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ProjectRole.resource_type.scope_key">
+<code class="descname">scope_key</code><em class="property"> = 'parent'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.resource_type.scope_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ProjectRole.resource_type.scope_template">
+<code class="descname">scope_template</code><em class="property"> = 'projects/{}'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.resource_type.scope_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ProjectRole.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'iam'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ProjectRole.resource_type.version">
+<code class="descname">version</code><em class="property"> = 'v1'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.resource_type.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ProjectRole.type">
+<code class="descname">type</code><em class="property"> = 'project-role'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ProjectRole.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.iam.ServiceAccount">
+<em class="property">class </em><code class="descclassname">c7n_gcp.resources.iam.</code><code class="descname">ServiceAccount</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/iam.html#ServiceAccount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n_gcp/resources/iam.html#ServiceAccount.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.TypeInfo" title="c7n_gcp.query.TypeInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.TypeInfo</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.resource_type.component">
+<code class="descname">component</code><em class="property"> = 'projects.serviceAccounts'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.resource_type.component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('list', 'accounts[]', [])</em><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.resource_type.get">
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><em>client</em>, <em>resource_info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/iam.html#ServiceAccount.resource_type.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.resource_type.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.resource_type.scope">
+<code class="descname">scope</code><em class="property"> = 'project'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.resource_type.scope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.resource_type.scope_key">
+<code class="descname">scope_key</code><em class="property"> = 'name'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.resource_type.scope_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.resource_type.scope_template">
+<code class="descname">scope_template</code><em class="property"> = 'projects/{}'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.resource_type.scope_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'iam'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.resource_type.version">
+<code class="descname">version</code><em class="property"> = 'v1'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.resource_type.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.ServiceAccount.type">
+<code class="descname">type</code><em class="property"> = 'service-account'</em><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1136,7 +1358,7 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.network.SetFlowLog.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'state': {'default': True, 'type': 'boolean'}, u'type': {u'enum': ['set-flow-log']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.network.SetFlowLog.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'state': {'default': True, 'type': 'boolean'}, 'type': {'enum': ['set-flow-log']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.network.SetFlowLog.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1163,7 +1385,7 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.network.SetGcpPrivateAccess.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'state': {'default': True, 'type': 'boolean'}, u'type': {u'enum': ['set-gcp-private']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.network.SetGcpPrivateAccess.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'state': {'default': True, 'type': 'boolean'}, 'type': {'enum': ['set-gcp-private']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.network.SetGcpPrivateAccess.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1228,7 +1450,7 @@
 <dl class="class">
 <dt id="c7n_gcp.resources.network.SubnetAction">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.network.</code><code class="descname">SubnetAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/network.html#SubnetAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.network.SubnetAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.actions.MethodAction" title="c7n_gcp.actions.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.MethodAction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.actions.html#c7n_gcp.actions.core.MethodAction" title="c7n_gcp.actions.core.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.core.MethodAction</span></code></a></p>
 <dl class="method">
 <dt id="c7n_gcp.resources.network.SubnetAction.get_resource_params">
 <code class="descname">get_resource_params</code><span class="sig-paren">(</span><em>model</em>, <em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/network.html#SubnetAction.get_resource_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.network.SubnetAction.get_resource_params" title="Permalink to this definition">¶</a></dt>
@@ -1236,7 +1458,7 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.network.SubnetAction.path_param_re">
-<code class="descname">path_param_re</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.network.SubnetAction.path_param_re" title="Permalink to this definition">¶</a></dt>
+<code class="descname">path_param_re</code><em class="property"> = re.compile('.*?/projects/(.*?)/regions/(.*?)/subnetworks/(.*)')</em><a class="headerlink" href="#c7n_gcp.resources.network.SubnetAction.path_param_re" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1456,7 +1678,7 @@
 <dl class="class">
 <dt id="c7n_gcp.resources.service.Disable">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.service.</code><code class="descname">Disable</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/service.html#Disable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.service.Disable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.actions.MethodAction" title="c7n_gcp.actions.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.MethodAction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.actions.html#c7n_gcp.actions.core.MethodAction" title="c7n_gcp.actions.core.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.core.MethodAction</span></code></a></p>
 <p>Disable a service for the current project</p>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">policies</span><span class="p">:</span>
@@ -1484,7 +1706,7 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.service.Disable.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['disable']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.service.Disable.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['disable']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.service.Disable.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1689,7 +1911,7 @@
 <dl class="class">
 <dt id="c7n_gcp.resources.sql.SqlInstanceAction">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.sql.</code><code class="descname">SqlInstanceAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/sql.html#SqlInstanceAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.actions.MethodAction" title="c7n_gcp.actions.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.MethodAction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.actions.html#c7n_gcp.actions.core.MethodAction" title="c7n_gcp.actions.core.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.core.MethodAction</span></code></a></p>
 <dl class="method">
 <dt id="c7n_gcp.resources.sql.SqlInstanceAction.get_resource_params">
 <code class="descname">get_resource_params</code><span class="sig-paren">(</span><em>model</em>, <em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/sql.html#SqlInstanceAction.get_resource_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceAction.get_resource_params" title="Permalink to this definition">¶</a></dt>
@@ -1708,12 +1930,12 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.sql.SqlInstanceDelete.path_param_re">
-<code class="descname">path_param_re</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceDelete.path_param_re" title="Permalink to this definition">¶</a></dt>
+<code class="descname">path_param_re</code><em class="property"> = re.compile('.*?/projects/(.*?)/instances/(.*)')</em><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceDelete.path_param_re" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.sql.SqlInstanceDelete.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['delete']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceDelete.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['delete']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceDelete.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1726,7 +1948,7 @@
 <dl class="class">
 <dt id="c7n_gcp.resources.sql.SqlInstanceStop">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.sql.</code><code class="descname">SqlInstanceStop</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/sql.html#SqlInstanceStop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceStop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.actions.MethodAction" title="c7n_gcp.actions.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.MethodAction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.actions.html#c7n_gcp.actions.core.MethodAction" title="c7n_gcp.actions.core.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.core.MethodAction</span></code></a></p>
 <dl class="method">
 <dt id="c7n_gcp.resources.sql.SqlInstanceStop.get_resource_params">
 <code class="descname">get_resource_params</code><span class="sig-paren">(</span><em>model</em>, <em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/sql.html#SqlInstanceStop.get_resource_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceStop.get_resource_params" title="Permalink to this definition">¶</a></dt>
@@ -1739,12 +1961,12 @@
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.sql.SqlInstanceStop.path_param_re">
-<code class="descname">path_param_re</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceStop.path_param_re" title="Permalink to this definition">¶</a></dt>
+<code class="descname">path_param_re</code><em class="property"> = re.compile('.*?/projects/(.*?)/instances/(.*)')</em><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceStop.path_param_re" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n_gcp.resources.sql.SqlInstanceStop.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': ['stop']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceStop.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['stop']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.resources.sql.SqlInstanceStop.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1838,7 +2060,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -1857,21 +2079,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

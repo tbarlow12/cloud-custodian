@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -395,27 +398,75 @@
 
 
 <div class="viewcode-block" id="setup_parser"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.cli.setup_parser">[docs]</a><span class="k">def</span> <span class="nf">setup_parser</span><span class="p">():</span>
-    <span class="n">c7n_desc</span> <span class="o">=</span> <span class="s2">&quot;Cloud fleet management&quot;</span>
+    <span class="n">c7n_desc</span> <span class="o">=</span> <span class="s2">&quot;Cloud Custodian - Cloud fleet management&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">c7n_desc</span><span class="p">)</span>
 
     <span class="c1"># Setting `dest` means we capture which subparser was used.</span>
-    <span class="n">subs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s1">&#39;subparser&#39;</span><span class="p">)</span>
+    <span class="n">subs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;commands&#39;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;subparser&#39;</span><span class="p">)</span>
+
+    <span class="n">run_desc</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span>
+        <span class="s2">&quot;Execute the policies in a config file.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Multiple regions can be passed in, as can the symbolic region &#39;all&#39;. &quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;When running across multiple regions, policies targeting resources in &quot;</span><span class="p">,</span>
+        <span class="s2">&quot;regions where they do not exist will not be run. The output directory &quot;</span><span class="p">,</span>
+        <span class="s2">&quot;when passing multiple regions is suffixed with the region. Resources &quot;</span><span class="p">,</span>
+        <span class="s2">&quot;with global endpoints are run just once and are suffixed with the first &quot;</span><span class="p">,</span>
+        <span class="s2">&quot;region passed in or us-east-1 if running against &#39;all&#39; regions.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span>
+    <span class="p">))</span>
+
+    <span class="n">run</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">run_desc</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Execute the policies in a config file&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">)</span>
+
+    <span class="n">run</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;c7n.commands.run&quot;</span><span class="p">)</span>
+    <span class="n">_default_options</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+    <span class="n">_dryrun_option</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--skip-validation&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skips validation of policies (assumes you&#39;ve run the validate command seperately).&quot;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;--metrics-enabled&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="s2">&quot;aws&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Emit metrics to provider metrics&quot;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--trace&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;tracer&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">SUPPRESS</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
+
+    <span class="n">schema_desc</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Browse the available vocabularies (resources, filters, and &quot;</span>
+                   <span class="s2">&quot;actions) for policy construction. The selector &quot;</span>
+                   <span class="s2">&quot;is specified with RESOURCE[.CATEGORY[.ITEM]] &quot;</span>
+                   <span class="s2">&quot;examples: s3, ebs.actions, or ec2.filters.instance-age&quot;</span><span class="p">)</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s1">&#39;schema&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">schema_desc</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Interactive cli docs for policy authors&quot;</span><span class="p">)</span>
+    <span class="n">schema</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;c7n.commands.schema_cmd&quot;</span><span class="p">)</span>
+    <span class="n">_schema_options</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
 
     <span class="n">report_desc</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Report of resources that a policy matched/ran on. &quot;</span>
                    <span class="s2">&quot;The default output format is csv, but other formats &quot;</span>
                    <span class="s2">&quot;are available.&quot;</span><span class="p">)</span>
     <span class="n">report</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">report_desc</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">report_desc</span><span class="p">)</span>
+        <span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">report_desc</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Tabular report on policy matched resources&quot;</span><span class="p">)</span>
     <span class="n">report</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;c7n.commands.report&quot;</span><span class="p">)</span>
     <span class="n">_report_options</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
 
-    <span class="n">logs_desc</span> <span class="o">=</span> <span class="s2">&quot;Get policy execution logs from s3 or cloud watch logs&quot;</span>
+    <span class="n">logs_desc</span> <span class="o">=</span> <span class="s2">&quot;Get policy execution logs&quot;</span>
     <span class="n">logs</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s1">&#39;logs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">logs_desc</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">logs_desc</span><span class="p">)</span>
     <span class="n">logs</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;c7n.commands.logs&quot;</span><span class="p">)</span>
     <span class="n">_logs_options</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span>
 
-    <span class="n">metrics_desc</span> <span class="o">=</span> <span class="s2">&quot;Retrieve metrics for policies from CloudWatch Metrics&quot;</span>
+    <span class="n">metrics_desc</span> <span class="o">=</span> <span class="s2">&quot;Retrieve policy execution metrics.&quot;</span>
     <span class="n">metrics</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s1">&#39;metrics&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">metrics_desc</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">metrics_desc</span><span class="p">)</span>
     <span class="n">metrics</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;c7n.commands.metrics_cmd&quot;</span><span class="p">)</span>
@@ -442,50 +493,6 @@
     <span class="n">validate</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Verbose Logging&quot;</span><span class="p">)</span>
     <span class="n">validate</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="s2">&quot;--quiet&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Less logging (repeatable)&quot;</span><span class="p">)</span>
     <span class="n">validate</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--debug&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">SUPPRESS</span><span class="p">)</span>
-
-    <span class="n">schema_desc</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Browse the available vocabularies (resources, filters, and &quot;</span>
-                   <span class="s2">&quot;actions) for policy construction. The selector &quot;</span>
-                   <span class="s2">&quot;is specified with RESOURCE[.CATEGORY[.ITEM]] &quot;</span>
-                   <span class="s2">&quot;examples: s3, ebs.actions, or ec2.filters.instance-age&quot;</span><span class="p">)</span>
-    <span class="n">schema</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s1">&#39;schema&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">schema_desc</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Interactive cli docs for policy authors&quot;</span><span class="p">)</span>
-    <span class="n">schema</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;c7n.commands.schema_cmd&quot;</span><span class="p">)</span>
-    <span class="n">_schema_options</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
-
-    <span class="n">run_desc</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span>
-        <span class="s2">&quot;Execute the policies in a config file&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Multiple regions can be passed in, as can the symbolic region &#39;all&#39;. &quot;</span><span class="p">,</span>
-        <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;When running across multiple regions, policies targeting resources in &quot;</span><span class="p">,</span>
-        <span class="s2">&quot;regions where they do not exist will not be run. The output directory &quot;</span><span class="p">,</span>
-        <span class="s2">&quot;when passing multiple regions is suffixed with the region. Resources &quot;</span><span class="p">,</span>
-        <span class="s2">&quot;with global endpoints are run just once and are suffixed with the first &quot;</span><span class="p">,</span>
-        <span class="s2">&quot;region passed in or us-east-1 if running against &#39;all&#39; regions.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;&quot;</span>
-    <span class="p">))</span>
-
-    <span class="n">run</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">run_desc</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">run_desc</span><span class="p">,</span>
-        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">)</span>
-
-    <span class="n">run</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;c7n.commands.run&quot;</span><span class="p">)</span>
-    <span class="n">_default_options</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-    <span class="n">_dryrun_option</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--skip-validation&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skips validation of policies (assumes you&#39;ve run the validate command seperately).&quot;</span><span class="p">)</span>
-    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;--metrics-enabled&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="s2">&quot;aws&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Emit metrics to provider metrics&quot;</span><span class="p">)</span>
-    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--trace&quot;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;tracer&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">SUPPRESS</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span></div>
 
@@ -571,7 +578,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -590,21 +597,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

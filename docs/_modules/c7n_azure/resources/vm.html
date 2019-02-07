@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -264,10 +267,11 @@
 
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;poweroff&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="VmPowerOffAction.process_resource_set"><a class="viewcode-back" href="../../../generated/azure/c7n_azure.resources.html#c7n_azure.resources.vm.VmPowerOffAction.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vms</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="n">vms</span><span class="p">:</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">virtual_machines</span><span class="o">.</span><span class="n">power_off</span><span class="p">(</span><span class="n">vm</span><span class="p">[</span><span class="s1">&#39;resourceGroup&#39;</span><span class="p">],</span> <span class="n">vm</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span></div></div>
+    <span class="k">def</span> <span class="nf">_prepare_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_process_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">virtual_machines</span><span class="o">.</span><span class="n">power_off</span><span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;resourceGroup&#39;</span><span class="p">],</span> <span class="n">resource</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="VmStopAction"><a class="viewcode-back" href="../../../generated/azure/c7n_azure.resources.html#c7n_azure.resources.vm.VmStopAction">[docs]</a><span class="nd">@VirtualMachine</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;stop&#39;</span><span class="p">)</span>
@@ -275,10 +279,11 @@
 
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;stop&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="VmStopAction.process_resource_set"><a class="viewcode-back" href="../../../generated/azure/c7n_azure.resources.html#c7n_azure.resources.vm.VmStopAction.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vms</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="n">vms</span><span class="p">:</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">virtual_machines</span><span class="o">.</span><span class="n">deallocate</span><span class="p">(</span><span class="n">vm</span><span class="p">[</span><span class="s1">&#39;resourceGroup&#39;</span><span class="p">],</span> <span class="n">vm</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span></div></div>
+    <span class="k">def</span> <span class="nf">_prepare_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_process_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">virtual_machines</span><span class="o">.</span><span class="n">deallocate</span><span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;resourceGroup&#39;</span><span class="p">],</span> <span class="n">resource</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="VmStartAction"><a class="viewcode-back" href="../../../generated/azure/c7n_azure.resources.html#c7n_azure.resources.vm.VmStartAction">[docs]</a><span class="nd">@VirtualMachine</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>
@@ -286,10 +291,11 @@
 
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="VmStartAction.process_resource_set"><a class="viewcode-back" href="../../../generated/azure/c7n_azure.resources.html#c7n_azure.resources.vm.VmStartAction.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vms</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="n">vms</span><span class="p">:</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">virtual_machines</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">vm</span><span class="p">[</span><span class="s1">&#39;resourceGroup&#39;</span><span class="p">],</span> <span class="n">vm</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span></div></div>
+    <span class="k">def</span> <span class="nf">_prepare_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_process_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">virtual_machines</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;resourceGroup&#39;</span><span class="p">],</span> <span class="n">resource</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="VmRestartAction"><a class="viewcode-back" href="../../../generated/azure/c7n_azure.resources.html#c7n_azure.resources.vm.VmRestartAction">[docs]</a><span class="nd">@VirtualMachine</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)</span>
@@ -297,10 +303,11 @@
 
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="VmRestartAction.process_resource_set"><a class="viewcode-back" href="../../../generated/azure/c7n_azure.resources.html#c7n_azure.resources.vm.VmRestartAction.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vms</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="n">vms</span><span class="p">:</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">virtual_machines</span><span class="o">.</span><span class="n">restart</span><span class="p">(</span><span class="n">vm</span><span class="p">[</span><span class="s1">&#39;resourceGroup&#39;</span><span class="p">],</span> <span class="n">vm</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span></div></div>
+    <span class="k">def</span> <span class="nf">_prepare_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_process_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">virtual_machines</span><span class="o">.</span><span class="n">restart</span><span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;resourceGroup&#39;</span><span class="p">],</span> <span class="n">resource</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span></div>
 </pre></div>
 
            </div>
@@ -313,7 +320,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -332,21 +339,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

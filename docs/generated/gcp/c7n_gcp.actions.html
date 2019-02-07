@@ -1,0 +1,507 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>c7n_gcp.actions package &mdash; Cloud Custodian  documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/c1_labs.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/expand.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="c7n_gcp.filters package" href="c7n_gcp.filters.html" />
+    <link rel="prev" title="c7n_gcp package" href="c7n_gcp.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Cloud Custodian
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart/usage.html">Monitoring your environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart/advanced.html">Advanced Usage</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart/offhours.html">Example offhours policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart/tagCompliance.html">Example tag compliance policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usecases/index.html">Use Cases</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Working with AWS Lambda</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../policy/lambda.html">Lambda Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../policy/mu.html">Mu - Lambda Lifecycle Management</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Policies reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../policy/index.html">Resource-Specific Filters and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../filters.html">Generic Filters</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Contributing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contributing to Cloud Custodian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/installing.html">Installing for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/tests.html">Testing for Developers</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Azure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../aws/modules.html">AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../azure/modules.html">Azure</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">GCP</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="c7n_gcp.html">c7n_gcp package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="c7n_gcp.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">c7n_gcp.actions package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="c7n_gcp.filters.html">c7n_gcp.filters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="c7n_gcp.resources.html">c7n_gcp.resources package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.client">c7n_gcp.client module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.entry">c7n_gcp.entry module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.handler">c7n_gcp.handler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.mu">c7n_gcp.mu module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.output">c7n_gcp.output module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.policy">c7n_gcp.policy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.provider">c7n_gcp.provider module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp.query">c7n_gcp.query module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c7n_gcp.html#module-c7n_gcp">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cloud Custodian</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">GCP</a> &raquo;</li>
+        
+          <li><a href="c7n_gcp.html">c7n_gcp package</a> &raquo;</li>
+        
+      <li>c7n_gcp.actions package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="c7n-gcp-actions-package">
+<h1>c7n_gcp.actions package<a class="headerlink" href="#c7n-gcp-actions-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-c7n_gcp.actions.core">
+<span id="c7n-gcp-actions-core-module"></span><h2>c7n_gcp.actions.core module<a class="headerlink" href="#module-c7n_gcp.actions.core" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="c7n_gcp.actions.core.Action">
+<em class="property">class </em><code class="descclassname">c7n_gcp.actions.core.</code><code class="descname">Action</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/core.html#Action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.core.Action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../aws/c7n.actions.html#c7n.actions.core.Action" title="c7n.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.core.Action</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.actions.core.MethodAction">
+<em class="property">class </em><code class="descclassname">c7n_gcp.actions.core.</code><code class="descname">MethodAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/core.html#MethodAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#c7n_gcp.actions.core.Action" title="c7n_gcp.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.core.Action</span></code></a></p>
+<p>Invoke an api call on each resource.</p>
+<p>Quite a number of procedural actions are simply invoking an api
+call on a filtered set of resources. The exact handling is mostly
+boilerplate at that point following an 80/20 rule. This class is
+an encapsulation of the 80%.</p>
+<dl class="attribute">
+<dt id="c7n_gcp.actions.core.MethodAction.attr_filter">
+<code class="descname">attr_filter</code><em class="property"> = ()</em><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.attr_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.actions.core.MethodAction.chunk_size">
+<code class="descname">chunk_size</code><em class="property"> = 20</em><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.chunk_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.core.MethodAction.filter_resources">
+<code class="descname">filter_resources</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/core.html#MethodAction.filter_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.filter_resources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.core.MethodAction.get_client">
+<code class="descname">get_client</code><span class="sig-paren">(</span><em>session</em>, <em>model</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/core.html#MethodAction.get_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.get_client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.core.MethodAction.get_resource_params">
+<code class="descname">get_resource_params</code><span class="sig-paren">(</span><em>m</em>, <em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/core.html#MethodAction.get_resource_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.get_resource_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.actions.core.MethodAction.ignore_errors_codes">
+<code class="descname">ignore_errors_codes</code><em class="property"> = ()</em><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.ignore_errors_codes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.core.MethodAction.invoke_api">
+<code class="descname">invoke_api</code><span class="sig-paren">(</span><em>client</em>, <em>op_name</em>, <em>params</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/core.html#MethodAction.invoke_api"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.invoke_api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.actions.core.MethodAction.method_spec">
+<code class="descname">method_spec</code><em class="property"> = ()</em><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.method_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.core.MethodAction.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/core.html#MethodAction.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.process" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.core.MethodAction.process_resource_set">
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>model</em>, <em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/core.html#MethodAction.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.core.MethodAction.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/core.html#MethodAction.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.core.MethodAction.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-c7n_gcp.actions.cscc">
+<span id="c7n-gcp-actions-cscc-module"></span><h2>c7n_gcp.actions.cscc module<a class="headerlink" href="#module-c7n_gcp.actions.cscc" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="c7n_gcp.actions.cscc.PostFinding">
+<em class="property">class </em><code class="descclassname">c7n_gcp.actions.cscc.</code><code class="descname">PostFinding</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#PostFinding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#c7n_gcp.actions.core.MethodAction" title="c7n_gcp.actions.core.MethodAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.actions.core.MethodAction</span></code></a></p>
+<p>Post finding for matched resources to Cloud Security Command Center.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">gcp-instances-with-label</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">gcp.instance</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;tag:name&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;bad-instance&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">post-finding</span>
+        <span class="l l-Scalar l-Scalar-Plain">org-domain</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">example.io</span>
+        <span class="l l-Scalar l-Scalar-Plain">category</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">MEDIUM_INTERNET_SECURITY</span>
+</pre></div>
+</div>
+<p>The source for custodian can either be specified inline to the policy, or
+custodian can generate one at runtime if it doesn’t exist given a org-domain
+or org-id.</p>
+<p>Finding updates are not currently supported, due to upstream api issues.</p>
+<dl class="attribute">
+<dt id="c7n_gcp.actions.cscc.PostFinding.CustodianSourceName">
+<code class="descname">CustodianSourceName</code><em class="property"> = 'CloudCustodian'</em><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.CustodianSourceName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.actions.cscc.PostFinding.DefaultCategory">
+<code class="descname">DefaultCategory</code><em class="property"> = 'Custodian'</em><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.DefaultCategory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.actions.cscc.PostFinding.Service">
+<code class="descname">Service</code><em class="property"> = 'securitycenter'</em><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.Service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.actions.cscc.PostFinding.ServiceVersion">
+<code class="descname">ServiceVersion</code><em class="property"> = 'v1beta1'</em><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.ServiceVersion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.cscc.PostFinding.get_client">
+<code class="descname">get_client</code><span class="sig-paren">(</span><em>session</em>, <em>model</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#PostFinding.get_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.get_client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.cscc.PostFinding.get_finding">
+<code class="descname">get_finding</code><span class="sig-paren">(</span><em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#PostFinding.get_finding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.get_finding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.cscc.PostFinding.get_name">
+<code class="descname">get_name</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#PostFinding.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given an arbitrary resource attempt to resolve back to a qualified name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.cscc.PostFinding.get_resource_params">
+<code class="descname">get_resource_params</code><span class="sig-paren">(</span><em>model</em>, <em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#PostFinding.get_resource_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.get_resource_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.actions.cscc.PostFinding.ignore_error_codes">
+<code class="descname">ignore_error_codes</code><em class="property"> = (409,)</em><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.ignore_error_codes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.cscc.PostFinding.initialize_source">
+<code class="descname">initialize_source</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#PostFinding.initialize_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.initialize_source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.actions.cscc.PostFinding.method_spec">
+<code class="descname">method_spec</code><em class="property"> = {'annotation_key': 'c7n:Finding', 'op': 'create', 'result': 'name'}</em><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.method_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.cscc.PostFinding.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#PostFinding.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.process" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="c7n_gcp.actions.cscc.PostFinding.register_resource">
+<em class="property">classmethod </em><code class="descname">register_resource</code><span class="sig-paren">(</span><em>registry</em>, <em>event</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#PostFinding.register_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.register_resource" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.actions.cscc.PostFinding.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'category': {'type': 'string'}, 'org-domain': {'type': 'string'}, 'org-id': {'type': 'integer'}, 'source': {'description': 'qualified name of source to post to CSCC as', 'type': 'string'}, 'type': {'enum': ['post-finding']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.actions.cscc.PostFinding.type">
+<code class="descname">type</code><em class="property"> = 'post-finding'</em><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n_gcp.actions.cscc.PostFinding.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#PostFinding.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.PostFinding.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="c7n_gcp.actions.cscc.name_appengine">
+<code class="descclassname">c7n_gcp.actions.cscc.</code><code class="descname">name_appengine</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#name_appengine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.name_appengine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="c7n_gcp.actions.cscc.name_compute">
+<code class="descclassname">c7n_gcp.actions.cscc.</code><code class="descname">name_compute</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#name_compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.name_compute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="c7n_gcp.actions.cscc.name_container">
+<code class="descclassname">c7n_gcp.actions.cscc.</code><code class="descname">name_container</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#name_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.name_container" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="c7n_gcp.actions.cscc.name_iam">
+<code class="descclassname">c7n_gcp.actions.cscc.</code><code class="descname">name_iam</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#name_iam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.name_iam" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="c7n_gcp.actions.cscc.name_resourcemanager">
+<code class="descclassname">c7n_gcp.actions.cscc.</code><code class="descname">name_resourcemanager</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#name_resourcemanager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.name_resourcemanager" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="c7n_gcp.actions.cscc.name_storage">
+<code class="descclassname">c7n_gcp.actions.cscc.</code><code class="descname">name_storage</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/actions/cscc.html#name_storage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.actions.cscc.name_storage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-c7n_gcp.actions">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-c7n_gcp.actions" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="c7n_gcp.filters.html" class="btn btn-neutral float-right" title="c7n_gcp.filters package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="c7n_gcp.html" class="btn btn-neutral" title="c7n_gcp package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Capital One Services, LLC
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

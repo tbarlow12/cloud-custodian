@@ -68,6 +68,14 @@ c7n.resources.awslambda module
     :undoc-members:
     :show-inheritance:
 
+c7n.resources.backup module
+---------------------------
+
+.. automodule:: c7n.resources.backup
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 c7n.resources.batch module
 --------------------------
 
@@ -160,6 +168,14 @@ c7n.resources.directory module
 ------------------------------
 
 .. automodule:: c7n.resources.directory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+c7n.resources.dlm module
+------------------------
+
+.. automodule:: c7n.resources.dlm
     :members:
     :undoc-members:
     :show-inheritance:
@@ -328,6 +344,14 @@ c7n.resources.iot module
 ------------------------
 
 .. automodule:: c7n.resources.iot
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+c7n.resources.kafka module
+--------------------------
+
+.. automodule:: c7n.resources.kafka
     :members:
     :undoc-members:
     :show-inheritance:

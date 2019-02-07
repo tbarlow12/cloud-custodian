@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -204,6 +207,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">types</span>
 
 <span class="kn">import</span> <span class="nn">jwt</span>
 <span class="kn">from</span> <span class="nn">azure.common.credentials</span> <span class="k">import</span> <span class="p">(</span><span class="n">BasicTokenAuthentication</span><span class="p">,</span>
@@ -212,7 +216,7 @@
 <span class="kn">from</span> <span class="nn">msrestazure.azure_active_directory</span> <span class="k">import</span> <span class="n">MSIAuthentication</span>
 
 <span class="kn">from</span> <span class="nn">c7n_azure</span> <span class="k">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">c7n_azure.utils</span> <span class="k">import</span> <span class="n">ResourceIdParser</span><span class="p">,</span> <span class="n">StringUtils</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.utils</span> <span class="k">import</span> <span class="n">ResourceIdParser</span><span class="p">,</span> <span class="n">StringUtils</span><span class="p">,</span> <span class="n">custodian_azure_send_override</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">azure.cli.core._profile</span> <span class="k">import</span> <span class="n">Profile</span>
@@ -335,7 +339,17 @@
         <span class="n">service_name</span><span class="p">,</span> <span class="n">client_name</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">svc_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
         <span class="n">klass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">svc_module</span><span class="p">,</span> <span class="n">client_name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">klass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscription_id</span><span class="p">)</span></div>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">klass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscription_id</span><span class="p">)</span>
+
+        <span class="c1"># Override send() method to log request limits &amp; custom retries</span>
+        <span class="n">service_client</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">_client</span>
+        <span class="n">service_client</span><span class="o">.</span><span class="n">orig_send</span> <span class="o">=</span> <span class="n">service_client</span><span class="o">.</span><span class="n">send</span>
+        <span class="n">service_client</span><span class="o">.</span><span class="n">send</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">MethodType</span><span class="p">(</span><span class="n">custodian_azure_send_override</span><span class="p">,</span> <span class="n">service_client</span><span class="p">)</span>
+
+        <span class="c1"># Don&#39;t respect retry_after_header to implement custom retries</span>
+        <span class="n">service_client</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">retry_policy</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">respect_retry_after_header</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">client</span></div>
 
 <div class="viewcode-block" id="Session.get_credentials"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.session.Session.get_credentials">[docs]</a>    <span class="k">def</span> <span class="nf">get_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_session</span><span class="p">()</span>
@@ -457,7 +471,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -476,21 +490,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

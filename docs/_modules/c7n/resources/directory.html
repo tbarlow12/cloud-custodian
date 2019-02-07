@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -203,12 +206,10 @@
 <span class="c1"># limitations under the License.</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span>
 
-<span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="k">import</span> <span class="n">ClientError</span>
-
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span>
-<span class="kn">from</span> <span class="nn">c7n.filters.vpc</span> <span class="k">import</span> <span class="n">SecurityGroupFilter</span><span class="p">,</span> <span class="n">SubnetFilter</span>
+<span class="kn">from</span> <span class="nn">c7n.filters.vpc</span> <span class="k">import</span> <span class="n">SecurityGroupFilter</span><span class="p">,</span> <span class="n">SubnetFilter</span><span class="p">,</span> <span class="n">VpcFilter</span>
 <span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">RemoveTag</span>
 
 
@@ -227,16 +228,14 @@
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ds:ListTagsForResource&#39;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="Directory.augment"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.directory.Directory.augment">[docs]</a>    <span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directories</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ds&#39;</span><span class="p">)</span>
+
         <span class="k">def</span> <span class="nf">_add_tags</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-            <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ds&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">list_tags_for_resource</span><span class="p">(</span>
-                    <span class="n">ResourceId</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;DirectoryId&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Tags&#39;</span><span class="p">,</span> <span class="p">[]):</span>
-                <span class="n">d</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;Tags&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="p">{</span><span class="s1">&#39;Key&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">],</span> <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]})</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;Tags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">list_tags_for_resource</span><span class="p">(</span>
+                <span class="n">ResourceId</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;DirectoryId&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Tags&#39;</span><span class="p">,</span> <span class="p">[])</span>
             <span class="k">return</span> <span class="n">d</span>
 
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_add_tags</span><span class="p">,</span> <span class="n">directories</span><span class="p">)))</span></div></div>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_add_tags</span><span class="p">,</span> <span class="n">directories</span><span class="p">))</span></div></div>
 
 
 <div class="viewcode-block" id="DirectorySubnetFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.directory.DirectorySubnetFilter">[docs]</a><span class="nd">@Directory</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;subnet&#39;</span><span class="p">)</span>
@@ -249,6 +248,12 @@
 <span class="k">class</span> <span class="nc">DirectorySecurityGroupFilter</span><span class="p">(</span><span class="n">SecurityGroupFilter</span><span class="p">):</span>
 
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;VpcSettings.SecurityGroupId&quot;</span></div>
+
+
+<div class="viewcode-block" id="DirectoryVpcFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.directory.DirectoryVpcFilter">[docs]</a><span class="nd">@Directory</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;vpc&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DirectoryVpcFilter</span><span class="p">(</span><span class="n">VpcFilter</span><span class="p">):</span>
+
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;VpcSettings.VpcId&quot;</span></div>
 
 
 <div class="viewcode-block" id="DirectoryTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.directory.DirectoryTag">[docs]</a><span class="nd">@Directory</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
@@ -271,18 +276,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ds:AddTagToResource&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="DirectoryTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.directory.DirectoryTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ds&#39;</span><span class="p">)</span>
-        <span class="n">tag_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
-            <span class="n">tag_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;Key&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">],</span> <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]})</span>
+<div class="viewcode-block" id="DirectoryTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.directory.DirectoryTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">directories</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">client</span><span class="o">.</span><span class="n">add_tags_to_resource</span><span class="p">(</span>
-                    <span class="n">ResourceId</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;DirectoryId&#39;</span><span class="p">],</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tag_list</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
-                    <span class="s1">&#39;Exception tagging Directory </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;DirectoryId&#39;</span><span class="p">],</span> <span class="n">e</span><span class="p">)</span>
+                    <span class="n">ResourceId</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;DirectoryId&#39;</span><span class="p">],</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">EntityDoesNotExistException</span><span class="p">:</span>
                 <span class="k">continue</span></div></div>
 
 
@@ -305,16 +304,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ds:RemoveTagsFromResource&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="DirectoryRemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.directory.DirectoryRemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ds&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="DirectoryRemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.directory.DirectoryRemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">directories</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">client</span><span class="o">.</span><span class="n">remove_tags_from_resource</span><span class="p">(</span>
                     <span class="n">ResourceId</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;DirectoryId&#39;</span><span class="p">],</span> <span class="n">TagKeys</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
-                    <span class="s1">&#39;Exception removing tags from Directory </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;DirectoryId&#39;</span><span class="p">],</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">EntityDoesNotExistException</span><span class="p">:</span>
                 <span class="k">continue</span></div></div>
 
 
@@ -340,7 +335,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -359,21 +354,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

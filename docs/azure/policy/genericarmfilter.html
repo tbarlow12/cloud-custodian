@@ -115,18 +115,28 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Policies</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="delayedoperation.html">Delayed Operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="genericarmaction.html">Generic Actions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Generic Filters</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#metric-filter">Metric Filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-policies">Example Policies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tag-filter">Tag Filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Example Policies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#marked-for-op-filter">Marked-For-Op Filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Example Policies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#diagnostic-settings-filter">Diagnostic Settings Filter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Example Policies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#metric-filter">Metric Filter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-policies">Example Policies</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tag-filter">Tag Filter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Example Policies</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#marked-for-op-filter">Marked-For-Op Filter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Example Policies</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#diagnostic-settings-filter">Diagnostic Settings Filter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Example Policies</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="resources/accesscontrol.html">Access Control</a></li>
@@ -135,6 +145,7 @@
 <li class="toctree-l2"><a class="reference internal" href="resources/batch.html">Batch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/cdn.html">CDN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/cognitiveservices.html">Cognitive Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/containerregistry.html">Container Registry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/containerservice.html">Container Service</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/cosmosdb.html">Cosmos DB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/datafactory.html">Data Factory</a></li>
@@ -149,7 +160,7 @@
 <li class="toctree-l2"><a class="reference internal" href="resources/publicip.html">Public IP Address</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/redis.html">Redis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/resourcegroup.html">Resource Groups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="resources/sqlserver.html">SQl Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/sqlserver.html">SQL Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/storage.html">Storage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/subscription.html">Subscription</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/vm.html">Virtual Machines</a></li>
@@ -160,6 +171,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -248,6 +261,9 @@ Schema:</div>
       <span class="s2">&quot;average&quot;</span>
     <span class="p">]</span>
   <span class="p">},</span>
+  <span class="s2">&quot;filter&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;string&quot;</span>
+  <span class="p">},</span>
   <span class="s2">&quot;interval&quot;</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">&quot;enum&quot;</span><span class="o">:</span> <span class="p">[</span>
       <span class="s2">&quot;PT1M&quot;</span><span class="p">,</span>
@@ -264,20 +280,26 @@ Schema:</div>
     <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;string&quot;</span>
   <span class="p">},</span>
+  <span class="s2">&quot;no_data_action&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;enum&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="s2">&quot;include&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;exclude&quot;</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
   <span class="s2">&quot;op&quot;</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">&quot;enum&quot;</span><span class="o">:</span> <span class="p">[</span>
-      <span class="s2">&quot;not-equal&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;eq&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;equal&quot;</span><span class="p">,</span>
       <span class="s2">&quot;ne&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;not-equal&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;gt&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;greater-than&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;ge&quot;</span><span class="p">,</span>
       <span class="s2">&quot;gte&quot;</span><span class="p">,</span>
       <span class="s2">&quot;le&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;eq&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;lt&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;equal&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;ge&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;less-than&quot;</span><span class="p">,</span>
       <span class="s2">&quot;lte&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;gt&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;greater-than&quot;</span>
+      <span class="s2">&quot;lt&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;less-than&quot;</span>
     <span class="p">],</span>
     <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span>
   <span class="p">},</span>
@@ -294,23 +316,22 @@ Schema:</div>
 </div>
 <p>Metrics for Custodian-supported Azure resources:</p>
 <ul class="simple">
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftcognitiveservicesaccounts/">Cognitive Services</a></li>
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftdocumentdbdatabaseaccounts/">Cosmos DB</a></li>
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftdatafactoryfactories/">Data Factory</a></li>
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftdevicesiothubs/">IoT Hub</a></li>
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftkeyvaultvaults/">Key Vault</a></li>
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftnetworkloadbalancers/">Load Balancer</a></li>
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftnetworkpublicipaddresses/">Public IP Address</a></li>
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftsqlservers/">SQL Server</a></li>
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftstoragestorageaccounts/">Storage Accounts</a></li>
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftcomputevirtualmachines/">Virtual Machine</a></li>
-<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftwebsites-excluding-functions/">Web Apps (excluding functions)</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftcognitiveservicesaccounts">Cognitive Services</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftdocumentdbdatabaseaccounts">Cosmos DB</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftdatafactoryfactories">Data Factory</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftdevicesiothubs">IoT Hub</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftkeyvaultvaults">Key Vault</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftnetworkloadbalancers">Load Balancer</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftnetworkpublicipaddresses">Public IP Address</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftsqlserversdatabases">SQL Server Databases</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftstoragestorageaccounts">Storage Accounts</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftcomputevirtualmachines">Virtual Machine</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics#microsoftwebsites-excluding-functions">Web Apps (excluding functions)</a></li>
 </ul>
 <p>Click <a class="reference external" href="https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-supported-metrics/">here</a>
 for a full list of metrics supported by Azure resources.</p>
-</div>
 <div class="section" id="example-policies">
-<h2>Example Policies<a class="headerlink" href="#example-policies" title="Permalink to this headline">¶</a></h2>
+<h3>Example Policies<a class="headerlink" href="#example-policies" title="Permalink to this headline">¶</a></h3>
 <p>Find VMs with an average Percentage CPU greater than or equal to 75% over the last 12 hours</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">find-busy-vms</span>
@@ -337,7 +358,7 @@ for a full list of metrics supported by Azure resources.</p>
         <span class="l l-Scalar l-Scalar-Plain">timeframe</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
 </pre></div>
 </div>
-<p>Find SQL servers with less than 10% average DTU consumption over last 24 hours</p>
+<p>Find SQL servers with less than 10% average DTU consumption across all databases over last 24 hours</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dtu-consumption</span>
     <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">azure.sqlserver</span>
@@ -348,7 +369,9 @@ for a full list of metrics supported by Azure resources.</p>
         <span class="l l-Scalar l-Scalar-Plain">op</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">lt</span>
         <span class="l l-Scalar l-Scalar-Plain">threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
         <span class="l l-Scalar l-Scalar-Plain">timeframe</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">24</span>
+        <span class="l l-Scalar l-Scalar-Plain">filter</span><span class="p p-Indicator">:</span>  <span class="s">&quot;DatabaseResourceId</span><span class="nv"> </span><span class="s">eq</span><span class="nv"> </span><span class="s">&#39;*&#39;&quot;</span>
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="tag-filter">
@@ -367,26 +390,26 @@ Schema:</div>
   <span class="p">},</span>
   <span class="s2">&quot;op&quot;</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">&quot;enum&quot;</span><span class="o">:</span> <span class="p">[</span>
-      <span class="s2">&quot;regex&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;not-equal&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;ne&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;gte&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;gt&quot;</span><span class="p">,</span>
       <span class="s2">&quot;eq&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;difference&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;lt&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;ni&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;ge&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;intersect&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;in&quot;</span><span class="p">,</span>
       <span class="s2">&quot;equal&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;lte&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;le&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;ne&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;not-equal&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;gt&quot;</span><span class="p">,</span>
       <span class="s2">&quot;greater-than&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;ge&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;gte&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;le&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;lte&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;lt&quot;</span><span class="p">,</span>
       <span class="s2">&quot;less-than&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;contains&quot;</span><span class="p">,</span>
       <span class="s2">&quot;glob&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;not-in&quot;</span>
+      <span class="s2">&quot;regex&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;in&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;ni&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;not-in&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;contains&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;difference&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;intersect&quot;</span>
     <span class="p">]</span>
   <span class="p">},</span>
   <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -457,9 +480,8 @@ Schema:</div>
 </pre></div>
 </div>
 </div>
-</div>
 <div class="section" id="id1">
-<h2>Example Policies<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h3>Example Policies<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>This policy will delete all ARM resources with the tag ‘Tag1’ present</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span>
   <span class="l l-Scalar l-Scalar-Plain">- name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete-resources-with-Tag1</span>
@@ -485,6 +507,7 @@ Schema:</div>
     <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">tag:Tag1</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Value1</span>
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="marked-for-op-filter">
@@ -516,9 +539,8 @@ Schema:</div>
 </pre></div>
 </div>
 </div>
-</div>
 <div class="section" id="id2">
-<h2>Example Policies<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h3>Example Policies<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Find VMs that have been marked for stopping and stop them</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span>
   <span class="l l-Scalar l-Scalar-Plain">- name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">find-vms-to-stop</span>
@@ -565,6 +587,7 @@ Schema:</div>
 </pre></div>
 </div>
 </div>
+</div>
 <div class="section" id="diagnostic-settings-filter">
 <h2>Diagnostic Settings Filter<a class="headerlink" href="#diagnostic-settings-filter" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">DiagnosticSettingsFilter</span></code>
@@ -582,26 +605,26 @@ Schema:</div>
   <span class="p">},</span>
   <span class="s2">&quot;op&quot;</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">&quot;enum&quot;</span><span class="o">:</span> <span class="p">[</span>
-      <span class="s2">&quot;regex&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;not-equal&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;ne&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;gte&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;gt&quot;</span><span class="p">,</span>
       <span class="s2">&quot;eq&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;difference&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;lt&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;ni&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;ge&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;intersect&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;in&quot;</span><span class="p">,</span>
       <span class="s2">&quot;equal&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;lte&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;le&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;ne&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;not-equal&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;gt&quot;</span><span class="p">,</span>
       <span class="s2">&quot;greater-than&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;ge&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;gte&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;le&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;lte&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;lt&quot;</span><span class="p">,</span>
       <span class="s2">&quot;less-than&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;contains&quot;</span><span class="p">,</span>
       <span class="s2">&quot;glob&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;not-in&quot;</span>
+      <span class="s2">&quot;regex&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;in&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;ni&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;not-in&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;contains&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;difference&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;intersect&quot;</span>
     <span class="p">]</span>
   <span class="p">},</span>
   <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -672,9 +695,8 @@ Schema:</div>
 </pre></div>
 </div>
 </div>
-</div>
 <div class="section" id="id3">
-<h2>Example Policies<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h3>Example Policies<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>Find Load Balancers that have logs for both LoadBalancerProbeHealthStatus category and LoadBalancerAlertEvent category enabled.
 The use of value_type: swap is important for these examples because it swaps the value and the evaluated key so that it evaluates the value provided is in the logs.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span>
@@ -707,6 +729,7 @@ The use of value_type: swap is important for these examples because it swaps the
 </div>
 </div>
 </div>
+</div>
 
 
            </div>
@@ -728,7 +751,7 @@ The use of value_type: swap is important for these examples because it swaps the
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -747,21 +770,15 @@ The use of value_type: swap is important for these examples because it swaps the
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

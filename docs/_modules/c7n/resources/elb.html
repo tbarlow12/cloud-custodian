@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -298,7 +301,8 @@
 
 <div class="viewcode-block" id="SetELBShieldProtection.clear_stale"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.SetELBShieldProtection.clear_stale">[docs]</a>    <span class="k">def</span> <span class="nf">clear_stale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">protections</span><span class="p">):</span>
         <span class="c1"># elbs arns need extra discrimination to distinguish</span>
-        <span class="c1"># from app load balancer arns. See https://goo.gl/pE7TQb</span>
+        <span class="c1"># from app load balancer arns. See</span>
+        <span class="c1"># https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-elb-application</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SetELBShieldProtection</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">clear_stale</span><span class="p">(</span>
             <span class="n">client</span><span class="p">,</span>
             <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">protections</span> <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="s1">&#39;ResourceArn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span></div></div>
@@ -324,16 +328,7 @@
 <span class="sd">                    msg: &quot;Unused ELB - No Instances: {op}@{action_date}&quot;</span>
 <span class="sd">                    op: delete</span>
 <span class="sd">                    days: 7</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;elasticloadbalancing:AddTags&#39;</span><span class="p">,)</span>
-
-<div class="viewcode-block" id="TagDelayedAction.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.TagDelayedAction.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">add_tags</span><span class="p">(</span>
-            <span class="n">LoadBalancerNames</span><span class="o">=</span><span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resource_set</span><span class="p">],</span>
-            <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Tag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.Tag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
@@ -358,9 +353,7 @@
     <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;elasticloadbalancing:AddTags&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="Tag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.Tag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Tag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.Tag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
         <span class="n">client</span><span class="o">.</span><span class="n">add_tags</span><span class="p">(</span>
             <span class="n">LoadBalancerNames</span><span class="o">=</span><span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resource_set</span><span class="p">],</span>
             <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
@@ -387,9 +380,7 @@
     <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;elasticloadbalancing:RemoveTags&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="RemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.RemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.RemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
         <span class="n">client</span><span class="o">.</span><span class="n">remove_tags</span><span class="p">(</span>
             <span class="n">LoadBalancerNames</span><span class="o">=</span><span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resource_set</span><span class="p">],</span>
             <span class="n">Tags</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;Key&#39;</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">tag_keys</span><span class="p">}])</span></div></div>
@@ -520,7 +511,7 @@
 <div class="viewcode-block" id="ELBModifyVpcSecurityGroups.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.ELBModifyVpcSecurityGroups.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_balancers</span><span class="p">):</span>
         <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
         <span class="n">groups</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ELBModifyVpcSecurityGroups</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_groups</span><span class="p">(</span>
-            <span class="n">load_balancers</span><span class="p">,</span> <span class="s1">&#39;SecurityGroups&#39;</span><span class="p">)</span>
+            <span class="n">load_balancers</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">load_balancers</span><span class="p">):</span>
             <span class="n">client</span><span class="o">.</span><span class="n">apply_security_groups_to_load_balancer</span><span class="p">(</span>
                 <span class="n">LoadBalancerName</span><span class="o">=</span><span class="n">l</span><span class="p">[</span><span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">],</span>
@@ -623,6 +614,13 @@
     <span class="sd">&quot;&quot;&quot;ELB subnet filter&quot;&quot;&quot;</span>
 
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;Subnets[]&quot;</span></div>
+
+
+<div class="viewcode-block" id="VpcFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.VpcFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;vpc&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VpcFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">VpcFilter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;ELB vpc filter&quot;&quot;&quot;</span>
+
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;VPCId&quot;</span></div>
 
 
 <span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;network-location&#39;</span><span class="p">,</span> <span class="n">net_filters</span><span class="o">.</span><span class="n">NetworkLocation</span><span class="p">)</span>
@@ -1064,7 +1062,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -1083,21 +1081,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

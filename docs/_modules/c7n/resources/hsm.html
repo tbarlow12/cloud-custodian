@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -208,7 +211,7 @@
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
 <span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="p">(</span><span class="n">RemoveTag</span><span class="p">,</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">universal_augment</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">generate_arn</span><span class="p">,</span> <span class="n">local_session</span>
+<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">generate_arn</span>
 
 
 <div class="viewcode-block" id="CloudHSMCluster"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.hsm.CloudHSMCluster">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;cloudhsm-cluster&#39;</span><span class="p">)</span>
@@ -242,19 +245,6 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_arn</span></div>
 
 
-<div class="viewcode-block" id="tag_function"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.hsm.tag_function">[docs]</a><span class="k">def</span> <span class="nf">tag_function</span><span class="p">(</span><span class="n">session_factory</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">log</span><span class="p">):</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;cloudhsmv2&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
-        <span class="nb">id</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;ClusterId&#39;</span><span class="p">]</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">tag_resource</span><span class="p">(</span><span class="n">ResourceId</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">TagList</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
-                <span class="s1">&#39;Exception tagging cloudhsm cluster </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="n">c</span><span class="p">[</span><span class="s1">&#39;ClusterId&#39;</span><span class="p">],</span> <span class="n">err</span><span class="p">)</span>
-            <span class="k">continue</span></div>
-
-
 <div class="viewcode-block" id="Tag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.hsm.Tag">[docs]</a><span class="nd">@CloudHSMCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Tag</span><span class="p">(</span><span class="n">Tag</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to add tag(s) to CloudHSM Cluster(s)</span>
@@ -276,8 +266,12 @@
 
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;cloudhsmv2:TagResource&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="Tag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.hsm.Tag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">tag_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="Tag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.hsm.Tag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">tag_resource</span><span class="p">(</span><span class="n">ResourceId</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;ClusterId&#39;</span><span class="p">],</span> <span class="n">TagList</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">CloudHsmResourceNotFoundException</span><span class="p">:</span>
+                <span class="k">continue</span></div></div>
 
 
 <div class="viewcode-block" id="RemoveTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.hsm.RemoveTag">[docs]</a><span class="nd">@CloudHSMCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
@@ -300,11 +294,9 @@
 
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;cloudhsmv2:UntagResource&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="RemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.hsm.RemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;cloudhsmv2&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.hsm.RemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
-            <span class="nb">id</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;ClusterId&#39;</span><span class="p">]</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">untag_resource</span><span class="p">(</span><span class="n">ResourceId</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">TagKeyList</span><span class="o">=</span><span class="n">tag_keys</span><span class="p">)</span></div></div>
+            <span class="n">client</span><span class="o">.</span><span class="n">untag_resource</span><span class="p">(</span><span class="n">ResourceId</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;ClusterId&#39;</span><span class="p">],</span> <span class="n">TagKeyList</span><span class="o">=</span><span class="n">tag_keys</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="CloudHSM"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.hsm.CloudHSM">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;hsm&#39;</span><span class="p">)</span>
@@ -358,7 +350,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -377,21 +369,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

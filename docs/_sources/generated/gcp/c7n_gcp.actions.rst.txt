@@ -1,0 +1,30 @@
+c7n\_gcp.actions package
+========================
+
+Submodules
+----------
+
+c7n\_gcp.actions.core module
+----------------------------
+
+.. automodule:: c7n_gcp.actions.core
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+c7n\_gcp.actions.cscc module
+----------------------------
+
+.. automodule:: c7n_gcp.actions.cscc
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: c7n_gcp.actions
+    :members:
+    :undoc-members:
+    :show-inheritance:

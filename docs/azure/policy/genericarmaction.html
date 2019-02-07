@@ -32,7 +32,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Generic Filters" href="genericarmfilter.html" />
-    <link rel="prev" title="Policies" href="index.html" /> 
+    <link rel="prev" title="Delayed Operations" href="delayedoperation.html" /> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -115,8 +115,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Policies</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="delayedoperation.html">Delayed Operations</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Generic Actions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#tags">Tags</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#others">Others</a></li>
@@ -129,6 +131,7 @@
 <li class="toctree-l2"><a class="reference internal" href="resources/batch.html">Batch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/cdn.html">CDN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/cognitiveservices.html">Cognitive Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/containerregistry.html">Container Registry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/containerservice.html">Container Service</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/cosmosdb.html">Cosmos DB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/datafactory.html">Data Factory</a></li>
@@ -143,7 +146,7 @@
 <li class="toctree-l2"><a class="reference internal" href="resources/publicip.html">Public IP Address</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/redis.html">Redis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/resourcegroup.html">Resource Groups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="resources/sqlserver.html">SQl Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/sqlserver.html">SQL Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/storage.html">Storage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/subscription.html">Subscription</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resources/vm.html">Virtual Machines</a></li>
@@ -154,6 +157,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -226,15 +231,45 @@
             
   <div class="section" id="generic-actions">
 <span id="azure-genericarmaction"></span><h1>Generic Actions<a class="headerlink" href="#generic-actions" title="Permalink to this headline">¶</a></h1>
-<p>These actions can be applied to a specific resource type, such as <code class="docutils literal notranslate"><span class="pre">azure.vm</span></code>, or they can be
-applied to all Azure resources by using <code class="docutils literal notranslate"><span class="pre">azure.armresource</span></code> as the resource type.</p>
+<p>These actions can be applied to a specific resource type, such as <code class="docutils literal notranslate"><span class="pre">azure.vm</span></code>.</p>
 <div class="section" id="tags">
 <h2>Tags<a class="headerlink" href="#tags" title="Permalink to this headline">¶</a></h2>
 <dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">Tag</span></code></dt>
+<dd><p class="first">Add/Update tag on a resource</p>
+<div class="toggle docutils container">
+<div class="header docutils container">
+Schema:</div>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;tag&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;string&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;tags&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;object&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;string&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="last highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">azure-tag</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">azure.resourcegroup</span>
+    <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Tag all resource groups with &#39;mytag&#39; with value &#39;myvalue&#39;</span>
+    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+        <span class="l l-Scalar l-Scalar-Plain">tag</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">mytag</span>
+        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">myvalue</span>
+</pre></div>
+</div>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">AutoTagUser</span></code></dt>
 <dd><p class="first">Create a tag listing name of user who created a resource based on scanning
 activity log history.</p>
-<div class="toggle last docutils container">
+<div class="toggle docutils container">
 <div class="header docutils container">
 Schema:</div>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -251,6 +286,17 @@ Schema:</div>
 <span class="p">}</span>
 </pre></div>
 </div>
+</div>
+<div class="last highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">azure-auto-tag-creator</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">azure.resourcegroup</span>
+    <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Tag all existing resource groups with the &#39;CreatorEmail&#39; tag</span>
+    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">auto-tag-user</span>
+        <span class="l l-Scalar l-Scalar-Plain">tag</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">CreatorEmail</span>
+        <span class="l l-Scalar l-Scalar-Plain">days</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+</pre></div>
 </div>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">RemoveTag</span></code></dt>
@@ -351,33 +397,31 @@ Schema:</div>
 </pre></div>
 </div>
 </div>
-<div class="last highlight-yaml notranslate"><div class="highlight"><pre><span></span>  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete-test-resources</span>
-        <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">Deletes any ARM resource with &#39;test&#39; in the name</span>
-        <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">azure.armresource</span>
-        <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
-         <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
-           <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
-           <span class="l l-Scalar l-Scalar-Plain">op</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">in</span>
-        <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
-         <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete</span>
-
-<span class="l l-Scalar l-Scalar-Plain">The delete action also works with a specified resource type</span><span class="p p-Indicator">:</span>
-
-<span class="l l-Scalar l-Scalar-Plain">.. code-block:</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">yaml</span>
-
-  <span class="l l-Scalar l-Scalar-Plain">- policies</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete-test-nsg</span>
-        <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">Deletes any Network Security Group with &#39;test&#39; in the name</span>
-        <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">azure.networksecuritygroup</span>
-        <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
-         <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
-           <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
-           <span class="l l-Scalar l-Scalar-Plain">op</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">in</span>
-        <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
-         <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete-test-resources</span>
+      <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Deletes any ARM resource with &#39;test&#39; in the name</span>
+      <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">azure.armresource</span>
+      <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+         <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
+         <span class="l l-Scalar l-Scalar-Plain">op</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">in</span>
+      <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete</span>
+</pre></div>
+</div>
+<p>The delete action also works with a specified resource type:</p>
+<div class="last highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete-test-nsg</span>
+      <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Deletes any Network Security Group with &#39;test&#39; in the name</span>
+      <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">azure.networksecuritygroup</span>
+      <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+         <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
+         <span class="l l-Scalar l-Scalar-Plain">op</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">in</span>
+      <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete</span>
 </pre></div>
 </div>
 </dd>
@@ -396,7 +440,7 @@ Schema:</div>
         <a href="genericarmfilter.html" class="btn btn-neutral float-right" title="Generic Filters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Policies" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="delayedoperation.html" class="btn btn-neutral" title="Delayed Operations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -405,7 +449,7 @@ Schema:</div>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -424,21 +468,15 @@ Schema:</div>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

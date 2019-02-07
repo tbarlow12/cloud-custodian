@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -306,20 +309,14 @@
             <span class="k">if</span> <span class="s1">&#39;$ref&#39;</span> <span class="ow">in</span> <span class="n">v</span> <span class="ow">and</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;$ref&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">:</span>
                 <span class="n">found</span> <span class="o">=</span> <span class="n">idx</span>
                 <span class="k">break</span>
+
         <span class="k">if</span> <span class="n">found</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Try to walk back an element/type ref to the specific</span>
-            <span class="c1"># error</span>
-            <span class="n">spath</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">absolute_schema_path</span><span class="p">)</span>
-            <span class="n">spath</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-            <span class="n">slen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">spath</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;oneOf&#39;</span> <span class="ow">in</span> <span class="n">spath</span><span class="p">:</span>
-                <span class="n">idx</span> <span class="o">=</span> <span class="n">spath</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;oneOf&#39;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="s1">&#39;anyOf&#39;</span> <span class="ow">in</span> <span class="n">spath</span><span class="p">:</span>
-                <span class="n">idx</span> <span class="o">=</span> <span class="n">spath</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;anyOf&#39;</span><span class="p">)</span>
-            <span class="n">vidx</span> <span class="o">=</span> <span class="n">slen</span> <span class="o">-</span> <span class="n">idx</span>
             <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">error</span><span class="o">.</span><span class="n">context</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">absolute_schema_path</span><span class="p">[</span><span class="n">vidx</span><span class="p">]</span> <span class="o">==</span> <span class="n">found</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">e</span>
+                <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">absolute_schema_path</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">el</span> <span class="o">==</span> <span class="n">found</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="n">e</span>
+                        <span class="k">break</span>
     <span class="k">return</span> <span class="n">error</span></div>
 
 
@@ -400,12 +397,11 @@
                 <span class="c1"># generalize server side query mechanisms, currently</span>
                 <span class="c1"># this only for ec2 instance queries. limitations</span>
                 <span class="c1"># in json schema inheritance prevent us from doing this</span>
-                <span class="c1"># on a type specific basis http://goo.gl/8UyRvQ</span>
+                <span class="c1"># on a type specific basis</span>
+                <span class="c1"># https://stackoverflow.com/questions/22689900/json-schema-allof-with-additionalproperties</span>
                 <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;minProperties&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                        <span class="s1">&#39;maxProperties&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}</span>
+                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">}}</span>
+
             <span class="p">},</span>
         <span class="p">},</span>
         <span class="s1">&#39;policy-mode&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -621,7 +617,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -640,21 +636,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

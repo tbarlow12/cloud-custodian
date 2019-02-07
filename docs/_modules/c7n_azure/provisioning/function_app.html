@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -190,11 +193,9 @@
 <span class="kn">from</span> <span class="nn">binascii</span> <span class="k">import</span> <span class="n">hexlify</span>
 
 <span class="kn">from</span> <span class="nn">azure.mgmt.web.models</span> <span class="k">import</span> <span class="p">(</span><span class="n">Site</span><span class="p">,</span> <span class="n">SiteConfig</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">c7n_azure.utils</span> <span class="k">import</span> <span class="n">azure_name_value_pair</span>
-
-<span class="kn">from</span> <span class="nn">c7n_azure.provisioning.deployment_unit</span> <span class="k">import</span> <span class="n">DeploymentUnit</span>
 <span class="kn">from</span> <span class="nn">c7n_azure.constants</span> <span class="k">import</span> <span class="p">(</span><span class="n">FUNCTION_DOCKER_VERSION</span><span class="p">,</span> <span class="n">FUNCTION_EXT_VERSION</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.provisioning.deployment_unit</span> <span class="k">import</span> <span class="n">DeploymentUnit</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.utils</span> <span class="k">import</span> <span class="n">azure_name_value_pair</span>
 
 
 <div class="viewcode-block" id="FunctionAppDeploymentUnit"><a class="viewcode-back" href="../../../generated/azure/c7n_azure.provisioning.html#c7n_azure.provisioning.function_app.FunctionAppDeploymentUnit">[docs]</a><span class="k">class</span> <span class="nc">FunctionAppDeploymentUnit</span><span class="p">(</span><span class="n">DeploymentUnit</span><span class="p">):</span>
@@ -211,26 +212,35 @@
         <span class="n">site_config</span> <span class="o">=</span> <span class="n">SiteConfig</span><span class="p">(</span><span class="n">app_settings</span><span class="o">=</span><span class="p">[])</span>
         <span class="n">functionapp_def</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">],</span> <span class="n">site_config</span><span class="o">=</span><span class="n">site_config</span><span class="p">)</span>
 
-        <span class="n">functionapp_def</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="s1">&#39;functionapp,linux&#39;</span>
+        <span class="c1"># common function app settings</span>
         <span class="n">functionapp_def</span><span class="o">.</span><span class="n">server_farm_id</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;app_service_plan_id&#39;</span><span class="p">]</span>
+        <span class="n">functionapp_def</span><span class="o">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># This implies Linux for auto-created app plans</span>
 
-        <span class="n">site_config</span><span class="o">.</span><span class="n">linux_fx_version</span> <span class="o">=</span> <span class="n">FUNCTION_DOCKER_VERSION</span>
-        <span class="n">site_config</span><span class="o">.</span><span class="n">always_on</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># consumption app plan</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;is_consumption_plan&#39;</span><span class="p">]:</span>
+            <span class="n">functionapp_def</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="s1">&#39;functionapp,linux&#39;</span>
+        <span class="c1"># dedicated app plan</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">functionapp_def</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="s1">&#39;functionapp,linux,container&#39;</span>
+            <span class="n">site_config</span><span class="o">.</span><span class="n">linux_fx_version</span> <span class="o">=</span> <span class="n">FUNCTION_DOCKER_VERSION</span>
+            <span class="n">site_config</span><span class="o">.</span><span class="n">app_settings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">azure_name_value_pair</span><span class="p">(</span><span class="s1">&#39;MACHINEKEY_DecryptionKey&#39;</span><span class="p">,</span>
+                                      <span class="n">FunctionAppDeploymentUnit</span><span class="o">.</span><span class="n">generate_machine_decryption_key</span><span class="p">()))</span>
+            <span class="n">site_config</span><span class="o">.</span><span class="n">always_on</span> <span class="o">=</span> <span class="kc">True</span>
 
+        <span class="c1"># application insights settings</span>
         <span class="n">app_insights_key</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;app_insights_key&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">app_insights_key</span><span class="p">:</span>
             <span class="n">site_config</span><span class="o">.</span><span class="n">app_settings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">azure_name_value_pair</span><span class="p">(</span><span class="s1">&#39;APPINSIGHTS_INSTRUMENTATIONKEY&#39;</span><span class="p">,</span> <span class="n">app_insights_key</span><span class="p">))</span>
 
+        <span class="c1"># general app settings</span>
         <span class="n">con_string</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;storage_account_connection_string&#39;</span><span class="p">]</span>
         <span class="n">site_config</span><span class="o">.</span><span class="n">app_settings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">azure_name_value_pair</span><span class="p">(</span><span class="s1">&#39;AzureWebJobsStorage&#39;</span><span class="p">,</span> <span class="n">con_string</span><span class="p">))</span>
         <span class="n">site_config</span><span class="o">.</span><span class="n">app_settings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">azure_name_value_pair</span><span class="p">(</span><span class="s1">&#39;AzureWebJobsDashboard&#39;</span><span class="p">,</span> <span class="n">con_string</span><span class="p">))</span>
         <span class="n">site_config</span><span class="o">.</span><span class="n">app_settings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">azure_name_value_pair</span><span class="p">(</span><span class="s1">&#39;FUNCTIONS_EXTENSION_VERSION&#39;</span><span class="p">,</span>
                                                               <span class="n">FUNCTION_EXT_VERSION</span><span class="p">))</span>
         <span class="n">site_config</span><span class="o">.</span><span class="n">app_settings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">azure_name_value_pair</span><span class="p">(</span><span class="s1">&#39;FUNCTIONS_WORKER_RUNTIME&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">))</span>
-        <span class="n">site_config</span><span class="o">.</span><span class="n">app_settings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">azure_name_value_pair</span><span class="p">(</span><span class="s1">&#39;MACHINEKEY_DecryptionKey&#39;</span><span class="p">,</span>
-                          <span class="n">FunctionAppDeploymentUnit</span><span class="o">.</span><span class="n">generate_machine_decryption_key</span><span class="p">()))</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">web_apps</span><span class="o">.</span><span class="n">create_or_update</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;resource_group_name&#39;</span><span class="p">],</span>
                                                      <span class="n">params</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
@@ -252,7 +262,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -271,21 +281,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

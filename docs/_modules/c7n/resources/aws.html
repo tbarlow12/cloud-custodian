@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -220,8 +223,11 @@
 
 <span class="kn">import</span> <span class="nn">boto3</span>
 
+<span class="kn">from</span> <span class="nn">botocore.validate</span> <span class="k">import</span> <span class="n">ParamValidator</span>
+
 <span class="kn">from</span> <span class="nn">c7n.credentials</span> <span class="k">import</span> <span class="n">SessionFactory</span>
 <span class="kn">from</span> <span class="nn">c7n.config</span> <span class="k">import</span> <span class="n">Bag</span>
+<span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
 <span class="kn">from</span> <span class="nn">c7n.log</span> <span class="k">import</span> <span class="n">CloudWatchLogHandler</span>
 
 <span class="c1"># Import output registries aws provider extends.</span>
@@ -305,6 +311,16 @@
         <span class="n">options</span><span class="o">.</span><span class="n">account_id</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_account_id_from_sts</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">options</span><span class="o">.</span><span class="n">account_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="shape_validate"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.aws.shape_validate">[docs]</a><span class="k">def</span> <span class="nf">shape_validate</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">shape_name</span><span class="p">,</span> <span class="n">service</span><span class="p">):</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">fake_session</span><span class="p">()</span><span class="o">.</span><span class="n">_session</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_service_model</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">shape_for</span><span class="p">(</span><span class="n">shape_name</span><span class="p">)</span>
+    <span class="n">validator</span> <span class="o">=</span> <span class="n">ParamValidator</span><span class="p">()</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">has_errors</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">generate_report</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="MetricsOutput"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.aws.MetricsOutput">[docs]</a><span class="nd">@metrics_outputs</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;aws&#39;</span><span class="p">)</span>
@@ -406,16 +422,16 @@
     <span class="n">use_daemon</span> <span class="o">=</span> <span class="s1">&#39;AWS_XRAY_DAEMON_ADDRESS&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>
     <span class="n">service_name</span> <span class="o">=</span> <span class="s1">&#39;custodian&#39;</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="n">XrayContext</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">HAVE_XRAY</span><span class="p">:</span>
+<div class="viewcode-block" id="XrayTracer.initialize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.aws.XrayTracer.initialize">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">XrayContext</span><span class="p">()</span>
         <span class="n">xray_recorder</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-            <span class="n">emitter</span><span class="o">=</span><span class="n">use_daemon</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">emitter</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">emitter</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">use_daemon</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="bp">cls</span><span class="o">.</span><span class="n">emitter</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
             <span class="n">sampling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">context_missing</span><span class="o">=</span><span class="s1">&#39;LOG_ERROR&#39;</span>
-        <span class="p">)</span>
+            <span class="n">context_missing</span><span class="o">=</span><span class="s1">&#39;LOG_ERROR&#39;</span><span class="p">)</span>
         <span class="n">patch</span><span class="p">([</span><span class="s1">&#39;boto3&#39;</span><span class="p">,</span> <span class="s1">&#39;requests&#39;</span><span class="p">])</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;aws_xray_sdk.core&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;aws_xray_sdk.core&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span>
@@ -585,6 +601,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_default_region</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
         <span class="n">_default_account_id</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">tracer</span> <span class="ow">and</span> <span class="n">options</span><span class="o">.</span><span class="n">tracer</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;xray&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">HAVE_XRAY</span><span class="p">:</span>
+            <span class="n">XrayTracer</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
         <span class="k">return</span> <span class="n">options</span></div>
 
 <div class="viewcode-block" id="AWS.get_session_factory"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.aws.AWS.get_session_factory">[docs]</a>    <span class="k">def</span> <span class="nf">get_session_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
@@ -658,12 +677,18 @@
             <span class="n">options</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="get_service_region_map"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.aws.get_service_region_map">[docs]</a><span class="k">def</span> <span class="nf">get_service_region_map</span><span class="p">(</span><span class="n">regions</span><span class="p">,</span> <span class="n">resource_types</span><span class="p">):</span>
-    <span class="c1"># we&#39;re not interacting with the apis just using the sdk meta information.</span>
+<div class="viewcode-block" id="fake_session"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.aws.fake_session">[docs]</a><span class="k">def</span> <span class="nf">fake_session</span><span class="p">():</span>
     <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span>
         <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">,</span>
         <span class="n">aws_access_key_id</span><span class="o">=</span><span class="s1">&#39;never&#39;</span><span class="p">,</span>
         <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="s1">&#39;found&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">session</span></div>
+
+
+<div class="viewcode-block" id="get_service_region_map"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.aws.get_service_region_map">[docs]</a><span class="k">def</span> <span class="nf">get_service_region_map</span><span class="p">(</span><span class="n">regions</span><span class="p">,</span> <span class="n">resource_types</span><span class="p">):</span>
+    <span class="c1"># we&#39;re not interacting with the apis just using the sdk meta information.</span>
+
+    <span class="n">session</span> <span class="o">=</span> <span class="n">fake_session</span><span class="p">()</span>
     <span class="n">normalized_types</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resource_types</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;aws.&#39;</span><span class="p">):</span>
@@ -704,7 +729,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -723,21 +748,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

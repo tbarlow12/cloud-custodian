@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -228,6 +231,7 @@
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span><span class="p">,</span> <span class="n">DescribeSource</span>
 <span class="kn">from</span> <span class="nn">c7n.resolver</span> <span class="k">import</span> <span class="n">ValuesFrom</span>
+<span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">TagActionFilter</span><span class="p">,</span> <span class="n">TagDelayedAction</span><span class="p">,</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">RemoveTag</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">filter_empty</span>
 
 
@@ -244,7 +248,8 @@
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">config_type</span> <span class="o">=</span> <span class="s2">&quot;AWS::IAM::Group&quot;</span>
         <span class="c1"># Denotes this resource type exists across regions</span>
-        <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span></div>
+        <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;Arn&#39;</span></div>
 
 <div class="viewcode-block" id="Group.get_resources"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.Group.get_resources">[docs]</a>    <span class="k">def</span> <span class="nf">get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_ids</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;For IAM Groups on events, resource ids are Group Names.&quot;&quot;&quot;</span>
@@ -275,7 +280,8 @@
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">config_type</span> <span class="o">=</span> <span class="s2">&quot;AWS::IAM::Role&quot;</span>
         <span class="c1"># Denotes this resource type exists across regions</span>
-        <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span></div>
+        <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;Arn&#39;</span></div>
 
 <div class="viewcode-block" id="Role.get_resources"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.Role.get_resources">[docs]</a>    <span class="k">def</span> <span class="nf">get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_ids</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;For IAM Roles on events, resource ids are role names.&quot;&quot;&quot;</span>
@@ -295,6 +301,7 @@
 <div class="viewcode-block" id="User.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.User.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
         <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;iam&#39;</span>
         <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+        <span class="n">detail_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;get_user&#39;</span><span class="p">,</span> <span class="s1">&#39;UserName&#39;</span><span class="p">,</span> <span class="s1">&#39;UserName&#39;</span><span class="p">,</span> <span class="s1">&#39;User&#39;</span><span class="p">)</span>
         <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;list_users&#39;</span><span class="p">,</span> <span class="s1">&#39;Users&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="nb">id</span> <span class="o">=</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;UserName&#39;</span>
@@ -302,7 +309,8 @@
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">config_type</span> <span class="o">=</span> <span class="s2">&quot;AWS::IAM::User&quot;</span>
         <span class="c1"># Denotes this resource type exists across regions</span>
-        <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span></div>
+        <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;Arn&#39;</span></div>
 
 <div class="viewcode-block" id="User.get_source"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.User.get_source">[docs]</a>    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_type</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">source_type</span> <span class="o">==</span> <span class="s1">&#39;describe&#39;</span><span class="p">:</span>
@@ -318,11 +326,45 @@
         <span class="k">for</span> <span class="n">rid</span> <span class="ow">in</span> <span class="n">resource_ids</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">resources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">UserName</span><span class="o">=</span><span class="n">rid</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;User&#39;</span><span class="p">))</span>
-            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NoSuchEntityException&#39;</span><span class="p">:</span>
-                    <span class="k">continue</span>
-                <span class="k">raise</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoSuchEntityException</span><span class="p">:</span>
+                <span class="k">continue</span>
         <span class="k">return</span> <span class="n">resources</span></div></div>
+
+
+<div class="viewcode-block" id="UserTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.UserTag">[docs]</a><span class="nd">@User</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UserTag</span><span class="p">(</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tag an iam user.&quot;&quot;&quot;</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;iam:TagUser&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="UserTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.UserTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">users</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">tag_user</span><span class="p">(</span><span class="n">UserName</span><span class="o">=</span><span class="n">u</span><span class="p">[</span><span class="s1">&#39;UserName&#39;</span><span class="p">],</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoSuchEntityException</span><span class="p">:</span>
+                <span class="k">continue</span></div></div>
+
+
+<div class="viewcode-block" id="UserRemoveTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.UserRemoveTag">[docs]</a><span class="nd">@User</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UserRemoveTag</span><span class="p">(</span><span class="n">RemoveTag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove tags from an iam user.&quot;&quot;&quot;</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;iam:UntagUser&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="UserRemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.UserRemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">users</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">untag_user</span><span class="p">(</span><span class="n">UserName</span><span class="o">=</span><span class="n">u</span><span class="p">[</span><span class="s1">&#39;UserName&#39;</span><span class="p">],</span> <span class="n">TagKeys</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoSuchEntityException</span><span class="p">:</span>
+                <span class="k">continue</span></div></div>
+
+
+<div class="viewcode-block" id="UserTagDelayedAction"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.UserTagDelayedAction">[docs]</a><span class="nd">@User</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UserTagDelayedAction</span><span class="p">(</span><span class="n">TagDelayedAction</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<span class="n">User</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Policy"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.Policy">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;iam-policy&#39;</span><span class="p">)</span>
@@ -339,7 +381,8 @@
         <span class="n">config_type</span> <span class="o">=</span> <span class="s2">&quot;AWS::IAM::Policy&quot;</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Denotes this resource type exists across regions</span>
-        <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span></div>
+        <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;Arn&#39;</span></div>
 
     <span class="n">arn_path_prefix</span> <span class="o">=</span> <span class="s2">&quot;aws:policy/&quot;</span>
 
@@ -377,7 +420,8 @@
         <span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;CreateDate&#39;</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Denotes this resource type exists across regions</span>
-        <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+        <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;Arn&#39;</span></div></div>
 
 
 <div class="viewcode-block" id="ServerCertificate"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.ServerCertificate">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;iam-certificate&#39;</span><span class="p">)</span>
@@ -931,10 +975,12 @@
 <div class="viewcode-block" id="CredentialReport"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.CredentialReport">[docs]</a><span class="k">class</span> <span class="nc">CredentialReport</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Use IAM Credential report to filter users.</span>
 
-<span class="sd">    The IAM Credential report ( https://goo.gl/sbEPtM ) aggregates</span>
-<span class="sd">    multiple pieces of information on iam users. This makes it highly</span>
-<span class="sd">    efficient for querying multiple aspects of a user that would</span>
-<span class="sd">    otherwise require per user api calls.</span>
+<span class="sd">    The IAM Credential report aggregates multiple pieces of</span>
+<span class="sd">    information on iam users. This makes it highly efficient for</span>
+<span class="sd">    querying multiple aspects of a user that would otherwise require</span>
+<span class="sd">    per user api calls.</span>
+
+<span class="sd">    https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_getting-report.html</span>
 
 <span class="sd">    For example if we wanted to retrieve all users with mfa who have</span>
 <span class="sd">    never used their password but have active access keys from the</span>
@@ -1797,7 +1843,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -1816,21 +1862,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

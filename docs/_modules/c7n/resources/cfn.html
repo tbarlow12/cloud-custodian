@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -325,23 +328,46 @@
 <span class="sd">              - &#39;tag:DesiredTag&#39;: absent</span>
 <span class="sd">            actions:</span>
 <span class="sd">              - type: tag</span>
-<span class="sd">                key: DesiredTag</span>
-<span class="sd">                value: DesiredValue</span>
+<span class="sd">                tags:</span>
+<span class="sd">                  DesiredTag: DesiredValue</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;cloudformation:UpdateStack&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="CloudFormationAddTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.cfn.CloudFormationAddTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stacks</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;cloudformation&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="CloudFormationAddTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.cfn.CloudFormationAddTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">stacks</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stacks</span><span class="p">:</span>
+            <span class="n">_tag_stack</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
 
-        <span class="k">def</span> <span class="nf">_tag_stacks</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">update_stack</span><span class="p">(</span>
-                <span class="n">StackName</span><span class="o">=</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;StackName&#39;</span><span class="p">],</span>
-                <span class="n">UsePreviousTemplate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="nb">list</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_tag_stacks</span><span class="p">,</span> <span class="n">stacks</span><span class="p">))</span></div></div>
+<span class="k">def</span> <span class="nf">_tag_stack</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="p">(),</span> <span class="n">remove</span><span class="o">=</span><span class="p">()):</span>
+
+    <span class="n">tags</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">]:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Tags&#39;</span><span class="p">)}</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">remove</span><span class="p">:</span>
+        <span class="n">tags</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">add</span><span class="p">:</span>
+        <span class="n">tags</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Parameters&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span><span class="s1">&#39;ParameterKey&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="s1">&#39;ParameterKey&#39;</span><span class="p">],</span>
+             <span class="s1">&#39;UsePreviousValue&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+
+    <span class="n">capabilities</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Capabilities&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="n">capabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="n">notifications</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;NotificationArns&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="n">notifications</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="n">client</span><span class="o">.</span><span class="n">update_stack</span><span class="p">(</span>
+        <span class="n">StackName</span><span class="o">=</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;StackName&#39;</span><span class="p">],</span>
+        <span class="n">UsePreviousTemplate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">Capabilities</span><span class="o">=</span><span class="n">capabilities</span><span class="p">,</span>
+        <span class="n">Parameters</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+        <span class="n">NotificationARNs</span><span class="o">=</span><span class="n">notifications</span><span class="p">,</span>
+        <span class="n">Tags</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;Key&#39;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tags</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
 
 
 <div class="viewcode-block" id="CloudFormationRemoveTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.cfn.CloudFormationRemoveTag">[docs]</a><span class="nd">@CloudFormation</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
@@ -362,19 +388,9 @@
 <span class="sd">                tags: [&#39;DesiredTag&#39;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CloudFormationRemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.cfn.CloudFormationRemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stacks</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;cloudformation&#39;</span><span class="p">)</span>
-
-        <span class="k">def</span> <span class="nf">_remove_tag</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-            <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;Tags&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">update_stack</span><span class="p">(</span>
-                <span class="n">StackName</span><span class="o">=</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;StackName&#39;</span><span class="p">],</span>
-                <span class="n">UsePreviousTemplate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
-
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="nb">list</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_remove_tag</span><span class="p">,</span> <span class="n">stacks</span><span class="p">))</span></div></div>
+<div class="viewcode-block" id="CloudFormationRemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.cfn.CloudFormationRemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">stacks</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stacks</span><span class="p">:</span>
+            <span class="n">_tag_stack</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="n">keys</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
@@ -387,7 +403,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -406,21 +422,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

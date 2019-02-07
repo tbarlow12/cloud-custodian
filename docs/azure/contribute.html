@@ -32,7 +32,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="AWS" href="../generated/aws/modules.html" />
-    <link rel="prev" title="Blob Storage Output" href="advanced/bloboutput.html" /> 
+    <link rel="prev" title="App Insights Logging &amp; Metrics" href="advanced/appinsightslogging.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -115,11 +115,22 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/index.html">Advanced Usage</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#adding-new-azure-resources">Adding New Azure Resources</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install-azure-dependencies">Install Azure Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-new-azure-resource">Create New Azure Resource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#load-new-azure-resource">Load New Azure Resource</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#testing">Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#test-framework">Test framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#arm-templates">ARM templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cassettes">Cassettes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-tests">Running tests</a></li>
 </ul>
 </li>
 </ul>
@@ -199,11 +210,112 @@ $ <span class="nb">source</span> bin/activate
 </pre></div>
 </div>
 <p>This creates a virtual env in your enlistment and installs all packages as editable.</p>
+<p>Instead, you can do <cite>pip install tools/c7n_azure/requirements.txt</cite> to install test dependencies.</p>
+</div>
+<div class="section" id="adding-new-azure-resources">
+<h1>Adding New Azure Resources<a class="headerlink" href="#adding-new-azure-resources" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="install-azure-dependencies">
+<h2>Install Azure Dependencies<a class="headerlink" href="#install-azure-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Custodian interfaces with ARM resources using Azure’s SDKs.
+Install the resources SDK in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;azure-mgmt-authorization&quot;</span><span class="p">,</span>
+                  <span class="o">...</span>
+                  <span class="s2">&quot;azure-mgmt-containerregistry&quot;</span><span class="p">,</span>
+                  <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-new-azure-resource">
+<h2>Create New Azure Resource<a class="headerlink" href="#create-new-azure-resource" title="Permalink to this headline">¶</a></h2>
+<p>Create your new Azure Resource.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">service</span></code>: The Azure SDK dependency added in step 1.</li>
+<li><code class="docutils literal notranslate"><span class="pre">client</span></code>: Client class name of the Azure Resource SDK of the resource you added.</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">enum_spec</span></code>: Is a tuple of (enum_operation, list_operation, extra_args). The resource SDK client will have a list of operations this resource has.</dt>
+<dd>Place the name of the property as the enum_operation. Next, put <cite>list</cite> as the operations.</dd>
+</dl>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">c7n_azure.provider</span> <span class="kn">import</span> <span class="n">resources</span>
+<span class="kn">from</span> <span class="nn">c7n_azure.resources.arm</span> <span class="kn">import</span> <span class="n">ArmResourceManager</span>
+
+
+<span class="nd">@resources.register</span><span class="p">(</span><span class="s1">&#39;containerregistry&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ContainerRegistry</span><span class="p">(</span><span class="n">ArmResourceManager</span><span class="p">):</span>
+
+    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="n">ArmResourceManager</span><span class="o">.</span><span class="n">resource_type</span><span class="p">):</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;azure.mgmt.containerregistry&#39;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="s1">&#39;ContainerRegistryManagementClient&#39;</span>
+        <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;registries&#39;</span><span class="p">,</span> <span class="s1">&#39;list&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">default_report_fields</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;location&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;resourceGroup&#39;</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="load-new-azure-resource">
+<h2>Load New Azure Resource<a class="headerlink" href="#load-new-azure-resource" title="Permalink to this headline">¶</a></h2>
+<p>Once the required dependecies are installed and created the new Azure Resource, custodian will
+load all registered resources. Import the resource in
+<code class="docutils literal notranslate"><span class="pre">entry.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">c7n_azure.resources.container_registry</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<h1>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h1>
 <p>Tests for c7n_azure run automatically with other Custodian tests.  See <a class="reference internal" href="../developer/tests.html#developer-tests"><span class="std std-ref">Testing for Developers</span></a>
 for information on how to run Tox.</p>
-<p>Azure tests are based on <a class="reference external" href="https://vcrpy.readthedocs.io/en/latest/">VCR.py</a>.</p>
+<div class="section" id="test-framework">
+<h2>Test framework<a class="headerlink" href="#test-framework" title="Permalink to this headline">¶</a></h2>
+<p>c7n_azure uses <cite>VCR.py</cite> for tests.
+This framework is used for tests in the official Azure Python SDK.</p>
+<p>VCRpy documentation can be found here: <a class="reference external" href="https://vcrpy.readthedocs.io/en/latest/">VCR.py documentation</a>.</p>
+</div>
+<div class="section" id="arm-templates">
+<h2>ARM templates<a class="headerlink" href="#arm-templates" title="Permalink to this headline">¶</a></h2>
+<p>To ensure VCR cassetes can be easily re-recorded, there are ARM templates to deploy Azure tests infrastructure.</p>
+<p>These templates will allow you to provision real Azure resources appropriate for recreating the VCR
+cassettes used by the unit tests.  They will let you run the unit tests against real resources.</p>
+<p>ARM templates and helper scripts can be found in <cite>tools/c7n_azure/tests/templates</cite> folder.</p>
+<p>There are two scripts <cite>provision.sh</cite> and <cite>cleanup.sh</cite> to provision and delete resources.</p>
+<p>These scripts will provision or delete all ARM templates (<cite>.json files</cite>) in this directory using resource groups named
+after the template files (<cite>test_&lt;filename&gt;</cite>).</p>
+<p>This scripts use Azure CLI, so you need to <cite>az login</cite> and <cite>az account set -s ‘subscription name’</cite> first.</p>
+<p>You can optionally pass a list of file names without extension to the scripts to act only on those templates:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>provision.sh vm storage
+cleanup.sh storage
+</pre></div>
+</div>
+<p>or do everything</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>provision.sh
+</pre></div>
+</div>
+<p>If test method requires real infrastructure, please decorate this method with the ARM template file name to ensure this test can automatically create
+required infrastructure if needed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@arm_template</span><span class="p">(</span><span class="s1">&#39;template.json&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_template</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cassettes">
+<h2>Cassettes<a class="headerlink" href="#cassettes" title="Permalink to this headline">¶</a></h2>
+<p><cite>AzureVCRBaseTest</cite> attempts to automatically obscure keys and other secrets in cassettes and replace subscription ids,
+but it is required to verify cassettes don’t contain any sensitive information before submitting.</p>
+<p>For long standing operations cassette can be modified to reduce test execution time (in case recorded cassette contains some responses with Retry-After headers or Azure SDK waits until resource is provisioned).</p>
+</div>
+<div class="section" id="running-tests">
+<h2>Running tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
+<p>You can use <cite>tox</cite> to run all tests or instead you can use <cite>pytest</cite> and run only Azure tests (or only specific set of tests). Runing recorded tests still requires some authentication, it is possible to use fake data for authorization token and subscription id.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">AZURE_ACCESS_TOKEN</span><span class="o">=</span>fake_token
+<span class="nb">export</span> <span class="nv">AZURE_SUBSCRIPTION_ID</span><span class="o">=</span>ea42f556-5106-4743-99b0-c129bfa71a47
+pytest tools/c7n_azure/tests
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -218,7 +330,7 @@ for information on how to run Tox.</p>
         <a href="../generated/aws/modules.html" class="btn btn-neutral float-right" title="AWS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="advanced/bloboutput.html" class="btn btn-neutral" title="Blob Storage Output" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="advanced/appinsightslogging.html" class="btn btn-neutral" title="App Insights Logging &amp; Metrics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -227,7 +339,7 @@ for information on how to run Tox.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -246,21 +358,15 @@ for information on how to run Tox.</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="../_static/js/expand.js"></script>
+    
 
   
 

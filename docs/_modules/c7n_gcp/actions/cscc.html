@@ -1,0 +1,479 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>c7n_gcp.actions.cscc &mdash; Cloud Custodian  documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/c1_labs.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/expand.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Cloud Custodian
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/usage.html">Monitoring your environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/advanced.html">Advanced Usage</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/offhours.html">Example offhours policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart/tagCompliance.html">Example tag compliance policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usecases/index.html">Use Cases</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Working with AWS Lambda</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../policy/lambda.html">Lambda Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../policy/mu.html">Mu - Lambda Lifecycle Management</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Policies reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../policy/index.html">Resource-Specific Filters and Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../filters.html">Generic Filters</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Contributing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing to Cloud Custodian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer/installing.html">Installing for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer/tests.html">Testing for Developers</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Azure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generated/aws/modules.html">AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../generated/azure/modules.html">Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../generated/gcp/modules.html">GCP</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Cloud Custodian</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>c7n_gcp.actions.cscc</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for c7n_gcp.actions.cscc</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018-2019 Capital One Services, LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1"># http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">six.moves.urllib.parse</span> <span class="k">import</span> <span class="n">urlparse</span>
+
+<span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyExecutionError</span><span class="p">,</span> <span class="n">PolicyValidationError</span>
+<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span>
+<span class="kn">from</span> <span class="nn">.core</span> <span class="k">import</span> <span class="n">MethodAction</span>
+
+<span class="kn">from</span> <span class="nn">c7n_gcp.provider</span> <span class="k">import</span> <span class="n">resources</span> <span class="k">as</span> <span class="n">gcp_resources</span>
+
+
+<div class="viewcode-block" id="PostFinding"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.PostFinding">[docs]</a><span class="k">class</span> <span class="nc">PostFinding</span><span class="p">(</span><span class="n">MethodAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Post finding for matched resources to Cloud Security Command Center.</span>
+
+
+<span class="sd">    :Example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">       policies:</span>
+<span class="sd">         - name: gcp-instances-with-label</span>
+<span class="sd">           resource: gcp.instance</span>
+<span class="sd">           filters:</span>
+<span class="sd">             - &quot;tag:name&quot;: &quot;bad-instance&quot;</span>
+<span class="sd">           actions:</span>
+<span class="sd">             - type: post-finding</span>
+<span class="sd">               org-domain: example.io</span>
+<span class="sd">               category: MEDIUM_INTERNET_SECURITY</span>
+
+<span class="sd">    The source for custodian can either be specified inline to the policy, or</span>
+<span class="sd">    custodian can generate one at runtime if it doesn&#39;t exist given a org-domain</span>
+<span class="sd">    or org-id.</span>
+
+<span class="sd">    Finding updates are not currently supported, due to upstream api issues.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;post-finding&#39;</span><span class="p">,</span>
+        <span class="o">**</span><span class="p">{</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;qualified name of source to post to CSCC as&#39;</span><span class="p">},</span>
+            <span class="s1">&#39;org-domain&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+            <span class="s1">&#39;org-id&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">},</span>
+            <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}})</span>
+
+    <span class="n">method_spec</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;op&#39;</span><span class="p">:</span> <span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;annotation_key&#39;</span><span class="p">:</span> <span class="s1">&#39;c7n:Finding&#39;</span><span class="p">}</span>
+
+    <span class="c1"># create throws error if already exists, patch method has bad docs.</span>
+    <span class="n">ignore_error_codes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">409</span><span class="p">,)</span>
+
+    <span class="n">CustodianSourceName</span> <span class="o">=</span> <span class="s1">&#39;CloudCustodian&#39;</span>
+    <span class="n">DefaultCategory</span> <span class="o">=</span> <span class="s1">&#39;Custodian&#39;</span>
+    <span class="n">Service</span> <span class="o">=</span> <span class="s1">&#39;securitycenter&#39;</span>
+    <span class="n">ServiceVersion</span> <span class="o">=</span> <span class="s1">&#39;v1beta1&#39;</span>
+
+    <span class="n">_source</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="PostFinding.validate"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.PostFinding.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;org-domain&#39;</span><span class="p">,</span> <span class="s1">&#39;org-id&#39;</span><span class="p">)]):</span>
+            <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
+                <span class="s2">&quot;policy:</span><span class="si">%s</span><span class="s2"> CSCC post-finding requires one of source, org-domain, org-id&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="PostFinding.process"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.PostFinding.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize_source</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">PostFinding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PostFinding.get_client"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.PostFinding.get_client">[docs]</a>    <span class="k">def</span> <span class="nf">get_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Service</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ServiceVersion</span><span class="p">,</span> <span class="s1">&#39;organizations.sources.findings&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PostFinding.get_resource_params"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.PostFinding.get_resource_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_resource_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_finding</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PostFinding.initialize_source"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.PostFinding.initialize_source">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Ideally we&#39;ll be given a source, but we&#39;ll attempt to auto create it</span>
+        <span class="c1"># if given an org_domain or org_id.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source</span>
+        <span class="k">elif</span> <span class="s1">&#39;source&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source</span>
+
+        <span class="n">session</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
+
+        <span class="c1"># Resolve Organization Id</span>
+        <span class="k">if</span> <span class="s1">&#39;org-id&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">org_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;org-id&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">orgs</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;cloudresourcemanager&#39;</span><span class="p">,</span> <span class="s1">&#39;v1&#39;</span><span class="p">,</span> <span class="s1">&#39;organizations&#39;</span><span class="p">)</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">orgs</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span>
+                <span class="s1">&#39;search&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;filter&#39;</span><span class="p">:</span> <span class="s1">&#39;domain:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;org-domain&#39;</span><span class="p">]}})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="s1">&#39;organizations&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PolicyExecutionError</span><span class="p">(</span><span class="s2">&quot;Could not determine organization id&quot;</span><span class="p">)</span>
+            <span class="n">org_id</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Resolve Source</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Service</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ServiceVersion</span><span class="p">,</span> <span class="s1">&#39;organizations.sources&#39;</span><span class="p">)</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span>
+               <span class="n">client</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span>
+                   <span class="s1">&#39;list&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="s1">&#39;organizations/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">org_id</span><span class="p">)})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sources&#39;</span><span class="p">)</span>
+               <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;displayName&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">CustodianSourceName</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span>
+                <span class="s1">&#39;create&#39;</span><span class="p">,</span>
+                <span class="p">{</span><span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="s1">&#39;organizations/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">org_id</span><span class="p">),</span>
+                 <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="p">{</span>
+                     <span class="s1">&#39;displayName&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">CustodianSourceName</span><span class="p">,</span>
+                     <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Cloud Management Rules Engine&#39;</span><span class="p">}})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;policy:</span><span class="si">%s</span><span class="s2"> resolved cscc source: </span><span class="si">%s</span><span class="s2">, update policy with this source value&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_source</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source</span></div>
+
+<div class="viewcode-block" id="PostFinding.get_name"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.PostFinding.get_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given an arbitrary resource attempt to resolve back to a qualified name.&quot;&quot;&quot;</span>
+        <span class="n">namer</span> <span class="o">=</span> <span class="n">ResourceNameAdapters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">resource_type</span><span class="o">.</span><span class="n">service</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">namer</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PostFinding.get_finding"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.PostFinding.get_finding">[docs]</a>    <span class="k">def</span> <span class="nf">get_finding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="n">policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span>
+        <span class="n">resource_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+        <span class="c1"># ideally we could be using shake, but its py3.6+ only</span>
+        <span class="n">finding_id</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span>
+            <span class="sa">b</span><span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">),</span>
+                <span class="n">resource_name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">32</span><span class="p">]</span>
+
+        <span class="n">finding</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/findings/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_source</span><span class="p">,</span> <span class="n">finding_id</span><span class="p">),</span>
+            <span class="s1">&#39;resourceName&#39;</span><span class="p">:</span> <span class="n">resource_name</span><span class="p">,</span>
+            <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="s1">&#39;ACTIVE&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DefaultCategory</span><span class="p">),</span>
+            <span class="s1">&#39;eventTime&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;sourceProperties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;resource-type&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">policy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+                <span class="s1">&#39;policy-name&#39;</span><span class="p">:</span> <span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s1">&#39;policy&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="n">request</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source</span><span class="p">,</span>
+            <span class="s1">&#39;findingId&#39;</span><span class="p">:</span> <span class="n">finding_id</span><span class="p">[:</span><span class="mi">31</span><span class="p">],</span>
+            <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="n">finding</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">request</span></div>
+
+<div class="viewcode-block" id="PostFinding.register_resource"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.PostFinding.register_resource">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">register_resource</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">rtype</span><span class="p">,</span> <span class="n">resource_manager</span> <span class="ow">in</span> <span class="n">registry</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">resource_manager</span><span class="o">.</span><span class="n">resource_type</span><span class="o">.</span><span class="n">service</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ResourceNameAdapters</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="s1">&#39;post-finding&#39;</span> <span class="ow">in</span> <span class="n">resource_manager</span><span class="o">.</span><span class="n">action_registry</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">resource_manager</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;post-finding&#39;</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># CSCC uses its own notion of resource id, if we want our findings on</span>
+<span class="c1"># a resource to be linked from the asset view we need to post w/ the</span>
+<span class="c1"># same resource name. If this conceptulization of resource name is</span>
+<span class="c1"># standard, then we should move these to resource types with</span>
+<span class="c1"># appropriate hierarchies by service.</span>
+
+
+<div class="viewcode-block" id="name_compute"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.name_compute">[docs]</a><span class="k">def</span> <span class="nf">name_compute</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;selfLink&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">:][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s2">&quot;//compute.googleapis.com/</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prefix</span><span class="p">),</span>
+        <span class="n">r</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="name_iam"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.name_iam">[docs]</a><span class="k">def</span> <span class="nf">name_iam</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;//iam.googleapis.com/projects/</span><span class="si">{}</span><span class="s2">/serviceAccounts/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">r</span><span class="p">[</span><span class="s1">&#39;projectId&#39;</span><span class="p">],</span>
+        <span class="n">r</span><span class="p">[</span><span class="s1">&#39;uniqueId&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="name_resourcemanager"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.name_resourcemanager">[docs]</a><span class="k">def</span> <span class="nf">name_resourcemanager</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="n">rid</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;projectNumber&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rtype</span> <span class="o">=</span> <span class="s1">&#39;projects&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rid</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;organizationId&#39;</span><span class="p">)</span>
+        <span class="n">rtype</span> <span class="o">=</span> <span class="s1">&#39;organizations&#39;</span>
+    <span class="k">return</span> <span class="s2">&quot;//cloudresourcemanager.googleapis.com/</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">rtype</span><span class="p">,</span> <span class="n">rid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="name_container"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.name_container">[docs]</a><span class="k">def</span> <span class="nf">name_container</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;//container.googleapis.com/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">urlparse</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;selfLink&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]))</span></div>
+
+
+<div class="viewcode-block" id="name_storage"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.name_storage">[docs]</a><span class="k">def</span> <span class="nf">name_storage</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;//storage.googleapis.com/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="name_appengine"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.actions.html#c7n_gcp.actions.cscc.name_appengine">[docs]</a><span class="k">def</span> <span class="nf">name_appengine</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;//appengine.googleapis.com/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span></div>
+
+
+<span class="n">ResourceNameAdapters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;appengine&#39;</span><span class="p">:</span> <span class="n">name_appengine</span><span class="p">,</span>
+    <span class="s1">&#39;cloudresourcemanager&#39;</span><span class="p">:</span> <span class="n">name_resourcemanager</span><span class="p">,</span>
+    <span class="s1">&#39;compute&#39;</span><span class="p">:</span> <span class="n">name_compute</span><span class="p">,</span>
+    <span class="s1">&#39;container&#39;</span><span class="p">:</span> <span class="n">name_container</span><span class="p">,</span>
+    <span class="s1">&#39;iam&#39;</span><span class="p">:</span> <span class="n">name_iam</span><span class="p">,</span>
+    <span class="s1">&#39;storage&#39;</span><span class="p">:</span> <span class="n">name_storage</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">gcp_resources</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+    <span class="n">gcp_resources</span><span class="o">.</span><span class="n">EVENT_FINAL</span><span class="p">,</span> <span class="n">PostFinding</span><span class="o">.</span><span class="n">register_resource</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Capital One Services, LLC
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

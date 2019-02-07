@@ -115,10 +115,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul class="current">
@@ -222,6 +225,7 @@
 <li class="toctree-l4"><a class="reference internal" href="c7n.filters.html#module-c7n.filters.offhours">c7n.filters.offhours module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.filters.html#module-c7n.filters.related">c7n.filters.related module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.filters.html#module-c7n.filters.revisions">c7n.filters.revisions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="c7n.filters.html#module-c7n.filters.securityhub">c7n.filters.securityhub module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.filters.html#module-c7n.filters.vpc">c7n.filters.vpc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.filters.html#module-c7n.filters">Module contents</a></li>
 </ul>
@@ -242,6 +246,7 @@
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.asg">c7n.resources.asg module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.aws">c7n.resources.aws module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.awslambda">c7n.resources.awslambda module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.backup">c7n.resources.backup module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.batch">c7n.resources.batch module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.cfn">c7n.resources.cfn module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.cloudfront">c7n.resources.cloudfront module</a></li>
@@ -254,6 +259,7 @@
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.datapipeline">c7n.resources.datapipeline module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.directconnect">c7n.resources.directconnect module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.directory">c7n.resources.directory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.dlm">c7n.resources.dlm module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.dms">c7n.resources.dms module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.dynamodb">c7n.resources.dynamodb module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.ebs">c7n.resources.ebs module</a></li>
@@ -275,6 +281,7 @@
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.hsm">c7n.resources.hsm module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.iam">c7n.resources.iam module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.iot">c7n.resources.iot module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.kafka">c7n.resources.kafka module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.kinesis">c7n.resources.kinesis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.kms">c7n.resources.kms module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.ml">c7n.resources.ml module</a></li>
@@ -365,7 +372,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -384,21 +391,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

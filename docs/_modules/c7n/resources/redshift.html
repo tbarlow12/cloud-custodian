@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -517,12 +520,13 @@
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;redshift:CreateClusterSnapshot&#39;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="Snapshot.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.Snapshot.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;redshift&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
             <span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
                 <span class="n">futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">process_cluster_snapshot</span><span class="p">,</span>
-                    <span class="n">cluster</span><span class="p">))</span>
+                    <span class="n">client</span><span class="p">,</span> <span class="n">cluster</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
@@ -530,21 +534,21 @@
                         <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">clusters</span></div>
 
-<div class="viewcode-block" id="Snapshot.process_cluster_snapshot"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.Snapshot.process_cluster_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">process_cluster_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster</span><span class="p">):</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;redshift&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Snapshot.process_cluster_snapshot"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.Snapshot.process_cluster_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">process_cluster_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">cluster</span><span class="p">):</span>
         <span class="n">cluster_tags</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Tags&#39;</span><span class="p">)</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">create_cluster_snapshot</span><span class="p">(</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">create_cluster_snapshot</span><span class="p">(</span>
             <span class="n">SnapshotIdentifier</span><span class="o">=</span><span class="n">snapshot_identifier</span><span class="p">(</span>
                 <span class="s1">&#39;Backup&#39;</span><span class="p">,</span>
                 <span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;ClusterIdentifier&#39;</span><span class="p">]),</span>
-            <span class="n">ClusterIdentifier</span><span class="o">=</span><span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;ClusterIdentifier&#39;</span><span class="p">],</span> <span class="n">Tags</span><span class="o">=</span><span class="n">cluster_tags</span><span class="p">)</span></div></div>
+            <span class="n">ClusterIdentifier</span><span class="o">=</span><span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;ClusterIdentifier&#39;</span><span class="p">],</span>
+            <span class="n">Tags</span><span class="o">=</span><span class="n">cluster_tags</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="EnhancedVpcRoutine"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.EnhancedVpcRoutine">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;enable-vpc-routing&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">EnhancedVpcRoutine</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to enable enhanced vpc routing on a redshift cluster</span>
 
-<span class="sd">    More: https://goo.gl/espcOF</span>
+<span class="sd">    More: https://docs.aws.amazon.com/redshift/latest/mgmt/enhanced-vpc-routing.html</span>
 
 <span class="sd">    :example:</span>
 
@@ -657,16 +661,7 @@
 <span class="sd">                    op: delete</span>
 <span class="sd">                    days: 5</span>
 <span class="sd">                    msg: &quot;Unencrypted Redshift cluster: {op}@{action_date}&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">tags</span><span class="o">.</span><span class="n">TagDelayedAction</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
-    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;redshift.CreateTags&#39;</span><span class="p">,)</span>
-
-<div class="viewcode-block" id="TagDelayedAction.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.TagDelayedAction.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;redshift&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
-            <span class="n">arn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">generate_arn</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;ClusterIdentifier&#39;</span><span class="p">])</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">create_tags</span><span class="p">(</span><span class="n">ResourceName</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Tag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.Tag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
@@ -692,8 +687,7 @@
     <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;redshift:CreateTags&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="Tag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.Tag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;redshift&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Tag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.Tag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
             <span class="n">arn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">generate_arn</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;ClusterIdentifier&#39;</span><span class="p">])</span>
             <span class="n">client</span><span class="o">.</span><span class="n">create_tags</span><span class="p">(</span><span class="n">ResourceName</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
@@ -722,8 +716,7 @@
     <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;redshift:DeleteTags&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="RemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.RemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;redshift&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.RemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
             <span class="n">arn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">generate_arn</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;ClusterIdentifier&#39;</span><span class="p">])</span>
             <span class="n">client</span><span class="o">.</span><span class="n">delete_tags</span><span class="p">(</span><span class="n">ResourceName</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">TagKeys</span><span class="o">=</span><span class="n">tag_keys</span><span class="p">)</span></div></div>
@@ -757,8 +750,7 @@
     <span class="n">max_tag_count</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;redshift:DeleteTags&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="TagTrim.process_tag_removal"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.TagTrim.process_tag_removal">[docs]</a>    <span class="k">def</span> <span class="nf">process_tag_removal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">candidates</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;redshift&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="TagTrim.process_tag_removal"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.TagTrim.process_tag_removal">[docs]</a>    <span class="k">def</span> <span class="nf">process_tag_removal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">candidates</span><span class="p">):</span>
         <span class="n">arn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">generate_arn</span><span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;DBInstanceIdentifier&#39;</span><span class="p">])</span>
         <span class="n">client</span><span class="o">.</span><span class="n">delete_tags</span><span class="p">(</span><span class="n">ResourceName</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">TagKeys</span><span class="o">=</span><span class="n">candidates</span><span class="p">)</span></div></div>
 
@@ -821,8 +813,9 @@
 
 <div class="viewcode-block" id="RedshiftModifyVpcSecurityGroups.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.RedshiftModifyVpcSecurityGroups.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
         <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;redshift&#39;</span><span class="p">)</span>
-        <span class="n">groups</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">RedshiftModifyVpcSecurityGroups</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_groups</span><span class="p">(</span>
-            <span class="n">clusters</span><span class="p">,</span> <span class="n">metadata_key</span><span class="o">=</span><span class="s1">&#39;VpcSecurityGroupId&#39;</span><span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span>
+            <span class="n">RedshiftModifyVpcSecurityGroups</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_groups</span><span class="p">(</span><span class="n">clusters</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">clusters</span><span class="p">):</span>
             <span class="n">client</span><span class="o">.</span><span class="n">modify_cluster</span><span class="p">(</span>
                 <span class="n">ClusterIdentifier</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;ClusterIdentifier&#39;</span><span class="p">],</span>
@@ -943,17 +936,7 @@
 <span class="sd">                    msg: &quot;Snapshot expiring: {op}@{action_date}&quot;</span>
 <span class="sd">                    op: delete</span>
 <span class="sd">                    days: 7</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">tags</span><span class="o">.</span><span class="n">TagDelayedAction</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
-    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;redshift:CreateTags&#39;</span><span class="p">,)</span>
-
-<div class="viewcode-block" id="RedshiftSnapshotTagDelayedAction.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.RedshiftSnapshotTagDelayedAction.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;redshift&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
-            <span class="n">arn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">generate_arn</span><span class="p">(</span>
-                <span class="n">r</span><span class="p">[</span><span class="s1">&#39;ClusterIdentifier&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;SnapshotIdentifier&#39;</span><span class="p">])</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">create_tags</span><span class="p">(</span><span class="n">ResourceName</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="RedshiftSnapshotTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.RedshiftSnapshotTag">[docs]</a><span class="nd">@RedshiftSnapshot</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
@@ -979,8 +962,7 @@
     <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;redshift:CreateTags&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="RedshiftSnapshotTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.RedshiftSnapshotTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;redshift&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RedshiftSnapshotTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.RedshiftSnapshotTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
             <span class="n">arn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">generate_arn</span><span class="p">(</span>
                 <span class="n">r</span><span class="p">[</span><span class="s1">&#39;ClusterIdentifier&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;SnapshotIdentifier&#39;</span><span class="p">])</span>
@@ -1010,8 +992,7 @@
     <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;redshift:DeleteTags&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="RedshiftSnapshotRemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.RedshiftSnapshotRemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;redshift&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RedshiftSnapshotRemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.redshift.RedshiftSnapshotRemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
             <span class="n">arn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">generate_arn</span><span class="p">(</span>
                 <span class="n">r</span><span class="p">[</span><span class="s1">&#39;ClusterIdentifier&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;SnapshotIdentifier&#39;</span><span class="p">])</span>
@@ -1087,7 +1068,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -1106,21 +1087,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

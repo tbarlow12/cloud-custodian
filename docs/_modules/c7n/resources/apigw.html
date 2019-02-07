@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -215,6 +218,10 @@
 <span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">universal_augment</span>
 
 
+<span class="n">ANNOTATION_KEY_MATCHED_METHODS</span> <span class="o">=</span> <span class="s1">&#39;c7n:matched-resource-methods&#39;</span>
+<span class="n">ANNOTATION_KEY_MATCHED_INTEGRATIONS</span> <span class="o">=</span> <span class="s1">&#39;c7n:matched-method-integrations&#39;</span>
+
+
 <div class="viewcode-block" id="RestAccount"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestAccount">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;rest-account&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">RestAccount</span><span class="p">(</span><span class="n">ResourceManager</span><span class="p">):</span>
 
@@ -297,10 +304,10 @@
         <span class="n">client</span><span class="o">.</span><span class="n">update_account</span><span class="p">(</span><span class="n">patchOperations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;patch&#39;</span><span class="p">])</span></div></div>
 
 
-<div class="viewcode-block" id="RestAPI"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestAPI">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;rest-api&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">RestAPI</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">QueryResourceManager</span><span class="p">):</span>
+<div class="viewcode-block" id="RestApi"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestApi">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;rest-api&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RestApi</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">QueryResourceManager</span><span class="p">):</span>
 
-<div class="viewcode-block" id="RestAPI.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestAPI.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="RestApi.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestApi.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
         <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;apigateway&#39;</span>
         <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;restapis&#39;</span>
         <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;get_rest_apis&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -311,15 +318,15 @@
         <span class="n">dimension</span> <span class="o">=</span> <span class="s1">&#39;GatewayName&#39;</span></div></div>
 
 
-<div class="viewcode-block" id="RestApiCrossAccount"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestApiCrossAccount">[docs]</a><span class="nd">@RestAPI</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;cross-account&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RestApiCrossAccount"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestApiCrossAccount">[docs]</a><span class="nd">@RestApi</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;cross-account&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">RestApiCrossAccount</span><span class="p">(</span><span class="n">CrossAccountAccessFilter</span><span class="p">):</span>
 
     <span class="n">policy_attribute</span> <span class="o">=</span> <span class="s1">&#39;policy&#39;</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;apigateway:GET&#39;</span><span class="p">,)</span></div>
 
 
-<div class="viewcode-block" id="UpdateAPI"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.UpdateAPI">[docs]</a><span class="nd">@RestAPI</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">UpdateAPI</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+<div class="viewcode-block" id="UpdateApi"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.UpdateApi">[docs]</a><span class="nd">@RestApi</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UpdateApi</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Update configuration of a REST API.</span>
 
 <span class="sd">    Non-exhaustive list of updateable attributes.</span>
@@ -348,7 +355,7 @@
         <span class="n">patch</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="n">OP_SCHEMA</span><span class="p">},</span>
         <span class="n">required</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;patch&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="UpdateAPI.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.UpdateAPI.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+<div class="viewcode-block" id="UpdateApi.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.UpdateApi.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
         <span class="n">client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">local_session</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;apigateway&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
@@ -499,7 +506,193 @@
         <span class="k">return</span> <span class="n">results</span></div></div>
 
 
-<span class="n">ANNOTATION_KEY</span> <span class="o">=</span> <span class="s1">&#39;c7n-matched-resource-methods&#39;</span>
+<div class="viewcode-block" id="RestApiVpcLink"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestApiVpcLink">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;rest-vpclink&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RestApiVpcLink</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">QueryResourceManager</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RestApiVpcLink.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestApiVpcLink.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;apigateway&#39;</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;get_vpc_links&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span>
+        <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;name&#39;</span></div></div>
+
+
+<div class="viewcode-block" id="FilterRestIntegration"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.FilterRestIntegration">[docs]</a><span class="nd">@RestResource</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;rest-integration&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FilterRestIntegration</span><span class="p">(</span><span class="n">ValueFilter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter rest resources based on a key value for the rest method integration of the api</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">          - name: api-method-integrations-with-type-aws</span>
+<span class="sd">            resource: rest-resource</span>
+<span class="sd">            filters:</span>
+<span class="sd">              - type: rest-integration</span>
+<span class="sd">                key: type</span>
+<span class="sd">                value: AWS</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;rest-integration&#39;</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="s1">&#39;ANY&#39;</span><span class="p">,</span> <span class="s1">&#39;PUT&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span> <span class="s2">&quot;OPTIONS&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">,</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">]},</span>
+        <span class="n">rinherit</span><span class="o">=</span><span class="n">ValueFilter</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;apigateway:GET&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="FilterRestIntegration.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.FilterRestIntegration.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">method_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">)</span>
+        <span class="c1"># 10 req/s with burst to 40</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">local_session</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;apigateway&#39;</span><span class="p">)</span>
+
+        <span class="c1"># uniqueness constraint validity across apis?</span>
+        <span class="n">resource_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]:</span> <span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">}</span>
+
+        <span class="n">futures</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+            <span class="n">tasks</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+                <span class="n">r_method_set</span> <span class="o">=</span> <span class="n">method_set</span>
+                <span class="k">if</span> <span class="n">method_set</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+                    <span class="n">r_method_set</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;resourceMethods&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">r_method_set</span><span class="p">:</span>
+                    <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="n">m</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">task_set</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">chunks</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+                <span class="n">futures</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">process_task_set</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">task_set</span><span class="p">)]</span> <span class="o">=</span> <span class="n">task_set</span>
+
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
+                <span class="n">task_set</span> <span class="o">=</span> <span class="n">futures</span><span class="p">[</span><span class="n">f</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;Error retrieving integrations on resources </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;restApiId&#39;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">])</span>
+                         <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">mt</span> <span class="ow">in</span> <span class="n">task_set</span><span class="p">])</span>
+                    <span class="k">continue</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">result</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                        <span class="n">results</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;resourceId&#39;</span><span class="p">])</span>
+                        <span class="n">resource_map</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;resourceId&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+                            <span class="n">ANNOTATION_KEY_MATCHED_INTEGRATIONS</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">resource_map</span><span class="p">[</span><span class="n">rid</span><span class="p">]</span> <span class="k">for</span> <span class="n">rid</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FilterRestIntegration.process_task_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.FilterRestIntegration.process_task_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_task_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">task_set</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">task_set</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">integration</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_integration</span><span class="p">(</span>
+                    <span class="n">restApiId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;restApiId&#39;</span><span class="p">],</span>
+                    <span class="n">resourceId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                    <span class="n">httpMethod</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+                <span class="n">integration</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ResponseMetadata&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">integration</span><span class="p">[</span><span class="s1">&#39;restApiId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;restApiId&#39;</span><span class="p">]</span>
+                <span class="n">integration</span><span class="p">[</span><span class="s1">&#39;resourceId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+                <span class="n">integration</span><span class="p">[</span><span class="s1">&#39;resourceHttpMethod&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">integration</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NotFoundException&#39;</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">results</span></div></div>
+
+
+<div class="viewcode-block" id="UpdateRestIntegration"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.UpdateRestIntegration">[docs]</a><span class="nd">@RestResource</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;update-integration&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UpdateRestIntegration</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Change or remove api integration properties based on key value</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">          - name: enforce-timeout-on-api-integration</span>
+<span class="sd">            resource: rest-resource</span>
+<span class="sd">            filters:</span>
+<span class="sd">              - type: rest-integration</span>
+<span class="sd">                key: timeoutInMillis</span>
+<span class="sd">                value: 29000</span>
+<span class="sd">            actions:</span>
+<span class="sd">              - type: update-integration</span>
+<span class="sd">                patch:</span>
+<span class="sd">                  - op: replace</span>
+<span class="sd">                    path: /timeoutInMillis</span>
+<span class="sd">                    value: &quot;3000&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;update-integration&#39;</span><span class="p">,</span>
+        <span class="n">patch</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="n">OP_SCHEMA</span><span class="p">},</span>
+        <span class="n">required</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;patch&#39;</span><span class="p">])</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;apigateway:PATCH&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="UpdateRestIntegration.validate"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.UpdateRestIntegration.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">iter_filters</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">FilterRestIntegration</span><span class="p">):</span>
+                <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;update-integration action requires &quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;rest-integration filter usage in policy&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="UpdateRestIntegration.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.UpdateRestIntegration.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">local_session</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;apigateway&#39;</span><span class="p">)</span>
+        <span class="n">ops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;patch&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ANNOTATION_KEY_MATCHED_INTEGRATIONS</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">update_integration</span><span class="p">(</span>
+                    <span class="n">restApiId</span><span class="o">=</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;restApiId&#39;</span><span class="p">],</span>
+                    <span class="n">resourceId</span><span class="o">=</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;resourceId&#39;</span><span class="p">],</span>
+                    <span class="n">httpMethod</span><span class="o">=</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;resourceHttpMethod&#39;</span><span class="p">],</span>
+                    <span class="n">patchOperations</span><span class="o">=</span><span class="n">ops</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DeleteRestIntegration"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.DeleteRestIntegration">[docs]</a><span class="nd">@RestResource</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete-integration&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DeleteRestIntegration</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete an api integration. Useful if the integration type is a security risk.</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">          - name: enforce-no-resource-integration-with-type-aws</span>
+<span class="sd">            resource: rest-resource</span>
+<span class="sd">            filters:</span>
+<span class="sd">              - type: rest-integration</span>
+<span class="sd">                key: type</span>
+<span class="sd">                value: AWS</span>
+<span class="sd">            actions:</span>
+<span class="sd">              - type: delete-integration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;apigateway:Delete&#39;</span><span class="p">,)</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;delete-integration&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DeleteRestIntegration.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.DeleteRestIntegration.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;apigateway&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ANNOTATION_KEY_MATCHED_INTEGRATIONS</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">client</span><span class="o">.</span><span class="n">delete_integration</span><span class="p">(</span>
+                        <span class="n">restApiId</span><span class="o">=</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;restApiId&#39;</span><span class="p">],</span>
+                        <span class="n">resourceId</span><span class="o">=</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;resourceId&#39;</span><span class="p">],</span>
+                        <span class="n">httpMethod</span><span class="o">=</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;resourceHttpMethod&#39;</span><span class="p">])</span>
+                <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NotFoundException</span><span class="p">:</span>
+                    <span class="k">continue</span></div></div>
 
 
 <div class="viewcode-block" id="FilterRestMethod"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.FilterRestMethod">[docs]</a><span class="nd">@RestResource</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;rest-method&#39;</span><span class="p">)</span>
@@ -563,7 +756,7 @@
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
                         <span class="n">results</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;resourceId&#39;</span><span class="p">])</span>
                         <span class="n">resource_map</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;resourceId&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
-                            <span class="n">ANNOTATION_KEY</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                            <span class="n">ANNOTATION_KEY_MATCHED_METHODS</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">resource_map</span><span class="p">[</span><span class="n">rid</span><span class="p">]</span> <span class="k">for</span> <span class="n">rid</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="FilterRestMethod.process_task_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.FilterRestMethod.process_task_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_task_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">task_set</span><span class="p">):</span>
@@ -627,7 +820,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;apigateway&#39;</span><span class="p">)</span>
         <span class="n">ops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;patch&#39;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ANNOTATION_KEY</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ANNOTATION_KEY_MATCHED_METHODS</span><span class="p">,</span> <span class="p">[]):</span>
                 <span class="n">client</span><span class="o">.</span><span class="n">update_method</span><span class="p">(</span>
                     <span class="n">restApiId</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;restApiId&#39;</span><span class="p">],</span>
                     <span class="n">resourceId</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;resourceId&#39;</span><span class="p">],</span>
@@ -645,7 +838,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -664,21 +857,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

@@ -52,6 +52,14 @@ c7n\_azure.resources.cognitive\_service module
     :undoc-members:
     :show-inheritance:
 
+c7n\_azure.resources.container\_registry module
+-----------------------------------------------
+
+.. automodule:: c7n_azure.resources.container_registry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 c7n\_azure.resources.container\_service module
 ----------------------------------------------
 

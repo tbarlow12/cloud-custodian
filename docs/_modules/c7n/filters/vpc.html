@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -230,6 +233,18 @@
 
     <span class="n">RelatedResource</span> <span class="o">=</span> <span class="s2">&quot;c7n.resources.vpc.Subnet&quot;</span>
     <span class="n">AnnotationKey</span> <span class="o">=</span> <span class="s2">&quot;matched-subnets&quot;</span></div>
+
+
+<div class="viewcode-block" id="VpcFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.VpcFilter">[docs]</a><span class="k">class</span> <span class="nc">VpcFilter</span><span class="p">(</span><span class="n">RelatedResourceFilter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter a resource by its associated vpc.&quot;&quot;&quot;</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;vpc&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">ValueFilter</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;match-resource&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+           <span class="s1">&#39;operator&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;and&#39;</span><span class="p">,</span> <span class="s1">&#39;or&#39;</span><span class="p">]}})</span>
+
+    <span class="n">schema_alias</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">RelatedResource</span> <span class="o">=</span> <span class="s2">&quot;c7n.resources.vpc.Vpc&quot;</span>
+    <span class="n">AnnotationKey</span> <span class="o">=</span> <span class="s2">&quot;matched-vpcs&quot;</span></div>
 
 
 <div class="viewcode-block" id="DefaultVpcBase"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.DefaultVpcBase">[docs]</a><span class="k">class</span> <span class="nc">DefaultVpcBase</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
@@ -454,7 +469,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -473,21 +488,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

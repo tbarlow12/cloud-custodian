@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -206,15 +209,15 @@
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">ActionRegistry</span><span class="p">,</span> <span class="n">BaseAction</span>
 <span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">FilterRegistry</span>
-<span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">TagDelayedAction</span><span class="p">,</span> <span class="n">RemoveTag</span>
+<span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">TagDelayedAction</span><span class="p">,</span> <span class="n">RemoveTag</span><span class="p">,</span> <span class="n">coalesce_copy_user_tags</span><span class="p">,</span> <span class="n">TagActionFilter</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span>
+<span class="kn">from</span> <span class="nn">c7n.filters.kms</span> <span class="k">import</span> <span class="n">KmsRelatedFilter</span>
 
 
 <div class="viewcode-block" id="FSx"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.FSx">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;fsx&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">FSx</span><span class="p">(</span><span class="n">QueryResourceManager</span><span class="p">):</span>
     <span class="n">filter_registry</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="p">(</span><span class="s1">&#39;fsx.filters&#39;</span><span class="p">)</span>
     <span class="n">action_registry</span> <span class="o">=</span> <span class="n">ActionRegistry</span><span class="p">(</span><span class="s1">&#39;fsx.actions&#39;</span><span class="p">)</span>
-    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;fsx:ListTagForResource&#39;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="FSx.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.FSx.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
         <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;fsx&#39;</span>
@@ -225,38 +228,87 @@
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span></div></div>
 
 
-<div class="viewcode-block" id="MarkForOpFileSystem"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.MarkForOpFileSystem">[docs]</a><span class="nd">@FSx</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">MarkForOpFileSystem</span><span class="p">(</span><span class="n">TagDelayedAction</span><span class="p">):</span>
-    <span class="n">concurrency</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;fsx:TagResource&#39;</span><span class="p">,)</span>
+<div class="viewcode-block" id="FSxBackup"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.FSxBackup">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;fsx-backup&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FSxBackup</span><span class="p">(</span><span class="n">QueryResourceManager</span><span class="p">):</span>
+    <span class="n">filter_registry</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="p">(</span><span class="s1">&#39;fsx-baackup.filters&#39;</span><span class="p">)</span>
+    <span class="n">action_registry</span> <span class="o">=</span> <span class="n">ActionRegistry</span><span class="p">(</span><span class="s1">&#39;fsx-baackup.actions&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MarkForOpFileSystem.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.MarkForOpFileSystem.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+<div class="viewcode-block" id="FSxBackup.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.FSxBackup.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;fsx&#39;</span>
+        <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;describe_backups&#39;</span><span class="p">,</span> <span class="s1">&#39;Backups&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;BackupId&#39;</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;CreationTime&#39;</span>
+        <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+
+
+<div class="viewcode-block" id="DeleteBackup"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.DeleteBackup">[docs]</a><span class="nd">@FSxBackup</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DeleteBackup</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Delete backups</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">            - type: delete-backups</span>
+<span class="sd">              resource: fsx-backup</span>
+<span class="sd">              filters:</span>
+<span class="sd">                - type: value</span>
+<span class="sd">                  value_type: age</span>
+<span class="sd">                  key: CreationDate</span>
+<span class="sd">                  value: 30</span>
+<span class="sd">                  op: gt</span>
+<span class="sd">              actions:</span>
+<span class="sd">                - type: delete</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;fsx:DeleteBackup&#39;</span><span class="p">,)</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DeleteBackup.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.DeleteBackup.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
         <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;fsx&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">tag_resource</span><span class="p">(</span><span class="n">ResourceARN</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;ResourceARN&#39;</span><span class="p">],</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">delete_backup</span><span class="p">(</span><span class="n">BackupId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;BackupId&#39;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">BackupRestoring</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s1">&#39;Unable to delete backup for: </span><span class="si">%s</span><span class="s1"> - </span><span class="si">%s</span><span class="s1"> - </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="n">r</span><span class="p">[</span><span class="s1">&#39;FileSystemId&#39;</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;BackupId&#39;</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span></div></div>
 
 
-<div class="viewcode-block" id="TagFileSystem"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.TagFileSystem">[docs]</a><span class="nd">@FSx</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="n">FSxBackup</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">)</span>
+
+<span class="n">FSx</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="MarkForOpFileSystem"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.MarkForOpFileSystem">[docs]</a><span class="nd">@FSxBackup</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<span class="nd">@FSx</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MarkForOpFileSystem</span><span class="p">(</span><span class="n">TagDelayedAction</span><span class="p">):</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;fsx:TagResource&#39;</span><span class="p">,)</span></div>
+
+
+<div class="viewcode-block" id="TagFileSystem"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.TagFileSystem">[docs]</a><span class="nd">@FSxBackup</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="nd">@FSx</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">TagFileSystem</span><span class="p">(</span><span class="n">Tag</span><span class="p">):</span>
     <span class="n">concurrency</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;fsx:TagResource&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="TagFileSystem.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.TagFileSystem.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;fsx&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="TagFileSystem.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.TagFileSystem.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
             <span class="n">client</span><span class="o">.</span><span class="n">tag_resource</span><span class="p">(</span><span class="n">ResourceARN</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;ResourceARN&#39;</span><span class="p">],</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="UnTagFileSystem"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.UnTagFileSystem">[docs]</a><span class="nd">@FSx</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="UnTagFileSystem"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.UnTagFileSystem">[docs]</a><span class="nd">@FSxBackup</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="nd">@FSx</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">UnTagFileSystem</span><span class="p">(</span><span class="n">RemoveTag</span><span class="p">):</span>
     <span class="n">concurrency</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;fsx:UntagResource&#39;</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="UnTagFileSystem.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.UnTagFileSystem.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;fsx&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="UnTagFileSystem.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.UnTagFileSystem.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
             <span class="n">client</span><span class="o">.</span><span class="n">untag_resource</span><span class="p">(</span><span class="n">ResourceARN</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;ResourceARN&#39;</span><span class="p">],</span> <span class="n">TagKeys</span><span class="o">=</span><span class="n">tag_keys</span><span class="p">)</span></div></div>
 
@@ -324,6 +376,20 @@
 <span class="sd">                  copy-tags: True</span>
 <span class="sd">                  tags:</span>
 <span class="sd">                    BackupSource: CloudCustodian</span>
+
+<span class="sd">            - name: backup-fsx-resource-copy-specific-tags</span>
+<span class="sd">              comment: |</span>
+<span class="sd">                  creates a backup of fsx resources and</span>
+<span class="sd">                  copies tags from file system to the backup</span>
+<span class="sd">              resource: fsx</span>
+<span class="sd">              actions:</span>
+<span class="sd">                - type: backup</span>
+<span class="sd">                  copy-tags:</span>
+<span class="sd">                    - Application</span>
+<span class="sd">                    - Owner</span>
+<span class="sd">                    # or use &#39;*&#39; to specify all tags</span>
+<span class="sd">                  tags:</span>
+<span class="sd">                    BackupSource: CloudCustodian</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;fsx:CreateBackup&#39;</span><span class="p">,)</span>
@@ -335,27 +401,160 @@
                 <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span>
             <span class="p">},</span>
             <span class="s1">&#39;copy-tags&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span>
+                <span class="s1">&#39;oneOf&#39;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">)</span>
 
 <div class="viewcode-block" id="BackupFileSystem.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.BackupFileSystem.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
         <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;fsx&#39;</span><span class="p">)</span>
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;Key&#39;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="n">user_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">copy_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;copy-tags&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
-            <span class="n">new_tags</span> <span class="o">=</span> <span class="n">tags</span>
-            <span class="k">if</span> <span class="n">copy_tags</span><span class="p">:</span>
-                <span class="n">new_tags</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;Tags&#39;</span><span class="p">])</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">coalesce_copy_user_tags</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">copy_tags</span><span class="p">,</span> <span class="n">user_tags</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">client</span><span class="o">.</span><span class="n">create_backup</span><span class="p">(</span>
-                    <span class="n">FileSystemId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;FileSystemId&#39;</span><span class="p">],</span>
-                    <span class="n">Tags</span><span class="o">=</span><span class="n">new_tags</span>
-                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">tags</span><span class="p">:</span>
+                    <span class="n">client</span><span class="o">.</span><span class="n">create_backup</span><span class="p">(</span>
+                        <span class="n">FileSystemId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;FileSystemId&#39;</span><span class="p">],</span>
+                        <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">client</span><span class="o">.</span><span class="n">create_backup</span><span class="p">(</span>
+                        <span class="n">FileSystemId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;FileSystemId&#39;</span><span class="p">]</span>
+                    <span class="p">)</span>
             <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">BackupInProgress</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="s1">&#39;Unable to create backup for: </span><span class="si">%s</span><span class="s1"> - </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;FileSystemId&#39;</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="DeleteFileSystem"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.DeleteFileSystem">[docs]</a><span class="nd">@FSx</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DeleteFileSystem</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Delete Filesystems</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">            - name: delete-fsx-instance-with-snapshot</span>
+<span class="sd">              resource: fsx</span>
+<span class="sd">              filters:</span>
+<span class="sd">                - FileSystemId: fs-1234567890123</span>
+<span class="sd">              actions:</span>
+<span class="sd">                - type: delete</span>
+<span class="sd">                  copy-tags:</span>
+<span class="sd">                    - Application</span>
+<span class="sd">                    - Owner</span>
+<span class="sd">                  tags:</span>
+<span class="sd">                    DeletedBy: CloudCustodian</span>
+
+<span class="sd">            - name: delete-fsx-instance-skip-snapshot</span>
+<span class="sd">              resource: fsx</span>
+<span class="sd">              filters:</span>
+<span class="sd">                - FileSystemId: fs-1234567890123</span>
+<span class="sd">              actions:</span>
+<span class="sd">                - type: delete</span>
+<span class="sd">                  skip-snapshot: True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;fsx:DeleteFileSystem&#39;</span><span class="p">,)</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;delete&#39;</span><span class="p">,</span>
+        <span class="o">**</span><span class="p">{</span>
+            <span class="s1">&#39;skip-snapshot&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+            <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">},</span>
+            <span class="s1">&#39;copy-tags&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;oneOf&#39;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span>
+                        <span class="p">}</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="DeleteFileSystem.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.DeleteFileSystem.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;fsx&#39;</span><span class="p">)</span>
+
+        <span class="n">skip_snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;skip-snapshot&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">copy_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;copy-tags&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">user_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">coalesce_copy_user_tags</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">copy_tags</span><span class="p">,</span> <span class="n">user_tags</span><span class="p">)</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;SkipFinalBackup&#39;</span><span class="p">:</span> <span class="n">skip_snapshot</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">tags</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">skip_snapshot</span><span class="p">:</span>
+                <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FinalBackupTags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tags</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">delete_file_system</span><span class="p">(</span>
+                    <span class="n">FileSystemId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;FileSystemId&#39;</span><span class="p">],</span>
+                    <span class="n">WindowsConfiguration</span><span class="o">=</span><span class="n">config</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">BadRequest</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Unable to delete: </span><span class="si">%s</span><span class="s1"> - </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;FileSystemId&#39;</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="KmsFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.KmsFilter">[docs]</a><span class="nd">@FSx</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;kms-key&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">KmsFilter</span><span class="p">(</span><span class="n">KmsRelatedFilter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter a resource by its associcated kms key and optionally the aliasname</span>
+<span class="sd">    of the kms key by using &#39;c7n:AliasName&#39;</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">        .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">                - name: fsx-kms-key-filters</span>
+<span class="sd">                  resource: fsx</span>
+<span class="sd">                  filters:</span>
+<span class="sd">                    - type: kms-key</span>
+<span class="sd">                      key: c7n:AliasName</span>
+<span class="sd">                      value: &quot;^(alias/aws/fsx)&quot;</span>
+<span class="sd">                      op: regex</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s1">&#39;KmsKeyId&#39;</span></div>
+
+
+<div class="viewcode-block" id="KmsFilterFsxBackup"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.fsx.KmsFilterFsxBackup">[docs]</a><span class="nd">@FSxBackup</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;kms-key&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">KmsFilterFsxBackup</span><span class="p">(</span><span class="n">KmsRelatedFilter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter a resource by its associcated kms key and optionally the aliasname</span>
+<span class="sd">    of the kms key by using &#39;c7n:AliasName&#39;</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">        .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">                - name: fsx-backup-kms-key-filters</span>
+<span class="sd">                  resource: fsx-backup</span>
+<span class="sd">                  filters:</span>
+<span class="sd">                    - type: kms-key</span>
+<span class="sd">                      key: c7n:AliasName</span>
+<span class="sd">                      value: &quot;^(alias/aws/fsx)&quot;</span>
+<span class="sd">                      op: regex</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s1">&#39;KmsKeyId&#39;</span></div>
 </pre></div>
 
            </div>
@@ -368,7 +567,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -387,21 +586,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

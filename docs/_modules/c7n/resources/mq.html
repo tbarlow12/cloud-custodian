@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -209,6 +212,7 @@
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span>
+<span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">RemoveTag</span><span class="p">,</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">TagDelayedAction</span><span class="p">,</span> <span class="n">TagActionFilter</span>
 
 
 <div class="viewcode-block" id="MessageBroker"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.mq.MessageBroker">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;message-broker&#39;</span><span class="p">)</span>
@@ -225,7 +229,19 @@
         <span class="n">date</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="s1">&#39;Broker&#39;</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">metrics_namespace</span> <span class="o">=</span> <span class="s1">&#39;AWS/AmazonMQ&#39;</span></div></div>
+        <span class="n">metrics_namespace</span> <span class="o">=</span> <span class="s1">&#39;AWS/AmazonMQ&#39;</span></div>
+
+<div class="viewcode-block" id="MessageBroker.augment"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.mq.MessageBroker.augment">[docs]</a>    <span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MessageBroker</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">augment</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">r</span><span class="p">[</span><span class="s1">&#39;Tags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;Key&#39;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Tags&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">resources</span></div></div>
+
+
+<div class="viewcode-block" id="MarkedForOp"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.mq.MarkedForOp">[docs]</a><span class="nd">@MessageBroker</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MarkedForOp</span><span class="p">(</span><span class="n">TagActionFilter</span><span class="p">):</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;mq:ListBrokers&#39;</span><span class="p">,)</span></div>
 
 
 <div class="viewcode-block" id="MQSubnetFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.mq.MQSubnetFilter">[docs]</a><span class="nd">@MessageBroker</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;subnet&#39;</span><span class="p">)</span>
@@ -264,6 +280,87 @@
                 <span class="n">client</span><span class="o">.</span><span class="n">delete_broker</span><span class="p">(</span><span class="n">BrokerId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;BrokerId&#39;</span><span class="p">])</span>
             <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NotFoundException</span><span class="p">:</span>
                 <span class="k">continue</span></div></div>
+
+
+<div class="viewcode-block" id="TagMessageBroker"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.mq.TagMessageBroker">[docs]</a><span class="nd">@MessageBroker</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TagMessageBroker</span><span class="p">(</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Action to create tag(s) on a mq</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: tag-mq</span>
+<span class="sd">                resource: message-broker</span>
+<span class="sd">                filters:</span>
+<span class="sd">                  - &quot;tag:target-tag&quot;: absent</span>
+<span class="sd">                actions:</span>
+<span class="sd">                  - type: tag</span>
+<span class="sd">                    key: target-tag</span>
+<span class="sd">                    value: target-tag-value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;mq:TagMessageBroker&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="TagMessageBroker.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.mq.TagMessageBroker.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">mq</span><span class="p">,</span> <span class="n">new_tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">mq</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">create_tags</span><span class="p">(</span>
+                    <span class="n">ResourceArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;BrokerArn&#39;</span><span class="p">],</span>
+                    <span class="n">Tags</span><span class="o">=</span><span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">]:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">new_tags</span><span class="p">})</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ResourceNotFound</span><span class="p">:</span>
+                <span class="k">continue</span></div></div>
+
+
+<div class="viewcode-block" id="UntagMessageBroker"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.mq.UntagMessageBroker">[docs]</a><span class="nd">@MessageBroker</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UntagMessageBroker</span><span class="p">(</span><span class="n">RemoveTag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Action to remove tag(s) on mq</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: mq-remove-tag</span>
+<span class="sd">                resource: message-broker</span>
+<span class="sd">                filters:</span>
+<span class="sd">                  - &quot;tag:OutdatedTag&quot;: present</span>
+<span class="sd">                actions:</span>
+<span class="sd">                  - type: remove-tag</span>
+<span class="sd">                    tags: [&quot;OutdatedTag&quot;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;mq:UntagMessageBroker&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="UntagMessageBroker.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.mq.UntagMessageBroker.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">mq</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">mq</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">delete_tags</span><span class="p">(</span><span class="n">ResourceArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;BrokerArn&#39;</span><span class="p">],</span> <span class="n">TagKeys</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ResourceNotFound</span><span class="p">:</span>
+                <span class="k">continue</span></div></div>
+
+
+<div class="viewcode-block" id="MarkForOpMessageBroker"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.mq.MarkForOpMessageBroker">[docs]</a><span class="nd">@MessageBroker</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MarkForOpMessageBroker</span><span class="p">(</span><span class="n">TagDelayedAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Action to specify an action to occur at a later date</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: mq-delete-unused</span>
+<span class="sd">                resource: message-broker</span>
+<span class="sd">                filters:</span>
+<span class="sd">                  - &quot;tag:custodian_cleanup&quot;: absent</span>
+<span class="sd">                actions:</span>
+<span class="sd">                  - type: mark-for-op</span>
+<span class="sd">                    tag: custodian_cleanup</span>
+<span class="sd">                    msg: &quot;Unused mq&quot;</span>
+<span class="sd">                    op: delete</span>
+<span class="sd">                    days: 7</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 </pre></div>
 
            </div>
@@ -276,7 +373,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -295,21 +392,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

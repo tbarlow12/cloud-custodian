@@ -115,10 +115,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul class="current">
@@ -271,14 +274,10 @@ between auto tagging and automation.</p>
 <p>In practice this window is on the order of a fraction of a second, as
 we fetch the resource and evaluate the presence of the tag before
 attempting to tag it.</p>
-<dl class="docutils">
-<dt>References</dt>
-<dd><ul class="first last simple">
-<li>AWS Config (see REQUIRED_TAGS caveat) - <a class="reference external" href="http://goo.gl/oDUXPY">http://goo.gl/oDUXPY</a></li>
-<li>CloudTrail User - <a class="reference external" href="http://goo.gl/XQhIG6">http://goo.gl/XQhIG6</a></li>
-</ul>
-</dd>
-</dl>
+<p>References</p>
+<blockquote>
+<div>CloudTrail User
+<a class="reference external" href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html">https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html</a></div></blockquote>
 <dl class="method">
 <dt id="c7n.actions.autotag.AutoTagUser.get_permissions">
 <code class="descname">get_permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/autotag.html#AutoTagUser.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.autotag.AutoTagUser.get_permissions" title="Permalink to this definition">¶</a></dt>
@@ -291,7 +290,7 @@ attempting to tag it.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.autotag.AutoTagUser.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'principal_id_tag': {'type': 'string'}, 'tag': {'type': 'string'}, 'update': {'type': 'boolean'}, u'type': {u'enum': ['auto-tag-user']}, 'user-type': {'items': {'enum': ['IAMUser', 'AssumedRole', 'FederatedUser'], 'type': 'string'}, 'type': 'array'}}, u'required': ['tag', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.actions.autotag.AutoTagUser.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'principal_id_tag': {'type': 'string'}, 'tag': {'type': 'string'}, 'type': {'enum': ['auto-tag-user']}, 'update': {'type': 'boolean'}, 'user-type': {'items': {'enum': ['IAMUser', 'AssumedRole', 'FederatedUser'], 'type': 'string'}, 'type': 'array'}}, 'required': ['tag', 'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.autotag.AutoTagUser.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -332,7 +331,7 @@ attempting to tag it.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.core.Action.log">
-<code class="descname">log</code><em class="property"> = &lt;logging.Logger object&gt;</em><a class="headerlink" href="#c7n.actions.core.Action.log" title="Permalink to this definition">¶</a></dt>
+<code class="descname">log</code><em class="property"> = &lt;Logger custodian.actions (DEBUG)&gt;</em><a class="headerlink" href="#c7n.actions.core.Action.log" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -357,7 +356,7 @@ attempting to tag it.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.core.Action.schema">
-<code class="descname">schema</code><em class="property"> = {u'type': u'object'}</em><a class="headerlink" href="#c7n.actions.core.Action.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'type': 'object'}</em><a class="headerlink" href="#c7n.actions.core.Action.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -445,7 +444,7 @@ invoke.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.invoke.LambdaInvoke.schema">
-<code class="descname">schema</code><em class="property"> = {'properties': {'async': {'type': 'boolean'}, 'function': {'type': 'string'}, 'batch_size': {'type': 'integer'}, 'type': {'enum': ['invoke-lambda']}, 'qualifier': {'type': 'string'}}, 'required': ['type', 'function'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.invoke.LambdaInvoke.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'properties': {'async': {'type': 'boolean'}, 'batch_size': {'type': 'integer'}, 'function': {'type': 'string'}, 'qualifier': {'type': 'string'}, 'type': {'enum': ['invoke-lambda']}}, 'required': ['type', 'function'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.invoke.LambdaInvoke.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -495,7 +494,7 @@ invoke.</p>
 <p>op and units are optional and will default to simple Counts.</p>
 <dl class="attribute">
 <dt id="c7n.actions.metric.PutMetric.permissions">
-<code class="descname">permissions</code><em class="property"> = set(['cloudwatch:PutMetricData'])</em><a class="headerlink" href="#c7n.actions.metric.PutMetric.permissions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">permissions</code><em class="property"> = {'cloudwatch:PutMetricData'}</em><a class="headerlink" href="#c7n.actions.metric.PutMetric.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -505,7 +504,7 @@ invoke.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.metric.PutMetric.schema">
-<code class="descname">schema</code><em class="property"> = {'properties': {'key': {'type': 'string'}, 'dimensions': {'items': {'type': 'object'}, 'type': 'array'}, 'op': {'enum': ['count', 'distinct_count', 'sum', 'average']}, 'namespace': {'type': 'string'}, 'metric_name': {'type': 'string'}, 'units': {'enum': ['Seconds', 'Microseconds', 'Milliseconds', 'Bytes', 'Kilobytes', 'Megabytes', 'Gigabytes', 'Terabytes', 'Bits', 'Kilobits', 'Megabits', 'Gigabits', 'Terabits', 'Bytes/Second', 'Kilobytes/Second', 'Megabytes/Second', 'Gigabytes/Second', 'Terabytes/Second', 'Bits/Second', 'Kilobits/Second', 'Megabits/Second', 'Gigabits/Second', 'Terabits/Second', 'Count/Second', 'Percent', 'Count', 'None']}, 'type': {'enum': ['put-metric']}}, 'required': ['type', 'key', 'namespace', 'metric_name'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.metric.PutMetric.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'properties': {'dimensions': {'items': {'type': 'object'}, 'type': 'array'}, 'key': {'type': 'string'}, 'metric_name': {'type': 'string'}, 'namespace': {'type': 'string'}, 'op': {'enum': ['count', 'distinct_count', 'sum', 'average']}, 'type': {'enum': ['put-metric']}, 'units': {'enum': ['Seconds', 'Microseconds', 'Milliseconds', 'Bytes', 'Kilobytes', 'Megabytes', 'Gigabytes', 'Terabytes', 'Bits', 'Kilobits', 'Megabits', 'Gigabits', 'Terabits', 'Bytes/Second', 'Kilobytes/Second', 'Megabytes/Second', 'Gigabytes/Second', 'Terabytes/Second', 'Bits/Second', 'Kilobits/Second', 'Megabits/Second', 'Gigabits/Second', 'Terabits/Second', 'Count/Second', 'Percent', 'Count', 'None']}}, 'required': ['type', 'key', 'namespace', 'metric_name'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.metric.PutMetric.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -537,62 +536,103 @@ invoke.</p>
 <dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction">
 <em class="property">class </em><code class="descclassname">c7n.actions.network.</code><code class="descname">ModifyVpcSecurityGroupsAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/network.html#ModifyVpcSecurityGroupsAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#c7n.actions.core.Action" title="c7n.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.core.Action</span></code></a></p>
-<p>Common actions for modifying security groups on a resource</p>
-<p>Can target either physical groups as a list of group ids or
-symbolic groups like ‘matched’, ‘network-location’ or ‘all’. ‘matched’ uses
-the annotations of the ‘security-group’ interface filter. ‘network-location’ uses
-the annotations of the ‘network-location’ interface filter for <cite>SecurityGroupMismatch</cite>.</p>
-<p>Note an interface always gets at least one security group, so
-we mandate the specification of an isolation/quarantine group
-that can be specified if there would otherwise be no groups.</p>
+<p>Common action for modifying security groups on a vpc attached resources.</p>
+<p>Security groups for add or remove can be specified via group id or
+name. Group removal also supports symbolic names such as
+‘matched’, ‘network-location’ or ‘all’. ‘matched’ uses the
+annotations/output of the ‘security-group’ filter
+filter. ‘network-location’ uses the annotations of the
+‘network-location’ interface filter for <cite>SecurityGroupMismatch</cite>.</p>
+<p>Note a vpc attached resource requires at least one security group,
+this action will use the sg specified in <cite>isolation-group</cite> to ensure
+resources always have at least one security-group.</p>
 <dl class="docutils">
 <dt>type: modify-security-groups</dt>
 <dd>add: []
 remove: [] | matched | network-location
 isolation-group: sg-xyz</dd>
 </dl>
+<dl class="attribute">
+<dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.SYMBOLIC_SGS">
+<code class="descname">SYMBOLIC_SGS</code><em class="property"> = {'all', 'matched', 'network-location'}</em><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.SYMBOLIC_SGS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.get_action_group_names">
+<code class="descname">get_action_group_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/network.html#ModifyVpcSecurityGroupsAction.get_action_group_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.get_action_group_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the security group names configured in this action.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.get_group_names">
+<code class="descname">get_group_names</code><span class="sig-paren">(</span><em>groups</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/network.html#ModifyVpcSecurityGroupsAction.get_group_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.get_group_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.get_groups">
-<code class="descname">get_groups</code><span class="sig-paren">(</span><em>resources</em>, <em>metadata_key=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/network.html#ModifyVpcSecurityGroupsAction.get_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.get_groups" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse policies to get lists of security groups to attach to each resource</p>
+<code class="descname">get_groups</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/network.html#ModifyVpcSecurityGroupsAction.get_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.get_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return lists of security groups to set on each resource</p>
 <p>For each input resource, parse the various add/remove/isolation-
 group policies for ‘modify-security-groups’ to find the resulting
 set of VPC security groups to attach to that resource.</p>
-<p>The ‘metadata_key’ parameter can be used for two purposes at
-the moment; The first use is for resources’ APIs that return a
-list of security group IDs but use a different metadata key
-than ‘Groups’ or ‘SecurityGroups’.</p>
-<p>The second use is for when there are richer objects in the ‘Groups’ or
-‘SecurityGroups’ lists. The custodian actions need to act on lists of
-just security group IDs, so the metadata_key can be used to select IDs
-from the richer objects in the provided lists.</p>
 <p>Returns a list of lists containing the resulting VPC security groups
 that should end up on each resource passed in.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>resources</strong> – List of resources containing VPC Security Groups</li>
-<li><strong>metadata_key</strong> – Metadata key for security groups list</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> – List of resources containing VPC Security Groups</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of lists of security groups per resource</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of lists of security groups per resource</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.get_groups_by_names">
+<code class="descname">get_groups_by_names</code><span class="sig-paren">(</span><em>names</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/network.html#ModifyVpcSecurityGroupsAction.get_groups_by_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.get_groups_by_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve security names to security groups resources.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.resolve_group_names">
+<code class="descname">resolve_group_names</code><span class="sig-paren">(</span><em>r</em>, <em>target_group_ids</em>, <em>groups</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/network.html#ModifyVpcSecurityGroupsAction.resolve_group_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.resolve_group_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve any security group names to the corresponding group ids</p>
+<p>With the context of a given network attached resource.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.resolve_remove_symbols">
+<code class="descname">resolve_remove_symbols</code><span class="sig-paren">(</span><em>r</em>, <em>target_group_ids</em>, <em>rgroups</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/network.html#ModifyVpcSecurityGroupsAction.resolve_remove_symbols"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.resolve_remove_symbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve the resources security groups that need be modified.</p>
+<p>Specifically handles symbolic names that match annotations from policy filters
+for groups being removed.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.schema">
-<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'anyOf': [{'required': ['isolation-group', 'remove', 'type']}, {'required': ['add', 'remove', 'type']}, {'required': ['add', 'type']}], 'properties': {'remove': {'oneOf': [{'items': {'pattern': '^sg-*', 'type': 'string'}, 'type': 'array'}, {'enum': ['matched', 'network-location', 'all', {'pattern': '^sg-*', 'type': 'string'}]}]}, 'isolation-group': {'oneOf': [{'pattern': '^sg-*', 'type': 'string'}, {'items': {'pattern': '^sg-*', 'type': 'string'}, 'type': 'array'}]}, 'add': {'oneOf': [{'pattern': '^sg-*', 'type': 'string'}, {'items': {'pattern': '^sg-*', 'type': 'string'}, 'type': 'array'}]}, 'type': {'enum': ['modify-security-groups']}}, 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'anyOf': [{'required': ['isolation-group', 'remove', 'type']}, {'required': ['add', 'remove', 'type']}, {'required': ['add', 'type']}], 'properties': {'add': {'oneOf': [{'type': 'string'}, {'type': 'array', 'items': {'type': 'string'}}]}, 'isolation-group': {'oneOf': [{'type': 'string'}, {'type': 'array', 'items': {'type': 'string'}}]}, 'remove': {'oneOf': [{'type': 'array', 'items': {'type': 'string'}}, {'enum': ['matched', 'network-location', 'all', {'type': 'string'}]}]}, 'type': {'enum': ['modify-security-groups']}}, 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.schema_alias">
 <code class="descname">schema_alias</code><em class="property"> = True</em><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.schema_alias" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.sg_expr">
+<code class="descname">sg_expr</code><em class="property"> = None</em><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.sg_expr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/network.html#ModifyVpcSecurityGroupsAction.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.actions.network.ModifyVpcSecurityGroupsAction.vpc_expr">
+<code class="descname">vpc_expr</code><em class="property"> = None</em><a class="headerlink" href="#c7n.actions.network.ModifyVpcSecurityGroupsAction.vpc_expr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -725,7 +765,7 @@ transport.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.notify.Notify.schema">
-<code class="descname">schema</code><em class="property"> = {'anyOf': [{'required': ['type', 'transport', 'to']}, {'required': ['type', 'transport', 'to_from']}], 'properties': {'cc_manager': {'type': 'boolean'}, 'assume_role': {'type': 'boolean'}, 'transport': {'oneOf': [{'required': ['type', 'queue'], 'type': 'object', 'properties': {'queue': {'type': 'string'}, 'type': {'enum': ['sqs']}}}, {'required': ['type', 'topic'], 'type': 'object', 'properties': {'attributes': {'type': 'object'}, 'topic': {'type': 'string'}, 'type': {'enum': ['sns']}}}]}, 'to': {'items': {'type': 'string'}, 'type': 'array'}, 'type': {'enum': ['notify']}, 'cc': {'items': {'type': 'string'}, 'type': 'array'}, 'cc_from': {u'required': [u'url'], u'additionalProperties': u'False', u'type': u'object', u'properties': {u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}, u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}}}, 'template': {'type': 'string'}, 'to_from': {u'required': [u'url'], u'additionalProperties': u'False', u'type': u'object', u'properties': {u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}, u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}}}, 'from': {'type': 'string'}, 'owner_absent_contact': {'items': {'type': 'string'}, 'type': 'array'}, 'subject': {'type': 'string'}}, 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.notify.Notify.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'anyOf': [{'required': ['type', 'transport', 'to']}, {'required': ['type', 'transport', 'to_from']}], 'properties': {'assume_role': {'type': 'boolean'}, 'cc': {'items': {'type': 'string'}, 'type': 'array'}, 'cc_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'cc_manager': {'type': 'boolean'}, 'from': {'type': 'string'}, 'owner_absent_contact': {'items': {'type': 'string'}, 'type': 'array'}, 'subject': {'type': 'string'}, 'template': {'type': 'string'}, 'to': {'items': {'type': 'string'}, 'type': 'array'}, 'to_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'transport': {'oneOf': [{'type': 'object', 'required': ['type', 'queue'], 'properties': {'queue': {'type': 'string'}, 'type': {'enum': ['sqs']}}}, {'type': 'object', 'required': ['type', 'topic'], 'properties': {'topic': {'type': 'string'}, 'type': {'enum': ['sns']}, 'attributes': {'type': 'object'}}}]}, 'type': {'enum': ['notify']}}, 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.notify.Notify.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -750,7 +790,7 @@ transport.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.notify.Notify.type">
-<code class="descname">type</code><em class="property"> = u'notify'</em><a class="headerlink" href="#c7n.actions.notify.Notify.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'notify'</em><a class="headerlink" href="#c7n.actions.notify.Notify.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -779,7 +819,7 @@ transport.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.policy.ModifyPolicyBase.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'add-statements': {'required': True, 'additionalProperties': False, 'type': 'array', 'items': {'$ref': '#/definitions/iam-statement'}}, 'remove-statements': {'required': True, 'oneOf': [{'enum': ['matched', '*']}, {'items': {'type': 'string'}, 'type': 'array'}], 'additionalProperties': False, 'type': ['array', 'string']}, u'type': {u'enum': ['modify-policy']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.actions.policy.ModifyPolicyBase.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'add-statements': {'additionalProperties': False, 'items': {'$ref': '#/definitions/iam-statement'}, 'required': True, 'type': 'array'}, 'remove-statements': {'additionalProperties': False, 'oneOf': [{'enum': ['matched', '*']}, {'type': 'array', 'items': {'type': 'string'}}], 'required': True, 'type': ['array', 'string']}, 'type': {'enum': ['modify-policy']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.policy.ModifyPolicyBase.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -800,7 +840,7 @@ transport.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.policy.RemovePolicyBase.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'statement_ids': {'oneOf': [{'enum': ['matched']}, {'items': {'type': 'string'}, 'type': 'array'}]}, u'type': {u'enum': ['remove-statements']}}, u'required': ['statement_ids', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.actions.policy.RemovePolicyBase.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'statement_ids': {'oneOf': [{'enum': ['matched']}, {'type': 'array', 'items': {'type': 'string'}}]}, 'type': {'enum': ['remove-statements']}}, 'required': ['statement_ids', 'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.policy.RemovePolicyBase.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -875,6 +915,11 @@ such that further findings generate updates.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="c7n.actions.securityhub.PostFinding.NEW_FINDING">
+<code class="descname">NEW_FINDING</code><em class="property"> = 'New'</em><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.NEW_FINDING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.actions.securityhub.PostFinding.ProductName">
 <code class="descname">ProductName</code><em class="property"> = 'default'</em><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.ProductName" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -886,7 +931,17 @@ such that further findings generate updates.</p>
 
 <dl class="method">
 <dt id="c7n.actions.securityhub.PostFinding.get_finding">
-<code class="descname">get_finding</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#PostFinding.get_finding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.get_finding" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_finding</code><span class="sig-paren">(</span><em>resources</em>, <em>existing_finding_id</em>, <em>created_at</em>, <em>updated_at</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#PostFinding.get_finding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.get_finding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.actions.securityhub.PostFinding.get_finding_tag">
+<code class="descname">get_finding_tag</code><span class="sig-paren">(</span><em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#PostFinding.get_finding_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.get_finding_tag" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.actions.securityhub.PostFinding.group_resources">
+<code class="descname">group_resources</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/securityhub.html#PostFinding.group_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.group_resources" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -901,7 +956,12 @@ such that further findings generate updates.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.securityhub.PostFinding.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'fields': {'type': 'object'}, 'severity_normalized': {'default': 0, 'max': 100, 'type': 'number', 'min': 0}, 'criticality': {'max': 100, 'type': 'number', 'min': 0}, 'types': {'items': {'enum': ['Effects/Data Exposure', 'Effects/Data Exfiltration', 'Effects/Data Destruction', 'Effects/Denial of Service', 'Effects/Resource Consumption', 'Software and Configuration Checks/Vulnerabilities', 'Software and Configuration Checks/Vulnerabilities/CVE', 'Software and Configuration Checks/AWS Security Best Practices', 'Software and Configuration Checks/AWS Security Best Practices/Network Reachability', 'Software and Configuration Checks/Industry and Regulatory Standards', 'Software and Configuration Checks/Industry and Regulatory Standards/CIS Host Hardening Benchmarks', 'Software and Configuration Checks/Industry and Regulatory Standards/CIS AWS Foundations Benchmark', 'Software and Configuration Checks/Industry and Regulatory Standards/PCI-DSS Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/Cloud Security Alliance Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 90001 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27001 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27017 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27018 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/SOC 1', 'Software and Configuration Checks/Industry and Regulatory Standards/SOC 2', 'Software and Configuration Checks/Industry and Regulatory Standards/HIPAA Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/NIST 800-53 Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/NIST CSF Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/IRAP Controls (Australia)', 'Software and Configuration Checks/Industry and Regulatory Standards/K-ISMS Controls (Korea)', 'Software and Configuration Checks/Industry and Regulatory Standards/MTCS Controls (Singapore)', 'Software and Configuration Checks/Industry and Regulatory Standards/FISC Controls (Japan)', 'Software and Configuration Checks/Industry and Regulatory Standards/My Number Act Controls (Japan)', 'Software and Configuration Checks/Industry and Regulatory Standards/ENS Controls (Spain)', 'Software and Configuration Checks/Industry and Regulatory Standards/Cyber Essentials Plus Controls (UK)', 'Software and Configuration Checks/Industry and Regulatory Standards/G-Cloud Controls (UK)', 'Software and Configuration Checks/Industry and Regulatory Standards/C5 Controls (Germany)', 'Software and Configuration Checks/Industry and Regulatory Standards/IT-Grundschutz Controls (Germany)', 'Software and Configuration Checks/Industry and Regulatory Standards/GDPR Controls (Europe)', 'Software and Configuration Checks/Industry and Regulatory Standards/TISAX Controls (Europe)', 'TTPs/Initial Access', 'TTPs/Execution', 'TTPs/Persistence', 'TTPs/Privilege Escalation', 'TTPs/Defense Evasion', 'TTPs/Credential Access', 'TTPs/Discovery', 'TTPs/Lateral Movement', 'TTPs/Collection', 'TTPs/Command and Control'], 'type': 'string'}, 'type': 'array'}, 'recommendation_url': {'type': 'string'}, 'recommendation': {'type': 'string'}, 'compliance_status': {'enum': ['PASSED', 'WARNING', 'FAILED', 'NOT_AVAILABLE'], 'type': 'string'}, 'region': {'description': 'cross-region aggregation target', 'type': 'string'}, 'severity': {'default': 0, 'type': 'number'}, 'confidence': {'max': 100, 'type': 'number', 'min': 0}, u'type': {u'enum': ['post-finding']}}, u'required': ['types', u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'compliance_status': {'enum': ['PASSED', 'WARNING', 'FAILED', 'NOT_AVAILABLE'], 'type': 'string'}, 'confidence': {'max': 100, 'min': 0, 'type': 'number'}, 'criticality': {'max': 100, 'min': 0, 'type': 'number'}, 'fields': {'type': 'object'}, 'recommendation': {'type': 'string'}, 'recommendation_url': {'type': 'string'}, 'region': {'description': 'cross-region aggregation target', 'type': 'string'}, 'severity': {'default': 0, 'type': 'number'}, 'severity_normalized': {'default': 0, 'max': 100, 'min': 0, 'type': 'number'}, 'type': {'enum': ['post-finding']}, 'types': {'items': {'enum': ['Software and Configuration Checks/Vulnerabilities', 'Software and Configuration Checks/Vulnerabilities/CVE', 'Software and Configuration Checks/AWS Security Best Practices', 'Software and Configuration Checks/AWS Security Best Practices/Network Reachability', 'Software and Configuration Checks/Industry and Regulatory Standards', 'Software and Configuration Checks/Industry and Regulatory Standards/CIS Host Hardening Benchmarks', 'Software and Configuration Checks/Industry and Regulatory Standards/CIS AWS Foundations Benchmark', 'Software and Configuration Checks/Industry and Regulatory Standards/PCI-DSS Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/Cloud Security Alliance Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 90001 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27001 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27017 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/ISO 27018 Controls', 'Software and Configuration Checks/Industry and Regulatory Standards/SOC 1', 'Software and Configuration Checks/Industry and Regulatory Standards/SOC 2', 'Software and Configuration Checks/Industry and Regulatory Standards/HIPAA Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/NIST 800-53 Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/NIST CSF Controls (USA)', 'Software and Configuration Checks/Industry and Regulatory Standards/IRAP Controls (Australia)', 'Software and Configuration Checks/Industry and Regulatory Standards/K-ISMS Controls (Korea)', 'Software and Configuration Checks/Industry and Regulatory Standards/MTCS Controls (Singapore)', 'Software and Configuration Checks/Industry and Regulatory Standards/FISC Controls (Japan)', 'Software and Configuration Checks/Industry and Regulatory Standards/My Number Act Controls (Japan)', 'Software and Configuration Checks/Industry and Regulatory Standards/ENS Controls (Spain)', 'Software and Configuration Checks/Industry and Regulatory Standards/Cyber Essentials Plus Controls (UK)', 'Software and Configuration Checks/Industry and Regulatory Standards/G-Cloud Controls (UK)', 'Software and Configuration Checks/Industry and Regulatory Standards/C5 Controls (Germany)', 'Software and Configuration Checks/Industry and Regulatory Standards/IT-Grundschutz Controls (Germany)', 'Software and Configuration Checks/Industry and Regulatory Standards/GDPR Controls (Europe)', 'Software and Configuration Checks/Industry and Regulatory Standards/TISAX Controls (Europe)', 'TTPs/Initial Access', 'TTPs/Execution', 'TTPs/Persistence', 'TTPs/Privilege Escalation', 'TTPs/Defense Evasion', 'TTPs/Credential Access', 'TTPs/Discovery', 'TTPs/Lateral Movement', 'TTPs/Collection', 'TTPs/Command and Control', 'Effects/Data Exposure', 'Effects/Data Exfiltration', 'Effects/Data Destruction', 'Effects/Denial of Service', 'Effects/Resource Consumption'], 'type': 'string'}, 'type': 'array'}}, 'required': ['types', 'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.actions.securityhub.PostFinding.schema_alias">
+<code class="descname">schema_alias</code><em class="property"> = True</em><a class="headerlink" href="#c7n.actions.securityhub.PostFinding.schema_alias" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -937,7 +997,7 @@ such that further findings generate updates.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -956,21 +1016,15 @@ such that further findings generate updates.</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

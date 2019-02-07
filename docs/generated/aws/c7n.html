@@ -115,10 +115,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul class="current">
@@ -278,6 +281,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.filters.html#module-c7n.filters.related">c7n.filters.related module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.filters.html#module-c7n.filters.revisions">c7n.filters.revisions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c7n.filters.html#module-c7n.filters.securityhub">c7n.filters.securityhub module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.filters.html#module-c7n.filters.vpc">c7n.filters.vpc module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.filters.html#module-c7n.filters">Module contents</a></li>
 </ul>
@@ -304,6 +308,7 @@
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.asg">c7n.resources.asg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.aws">c7n.resources.aws module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.awslambda">c7n.resources.awslambda module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.backup">c7n.resources.backup module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.batch">c7n.resources.batch module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.cfn">c7n.resources.cfn module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.cloudfront">c7n.resources.cloudfront module</a></li>
@@ -316,6 +321,7 @@
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.datapipeline">c7n.resources.datapipeline module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.directconnect">c7n.resources.directconnect module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.directory">c7n.resources.directory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.dlm">c7n.resources.dlm module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.dms">c7n.resources.dms module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.dynamodb">c7n.resources.dynamodb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.ebs">c7n.resources.ebs module</a></li>
@@ -337,6 +343,7 @@
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.hsm">c7n.resources.hsm module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.iam">c7n.resources.iam module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.iot">c7n.resources.iot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.kafka">c7n.resources.kafka module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.kinesis">c7n.resources.kinesis module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.kms">c7n.resources.kms module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c7n.resources.html#module-c7n.resources.ml">c7n.resources.ml module</a></li>
@@ -493,12 +500,12 @@ multiple policies on the same resource type.</p>
 <span id="c7n-commands-module"></span><h2>c7n.commands module<a class="headerlink" href="#module-c7n.commands" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="c7n.commands.logs">
-<code class="descclassname">c7n.commands.</code><code class="descname">logs</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/commands.html#logs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.commands.logs" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">c7n.commands.</code><code class="descname">logs</code><span class="sig-paren">(</span><em>options</em>, <em>policies</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/commands.html#logs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.commands.logs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="c7n.commands.metrics_cmd">
-<code class="descclassname">c7n.commands.</code><code class="descname">metrics_cmd</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/commands.html#metrics_cmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.commands.metrics_cmd" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">c7n.commands.</code><code class="descname">metrics_cmd</code><span class="sig-paren">(</span><em>options</em>, <em>policies</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/commands.html#metrics_cmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.commands.metrics_cmd" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -508,12 +515,12 @@ multiple policies on the same resource type.</p>
 
 <dl class="function">
 <dt id="c7n.commands.report">
-<code class="descclassname">c7n.commands.</code><code class="descname">report</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/commands.html#report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.commands.report" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">c7n.commands.</code><code class="descname">report</code><span class="sig-paren">(</span><em>options</em>, <em>policies</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/commands.html#report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.commands.report" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="c7n.commands.run">
-<code class="descclassname">c7n.commands.</code><code class="descname">run</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/commands.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.commands.run" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">c7n.commands.</code><code class="descname">run</code><span class="sig-paren">(</span><em>options</em>, <em>policies</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/commands.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.commands.run" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -623,7 +630,7 @@ in a function closure for renewing the sts assumed role.</dd>
 <p>Policy Execution Context.</p>
 <dl class="method">
 <dt id="c7n.ctx.ExecutionContext.get_metadata">
-<code class="descname">get_metadata</code><span class="sig-paren">(</span><em>include=(u'sys-stats'</em>, <em>u'api-stats'</em>, <em>u'metrics')</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/ctx.html#ExecutionContext.get_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.ctx.ExecutionContext.get_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_metadata</code><span class="sig-paren">(</span><em>include=('sys-stats'</em>, <em>'api-stats'</em>, <em>'metrics')</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/ctx.html#ExecutionContext.get_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.ctx.ExecutionContext.get_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -671,7 +678,7 @@ in a function closure for renewing the sts assumed role.</dd>
 
 <dl class="attribute">
 <dt id="c7n.cwe.CloudWatchEvents.trail_events">
-<code class="descname">trail_events</code><em class="property"> = {u'ConsoleLogin': {u'ids': u'userIdentity.arn', u'source': u'signin.amazonaws.com'}, u'CreateAutoScalingGroup': {u'ids': u'requestParameters.autoScalingGroupName', u'source': u'autoscaling.amazonaws.com'}, u'CreateBucket': {u'ids': u'requestParameters.bucketName', u'source': u's3.amazonaws.com'}, u'CreateCluster': {u'ids': u'requestParameters.clusterIdentifier', u'source': u'redshift.amazonaws.com'}, u'CreateDBInstance': {u'ids': u'requestParameters.dBInstanceIdentifier', u'source': u'rds.amazonaws.com'}, u'CreateElasticsearchDomain': {u'ids': u'requestParameters.domainName', u'source': u'es.amazonaws.com'}, u'CreateLoadBalancer': {u'ids': u'requestParameters.loadBalancerName', u'source': u'elasticloadbalancing.amazonaws.com'}, u'CreateLoadBalancerPolicy': {u'ids': u'requestParameters.loadBalancerName', u'source': u'elasticloadbalancing.amazonaws.com'}, u'CreateTable': {u'ids': u'requestParameters.tableName', u'source': u'dynamodb.amazonaws.com'}, u'CreateVolume': {u'ids': u'responseElements.volumeId', u'source': u'ec2.amazonaws.com'}, u'RunInstances': {u'ids': u'responseElements.instancesSet.items[].instanceId', u'source': u'ec2.amazonaws.com'}, u'SetLoadBalancerPoliciesOfListener': {u'ids': u'requestParameters.loadBalancerName', u'source': u'elasticloadbalancing.amazonaws.com'}, u'UpdateAutoScalingGroup': {u'ids': u'requestParameters.autoScalingGroupName', u'source': u'autoscaling.amazonaws.com'}}</em><a class="headerlink" href="#c7n.cwe.CloudWatchEvents.trail_events" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trail_events</code><em class="property"> = {'ConsoleLogin': {'ids': 'userIdentity.arn', 'source': 'signin.amazonaws.com'}, 'CreateAutoScalingGroup': {'ids': 'requestParameters.autoScalingGroupName', 'source': 'autoscaling.amazonaws.com'}, 'CreateBucket': {'ids': 'requestParameters.bucketName', 'source': 's3.amazonaws.com'}, 'CreateCluster': {'ids': 'requestParameters.clusterIdentifier', 'source': 'redshift.amazonaws.com'}, 'CreateDBInstance': {'ids': 'requestParameters.dBInstanceIdentifier', 'source': 'rds.amazonaws.com'}, 'CreateElasticsearchDomain': {'ids': 'requestParameters.domainName', 'source': 'es.amazonaws.com'}, 'CreateLoadBalancer': {'ids': 'requestParameters.loadBalancerName', 'source': 'elasticloadbalancing.amazonaws.com'}, 'CreateLoadBalancerPolicy': {'ids': 'requestParameters.loadBalancerName', 'source': 'elasticloadbalancing.amazonaws.com'}, 'CreateTable': {'ids': 'requestParameters.tableName', 'source': 'dynamodb.amazonaws.com'}, 'CreateVolume': {'ids': 'responseElements.volumeId', 'source': 'ec2.amazonaws.com'}, 'RunInstances': {'ids': 'responseElements.instancesSet.items[].instanceId', 'source': 'ec2.amazonaws.com'}, 'SetLoadBalancerPoliciesOfListener': {'ids': 'requestParameters.loadBalancerName', 'source': 'elasticloadbalancing.amazonaws.com'}, 'UpdateAutoScalingGroup': {'ids': 'requestParameters.autoScalingGroupName', 'source': 'autoscaling.amazonaws.com'}}</em><a class="headerlink" href="#c7n.cwe.CloudWatchEvents.trail_events" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -682,7 +689,7 @@ in a function closure for renewing the sts assumed role.</dd>
 <dl class="exception">
 <dt id="c7n.exceptions.CustodianError">
 <em class="property">exception </em><code class="descclassname">c7n.exceptions.</code><code class="descname">CustodianError</code><a class="reference internal" href="../../_modules/c7n/exceptions.html#CustodianError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.exceptions.CustodianError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">exceptions.Exception</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Custodian Exception Base Class</p>
 </dd></dl>
 
@@ -768,7 +775,7 @@ c7n_async == False -&gt; let exceptions bubble up.</p>
 
 <dl class="attribute">
 <dt id="c7n.executor.MainThreadExecutor.type">
-<code class="descname">type</code><em class="property"> = u'main'</em><a class="headerlink" href="#c7n.executor.MainThreadExecutor.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'main'</em><a class="headerlink" href="#c7n.executor.MainThreadExecutor.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -840,7 +847,7 @@ uses a separate session.</p>
 <em class="property">class </em><code class="descclassname">c7n.log.</code><code class="descname">CloudWatchLogHandler</code><span class="sig-paren">(</span><em>log_group='c7n.log'</em>, <em>log_stream=None</em>, <em>session_factory=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/log.html#CloudWatchLogHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.log.CloudWatchLogHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Handler</span></code></p>
 <p>Python Log Handler to Send to Cloud Watch Logs</p>
-<p><a class="reference external" href="http://goo.gl/eZGAEK">http://goo.gl/eZGAEK</a></p>
+<p><a class="reference external" href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html">https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html</a></p>
 <dl class="attribute">
 <dt id="c7n.log.CloudWatchLogHandler.batch_interval">
 <code class="descname">batch_interval</code><em class="property"> = 40</em><a class="headerlink" href="#c7n.log.CloudWatchLogHandler.batch_interval" title="Permalink to this definition">¶</a></dt>
@@ -903,17 +910,17 @@ methods.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
 <dt id="c7n.log.Error.AlreadyAccepted">
-<code class="descname">AlreadyAccepted</code><em class="property"> = u'DataAlreadyAcceptedException'</em><a class="headerlink" href="#c7n.log.Error.AlreadyAccepted" title="Permalink to this definition">¶</a></dt>
+<code class="descname">AlreadyAccepted</code><em class="property"> = 'DataAlreadyAcceptedException'</em><a class="headerlink" href="#c7n.log.Error.AlreadyAccepted" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.log.Error.InvalidToken">
-<code class="descname">InvalidToken</code><em class="property"> = u'InvalidSequenceTokenException'</em><a class="headerlink" href="#c7n.log.Error.InvalidToken" title="Permalink to this definition">¶</a></dt>
+<code class="descname">InvalidToken</code><em class="property"> = 'InvalidSequenceTokenException'</em><a class="headerlink" href="#c7n.log.Error.InvalidToken" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.log.Error.ResourceExists">
-<code class="descname">ResourceExists</code><em class="property"> = u'ResourceAlreadyExistsException'</em><a class="headerlink" href="#c7n.log.Error.ResourceExists" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ResourceExists</code><em class="property"> = 'ResourceAlreadyExistsException'</em><a class="headerlink" href="#c7n.log.Error.ResourceExists" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
@@ -1078,6 +1085,11 @@ of PolicyExecutionMode.get_logs()</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="c7n.mu.AbstractLambdaFunction.concurrency">
+<code class="descname">concurrency</code><a class="headerlink" href="#c7n.mu.AbstractLambdaFunction.concurrency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.mu.AbstractLambdaFunction.dead_letter_config">
 <code class="descname">dead_letter_config</code><a class="headerlink" href="#c7n.mu.AbstractLambdaFunction.dead_letter_config" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1117,6 +1129,11 @@ of PolicyExecutionMode.get_logs()</p>
 <dl class="attribute">
 <dt id="c7n.mu.AbstractLambdaFunction.kms_key_arn">
 <code class="descname">kms_key_arn</code><a class="headerlink" href="#c7n.mu.AbstractLambdaFunction.kms_key_arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.mu.AbstractLambdaFunction.layers">
+<code class="descname">layers</code><a class="headerlink" href="#c7n.mu.AbstractLambdaFunction.layers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1230,12 +1247,17 @@ events, and realtime asg membership changes.</p>
 </div>
 <dl class="attribute">
 <dt id="c7n.mu.CloudWatchEventSource.ASG_EVENT_MAPPING">
-<code class="descname">ASG_EVENT_MAPPING</code><em class="property"> = {u'launch-failure': u'EC2 Instance Launch Unsuccessful', u'launch-success': u'EC2 Instance Launch Successful', u'terminate-failure': u'EC2 Instance Terminate Unsuccessful', u'terminate-success': u'EC2 Instance Terminate Successful'}</em><a class="headerlink" href="#c7n.mu.CloudWatchEventSource.ASG_EVENT_MAPPING" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ASG_EVENT_MAPPING</code><em class="property"> = {'launch-failure': 'EC2 Instance Launch Unsuccessful', 'launch-success': 'EC2 Instance Launch Successful', 'terminate-failure': 'EC2 Instance Terminate Unsuccessful', 'terminate-success': 'EC2 Instance Terminate Successful'}</em><a class="headerlink" href="#c7n.mu.CloudWatchEventSource.ASG_EVENT_MAPPING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="c7n.mu.CloudWatchEventSource.add">
 <code class="descname">add</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#CloudWatchEventSource.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.CloudWatchEventSource.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.mu.CloudWatchEventSource.client">
+<code class="descname">client</code><a class="headerlink" href="#c7n.mu.CloudWatchEventSource.client" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
@@ -1273,6 +1295,11 @@ events, and realtime asg membership changes.</p>
 <dl class="method">
 <dt id="c7n.mu.CloudWatchEventSource.resume">
 <code class="descname">resume</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#CloudWatchEventSource.resume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.CloudWatchEventSource.resume" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.mu.CloudWatchEventSource.session">
+<code class="descname">session</code><a class="headerlink" href="#c7n.mu.CloudWatchEventSource.session" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1341,6 +1368,11 @@ events, and realtime asg membership changes.</p>
 <em class="property">class </em><code class="descclassname">c7n.mu.</code><code class="descname">LambdaFunction</code><span class="sig-paren">(</span><em>func_data</em>, <em>archive</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#LambdaFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.LambdaFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#c7n.mu.AbstractLambdaFunction" title="c7n.mu.AbstractLambdaFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.mu.AbstractLambdaFunction</span></code></a></p>
 <dl class="attribute">
+<dt id="c7n.mu.LambdaFunction.concurrency">
+<code class="descname">concurrency</code><a class="headerlink" href="#c7n.mu.LambdaFunction.concurrency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.mu.LambdaFunction.dead_letter_config">
 <code class="descname">dead_letter_config</code><a class="headerlink" href="#c7n.mu.LambdaFunction.dead_letter_config" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1358,12 +1390,14 @@ events, and realtime asg membership changes.</p>
 <dl class="method">
 <dt id="c7n.mu.LambdaFunction.get_archive">
 <code class="descname">get_archive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#LambdaFunction.get_archive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.LambdaFunction.get_archive" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the lambda distribution archive object.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n.mu.LambdaFunction.get_events">
 <code class="descname">get_events</code><span class="sig-paren">(</span><em>session_factory</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#LambdaFunction.get_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.LambdaFunction.get_events" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>event sources that should be bound to this lambda.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.mu.LambdaFunction.handler">
@@ -1376,6 +1410,11 @@ events, and realtime asg membership changes.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="c7n.mu.LambdaFunction.layers">
+<code class="descname">layers</code><a class="headerlink" href="#c7n.mu.LambdaFunction.layers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.mu.LambdaFunction.memory_size">
 <code class="descname">memory_size</code><a class="headerlink" href="#c7n.mu.LambdaFunction.memory_size" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1383,7 +1422,8 @@ events, and realtime asg membership changes.</p>
 <dl class="attribute">
 <dt id="c7n.mu.LambdaFunction.name">
 <code class="descname">name</code><a class="headerlink" href="#c7n.mu.LambdaFunction.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Name for the lambda function</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.mu.LambdaFunction.role">
@@ -1427,6 +1467,11 @@ events, and realtime asg membership changes.</p>
 <em class="property">class </em><code class="descclassname">c7n.mu.</code><code class="descname">LambdaManager</code><span class="sig-paren">(</span><em>session_factory</em>, <em>s3_asset_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#LambdaManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.LambdaManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Provides CRUD operations around lambda functions</p>
+<dl class="method">
+<dt id="c7n.mu.LambdaManager.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>func</em>, <em>alias=None</em>, <em>role=None</em>, <em>s3_uri=None</em><span class="sig-paren">)</span><a class="headerlink" href="#c7n.mu.LambdaManager.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="staticmethod">
 <dt id="c7n.mu.LambdaManager.delta_function">
 <em class="property">static </em><code class="descname">delta_function</code><span class="sig-paren">(</span><em>old_config</em>, <em>new_config</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#LambdaManager.delta_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.LambdaManager.delta_function" title="Permalink to this definition">¶</a></dt>
@@ -1481,6 +1526,11 @@ events, and realtime asg membership changes.</p>
 <dd><p>Bases: <a class="reference internal" href="#c7n.mu.AbstractLambdaFunction" title="c7n.mu.AbstractLambdaFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.mu.AbstractLambdaFunction</span></code></a></p>
 <p>Wraps a custodian policy to turn it into a lambda function.</p>
 <dl class="attribute">
+<dt id="c7n.mu.PolicyLambda.concurrency">
+<code class="descname">concurrency</code><a class="headerlink" href="#c7n.mu.PolicyLambda.concurrency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.mu.PolicyLambda.dead_letter_config">
 <code class="descname">dead_letter_config</code><a class="headerlink" href="#c7n.mu.PolicyLambda.dead_letter_config" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1498,21 +1548,28 @@ events, and realtime asg membership changes.</p>
 <dl class="method">
 <dt id="c7n.mu.PolicyLambda.get_archive">
 <code class="descname">get_archive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#PolicyLambda.get_archive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.PolicyLambda.get_archive" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the lambda distribution archive object.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n.mu.PolicyLambda.get_events">
 <code class="descname">get_events</code><span class="sig-paren">(</span><em>session_factory</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#PolicyLambda.get_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.PolicyLambda.get_events" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>event sources that should be bound to this lambda.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.mu.PolicyLambda.handler">
-<code class="descname">handler</code><em class="property"> = u'custodian_policy.run'</em><a class="headerlink" href="#c7n.mu.PolicyLambda.handler" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handler</code><em class="property"> = 'custodian_policy.run'</em><a class="headerlink" href="#c7n.mu.PolicyLambda.handler" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.mu.PolicyLambda.kms_key_arn">
 <code class="descname">kms_key_arn</code><a class="headerlink" href="#c7n.mu.PolicyLambda.kms_key_arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.mu.PolicyLambda.layers">
+<code class="descname">layers</code><a class="headerlink" href="#c7n.mu.PolicyLambda.layers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1523,7 +1580,8 @@ events, and realtime asg membership changes.</p>
 <dl class="attribute">
 <dt id="c7n.mu.PolicyLambda.name">
 <code class="descname">name</code><a class="headerlink" href="#c7n.mu.PolicyLambda.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Name for the lambda function</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.mu.PolicyLambda.packages">
@@ -1667,6 +1725,12 @@ a <code class="docutils literal notranslate"><span class="pre">py</span></code> 
 <dd><p>Return a read-only <code class="xref py py-class docutils literal notranslate"><span class="pre">ZipFile</span></code>.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="c7n.mu.PythonPackageArchive.get_stream">
+<code class="descname">get_stream</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#PythonPackageArchive.get_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.PythonPackageArchive.get_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the entire zip file as a stream.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.mu.PythonPackageArchive.path">
 <code class="descname">path</code><a class="headerlink" href="#c7n.mu.PythonPackageArchive.path" title="Permalink to this definition">¶</a></dt>
@@ -1754,7 +1818,7 @@ a <code class="docutils literal notranslate"><span class="pre">py</span></code> 
 
 <dl class="function">
 <dt id="c7n.mu.resource_exists">
-<code class="descclassname">c7n.mu.</code><code class="descname">resource_exists</code><span class="sig-paren">(</span><em>op</em>, <em>NotFound=u'ResourceNotFoundException'</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#resource_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.resource_exists" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">c7n.mu.</code><code class="descname">resource_exists</code><span class="sig-paren">(</span><em>op</em>, <em>NotFound='ResourceNotFoundException'</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/mu.html#resource_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.mu.resource_exists" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -1783,7 +1847,7 @@ a variety of sinks.</p>
 <dd><p>Bases: <a class="reference internal" href="#c7n.output.OutputRegistry" title="c7n.output.OutputRegistry"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.output.OutputRegistry</span></code></a></p>
 <dl class="attribute">
 <dt id="c7n.output.BlobOutputRegistry.default_protocol">
-<code class="descname">default_protocol</code><em class="property"> = u'file'</em><a class="headerlink" href="#c7n.output.BlobOutputRegistry.default_protocol" title="Permalink to this definition">¶</a></dt>
+<code class="descname">default_protocol</code><em class="property"> = 'file'</em><a class="headerlink" href="#c7n.output.BlobOutputRegistry.default_protocol" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1848,7 +1912,7 @@ stack element to the current stats.</p>
 
 <dl class="attribute">
 <dt id="c7n.output.DirectoryOutput.type">
-<code class="descname">type</code><em class="property"> = u'file'</em><a class="headerlink" href="#c7n.output.DirectoryOutput.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'file'</em><a class="headerlink" href="#c7n.output.DirectoryOutput.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1863,8 +1927,13 @@ stack element to the current stats.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="c7n.output.LogFile.log_path">
+<code class="descname">log_path</code><a class="headerlink" href="#c7n.output.LogFile.log_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.output.LogFile.type">
-<code class="descname">type</code><em class="property"> = u'default'</em><a class="headerlink" href="#c7n.output.LogFile.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'default'</em><a class="headerlink" href="#c7n.output.LogFile.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1887,7 +1956,7 @@ stack element to the current stats.</p>
 
 <dl class="attribute">
 <dt id="c7n.output.LogMetrics.type">
-<code class="descname">type</code><em class="property"> = u'default'</em><a class="headerlink" href="#c7n.output.LogMetrics.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'default'</em><a class="headerlink" href="#c7n.output.LogMetrics.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1913,7 +1982,7 @@ stack element to the current stats.</p>
 
 <dl class="attribute">
 <dt id="c7n.output.LogOutput.log_format">
-<code class="descname">log_format</code><em class="property"> = u'%(asctime)s - %(name)s - %(levelname)s - %(message)s'</em><a class="headerlink" href="#c7n.output.LogOutput.log_format" title="Permalink to this definition">¶</a></dt>
+<code class="descname">log_format</code><em class="property"> = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'</em><a class="headerlink" href="#c7n.output.LogOutput.log_format" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1924,7 +1993,7 @@ stack element to the current stats.</p>
 <dd><p>Bases: <a class="reference internal" href="#c7n.output.OutputRegistry" title="c7n.output.OutputRegistry"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.output.OutputRegistry</span></code></a></p>
 <dl class="attribute">
 <dt id="c7n.output.LogOutputRegistry.default_protocol">
-<code class="descname">default_protocol</code><em class="property"> = u'aws'</em><a class="headerlink" href="#c7n.output.LogOutputRegistry.default_protocol" title="Permalink to this definition">¶</a></dt>
+<code class="descname">default_protocol</code><em class="property"> = 'aws'</em><a class="headerlink" href="#c7n.output.LogOutputRegistry.default_protocol" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1950,7 +2019,7 @@ stack element to the current stats.</p>
 
 <dl class="attribute">
 <dt id="c7n.output.Metrics.namespace">
-<code class="descname">namespace</code><em class="property"> = u'CloudMaid'</em><a class="headerlink" href="#c7n.output.Metrics.namespace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">namespace</code><em class="property"> = 'CloudMaid'</em><a class="headerlink" href="#c7n.output.Metrics.namespace" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2005,7 +2074,7 @@ tracing metadata annotation across nested subsegments.</p>
 
 <dl class="attribute">
 <dt id="c7n.output.NullStats.type">
-<code class="descname">type</code><em class="property"> = u'default'</em><a class="headerlink" href="#c7n.output.NullStats.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'default'</em><a class="headerlink" href="#c7n.output.NullStats.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2018,13 +2087,13 @@ tracing metadata annotation across nested subsegments.</p>
 <p>Uses native cloud provider integration (xray, stack driver trace).</p>
 <dl class="method">
 <dt id="c7n.output.NullTracer.subsegment">
-<code class="descname">subsegment</code><span class="sig-paren">(</span><em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/output.html#NullTracer.subsegment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.output.NullTracer.subsegment" title="Permalink to this definition">¶</a></dt>
+<code class="descname">subsegment</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/output.html#NullTracer.subsegment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.output.NullTracer.subsegment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a named subsegment as a context manager</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.output.NullTracer.type">
-<code class="descname">type</code><em class="property"> = u'default'</em><a class="headerlink" href="#c7n.output.NullTracer.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'default'</em><a class="headerlink" href="#c7n.output.NullTracer.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2062,7 +2131,7 @@ tracing metadata annotation across nested subsegments.</p>
 
 <dl class="attribute">
 <dt id="c7n.output.SystemStats.type">
-<code class="descname">type</code><em class="property"> = u'psutil'</em><a class="headerlink" href="#c7n.output.SystemStats.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'psutil'</em><a class="headerlink" href="#c7n.output.SystemStats.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2077,12 +2146,12 @@ tracing metadata annotation across nested subsegments.</p>
 <p>a lambda policy that executes on an asg’s ec2 instance state changes.</p>
 <dl class="attribute">
 <dt id="c7n.policy.ASGInstanceState.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'subnets': {u'type': u'array'}, u'function-prefix': {u'type': u'string'}, u'memory': {u'type': u'number'}, u'role': {u'type': u'string'}, u'member-role': {u'type': u'string'}, u'kms_key_arn': {u'type': u'string'}, u'dead_letter_config': {u'type': u'object'}, 'events': {u'items': {u'enum': [u'launch-success', u'launch-failure', u'terminate-success', u'terminate-failure']}, u'type': u'array'}, u'execution-options': {u'type': u'object'}, u'tracing_config': {u'type': u'object'}, u'environment': {u'type': u'object'}, u'tags': {u'type': u'object'}, u'type': {u'enum': [u'asg-instance-state']}, u'timeout': {u'type': u'number'}, u'packages': {u'type': u'array'}, u'runtime': {u'enum': [u'python2.7', u'python3.6']}, u'security_groups': {u'type': u'array'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.policy.ASGInstanceState.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'concurrency': {'type': 'integer'}, 'dead_letter_config': {'type': 'object'}, 'environment': {'type': 'object'}, 'events': {'items': {'enum': ['launch-success', 'launch-failure', 'terminate-success', 'terminate-failure']}, 'type': 'array'}, 'execution-options': {'type': 'object'}, 'function-prefix': {'type': 'string'}, 'kms_key_arn': {'type': 'string'}, 'layers': {'items': {'type': 'string'}, 'type': 'array'}, 'member-role': {'type': 'string'}, 'memory': {'type': 'number'}, 'packages': {'items': {'type': 'string'}, 'type': 'array'}, 'role': {'type': 'string'}, 'runtime': {'enum': ['python2.7', 'python3.6', 'python3.7']}, 'security_groups': {'type': 'array'}, 'subnets': {'type': 'array'}, 'tags': {'type': 'object'}, 'timeout': {'type': 'number'}, 'tracing_config': {'type': 'object'}, 'type': {'enum': ['asg-instance-state']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.policy.ASGInstanceState.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.ASGInstanceState.type">
-<code class="descname">type</code><em class="property"> = u'asg-instance-state'</em><a class="headerlink" href="#c7n.policy.ASGInstanceState.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'asg-instance-state'</em><a class="headerlink" href="#c7n.policy.ASGInstanceState.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2094,18 +2163,19 @@ tracing metadata annotation across nested subsegments.</p>
 <p>A lambda policy using cloudwatch events rules on cloudtrail api logs.</p>
 <dl class="attribute">
 <dt id="c7n.policy.CloudTrailMode.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'subnets': {u'type': u'array'}, u'function-prefix': {u'type': u'string'}, u'memory': {u'type': u'number'}, u'role': {u'type': u'string'}, u'member-role': {u'type': u'string'}, u'kms_key_arn': {u'type': u'string'}, u'dead_letter_config': {u'type': u'object'}, 'events': {u'items': {u'oneOf': [{u'type': u'string'}, {u'required': [u'event', u'source', u'ids'], u'type': u'object', u'properties': {u'event': {u'type': u'string'}, u'ids': {u'type': u'string'}, u'source': {u'type': u'string'}}}]}, u'type': u'array'}, u'execution-options': {u'type': u'object'}, u'tracing_config': {u'type': u'object'}, u'environment': {u'type': u'object'}, u'tags': {u'type': u'object'}, u'type': {u'enum': [u'cloudtrail']}, u'timeout': {u'type': u'number'}, u'packages': {u'type': u'array'}, u'runtime': {u'enum': [u'python2.7', u'python3.6']}, u'security_groups': {u'type': u'array'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.policy.CloudTrailMode.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'concurrency': {'type': 'integer'}, 'dead_letter_config': {'type': 'object'}, 'environment': {'type': 'object'}, 'events': {'items': {'oneOf': [{'type': 'string'}, {'type': 'object', 'required': ['event', 'source', 'ids'], 'properties': {'source': {'type': 'string'}, 'ids': {'type': 'string'}, 'event': {'type': 'string'}}}]}, 'type': 'array'}, 'execution-options': {'type': 'object'}, 'function-prefix': {'type': 'string'}, 'kms_key_arn': {'type': 'string'}, 'layers': {'items': {'type': 'string'}, 'type': 'array'}, 'member-role': {'type': 'string'}, 'memory': {'type': 'number'}, 'packages': {'items': {'type': 'string'}, 'type': 'array'}, 'role': {'type': 'string'}, 'runtime': {'enum': ['python2.7', 'python3.6', 'python3.7']}, 'security_groups': {'type': 'array'}, 'subnets': {'type': 'array'}, 'tags': {'type': 'object'}, 'timeout': {'type': 'number'}, 'tracing_config': {'type': 'object'}, 'type': {'enum': ['cloudtrail']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.policy.CloudTrailMode.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.CloudTrailMode.type">
-<code class="descname">type</code><em class="property"> = u'cloudtrail'</em><a class="headerlink" href="#c7n.policy.CloudTrailMode.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'cloudtrail'</em><a class="headerlink" href="#c7n.policy.CloudTrailMode.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="c7n.policy.CloudTrailMode.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#CloudTrailMode.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.CloudTrailMode.validate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Validate configuration settings for execution mode.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2128,16 +2198,22 @@ tracing metadata annotation across nested subsegments.</p>
 <dl class="method">
 <dt id="c7n.policy.ConfigRuleMode.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>event</em>, <em>lambda_context</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#ConfigRuleMode.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.ConfigRuleMode.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Run policy in push mode against given event.</p>
+<p>Lambda automatically generates cloud watch logs, and metrics
+for us, albeit with some deficienies, metrics no longer count
+against valid resources matches, but against execution.</p>
+<p>If metrics execution option is enabled, custodian will generate
+metrics per normal.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.ConfigRuleMode.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'subnets': {u'type': u'array'}, u'function-prefix': {u'type': u'string'}, u'memory': {u'type': u'number'}, u'role': {u'type': u'string'}, u'member-role': {u'type': u'string'}, u'kms_key_arn': {u'type': u'string'}, u'dead_letter_config': {u'type': u'object'}, u'execution-options': {u'type': u'object'}, u'tracing_config': {u'type': u'object'}, u'environment': {u'type': u'object'}, u'tags': {u'type': u'object'}, u'type': {u'enum': [u'config-rule']}, u'timeout': {u'type': u'number'}, u'packages': {u'type': u'array'}, u'runtime': {u'enum': [u'python2.7', u'python3.6']}, u'security_groups': {u'type': u'array'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.policy.ConfigRuleMode.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'concurrency': {'type': 'integer'}, 'dead_letter_config': {'type': 'object'}, 'environment': {'type': 'object'}, 'execution-options': {'type': 'object'}, 'function-prefix': {'type': 'string'}, 'kms_key_arn': {'type': 'string'}, 'layers': {'items': {'type': 'string'}, 'type': 'array'}, 'member-role': {'type': 'string'}, 'memory': {'type': 'number'}, 'packages': {'items': {'type': 'string'}, 'type': 'array'}, 'role': {'type': 'string'}, 'runtime': {'enum': ['python2.7', 'python3.6', 'python3.7']}, 'security_groups': {'type': 'array'}, 'subnets': {'type': 'array'}, 'tags': {'type': 'object'}, 'timeout': {'type': 'number'}, 'tracing_config': {'type': 'object'}, 'type': {'enum': ['config-rule']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.policy.ConfigRuleMode.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.ConfigRuleMode.type">
-<code class="descname">type</code><em class="property"> = u'config-rule'</em><a class="headerlink" href="#c7n.policy.ConfigRuleMode.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'config-rule'</em><a class="headerlink" href="#c7n.policy.ConfigRuleMode.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2150,12 +2226,12 @@ tracing metadata annotation across nested subsegments.</p>
 <p><a class="reference external" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html</a></p>
 <dl class="attribute">
 <dt id="c7n.policy.EC2InstanceState.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'subnets': {u'type': u'array'}, u'function-prefix': {u'type': u'string'}, u'memory': {u'type': u'number'}, u'role': {u'type': u'string'}, u'member-role': {u'type': u'string'}, u'kms_key_arn': {u'type': u'string'}, u'dead_letter_config': {u'type': u'object'}, 'events': {u'items': {u'enum': [u'pending', u'running', u'shutting-down', u'stopped', u'stopping', u'terminated']}, u'type': u'array'}, u'execution-options': {u'type': u'object'}, u'tracing_config': {u'type': u'object'}, u'environment': {u'type': u'object'}, u'tags': {u'type': u'object'}, u'type': {u'enum': [u'ec2-instance-state']}, u'timeout': {u'type': u'number'}, u'packages': {u'type': u'array'}, u'runtime': {u'enum': [u'python2.7', u'python3.6']}, u'security_groups': {u'type': u'array'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.policy.EC2InstanceState.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'concurrency': {'type': 'integer'}, 'dead_letter_config': {'type': 'object'}, 'environment': {'type': 'object'}, 'events': {'items': {'enum': ['pending', 'running', 'shutting-down', 'stopped', 'stopping', 'terminated']}, 'type': 'array'}, 'execution-options': {'type': 'object'}, 'function-prefix': {'type': 'string'}, 'kms_key_arn': {'type': 'string'}, 'layers': {'items': {'type': 'string'}, 'type': 'array'}, 'member-role': {'type': 'string'}, 'memory': {'type': 'number'}, 'packages': {'items': {'type': 'string'}, 'type': 'array'}, 'role': {'type': 'string'}, 'runtime': {'enum': ['python2.7', 'python3.6', 'python3.7']}, 'security_groups': {'type': 'array'}, 'subnets': {'type': 'array'}, 'tags': {'type': 'object'}, 'timeout': {'type': 'number'}, 'tracing_config': {'type': 'object'}, 'type': {'enum': ['ec2-instance-state']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.policy.EC2InstanceState.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.EC2InstanceState.type">
-<code class="descname">type</code><em class="property"> = u'ec2-instance-state'</em><a class="headerlink" href="#c7n.policy.EC2InstanceState.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'ec2-instance-state'</em><a class="headerlink" href="#c7n.policy.EC2InstanceState.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2172,13 +2248,14 @@ tracing metadata annotation across nested subsegments.</p>
 
 <dl class="attribute">
 <dt id="c7n.policy.GuardDutyMode.id_exprs">
-<code class="descname">id_exprs</code><em class="property"> = {u'account': {'type': 'subexpression', 'children': [{'value': u'detail', 'type': 'field', 'children': []}, {'value': u'accountId', 'type': 'field', 'children': []}]}, u'ec2': {'type': 'subexpression', 'children': [{'value': u'detail', 'type': 'field', 'children': []}, {'value': u'resource', 'type': 'field', 'children': []}, {'value': u'instanceDetails', 'type': 'field', 'children': []}, {'value': u'instanceId', 'type': 'field', 'children': []}]}, u'iam-user': {'type': 'subexpression', 'children': [{'value': u'detail', 'type': 'field', 'children': []}, {'value': u'resource', 'type': 'field', 'children': []}, {'value': u'accessKeyDetails', 'type': 'field', 'children': []}, {'value': u'userName', 'type': 'field', 'children': []}]}}</em><a class="headerlink" href="#c7n.policy.GuardDutyMode.id_exprs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">id_exprs</code><em class="property"> = {'account': {'type': 'subexpression', 'children': [{'type': 'field', 'children': [], 'value': 'detail'}, {'type': 'field', 'children': [], 'value': 'accountId'}]}, 'ec2': {'type': 'subexpression', 'children': [{'type': 'field', 'children': [], 'value': 'detail'}, {'type': 'field', 'children': [], 'value': 'resource'}, {'type': 'field', 'children': [], 'value': 'instanceDetails'}, {'type': 'field', 'children': [], 'value': 'instanceId'}]}, 'iam-user': {'type': 'subexpression', 'children': [{'type': 'field', 'children': [], 'value': 'detail'}, {'type': 'field', 'children': [], 'value': 'resource'}, {'type': 'field', 'children': [], 'value': 'accessKeyDetails'}, {'type': 'field', 'children': [], 'value': 'userName'}]}}</em><a class="headerlink" href="#c7n.policy.GuardDutyMode.id_exprs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="c7n.policy.GuardDutyMode.provision">
 <code class="descname">provision</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#GuardDutyMode.provision"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.GuardDutyMode.provision" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Provision any resources needed for the policy.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n.policy.GuardDutyMode.resolve_resources">
@@ -2187,23 +2264,24 @@ tracing metadata annotation across nested subsegments.</p>
 
 <dl class="attribute">
 <dt id="c7n.policy.GuardDutyMode.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'subnets': {u'type': u'array'}, u'function-prefix': {u'type': u'string'}, u'memory': {u'type': u'number'}, u'role': {u'type': u'string'}, u'member-role': {u'type': u'string'}, u'kms_key_arn': {u'type': u'string'}, u'dead_letter_config': {u'type': u'object'}, u'execution-options': {u'type': u'object'}, u'tracing_config': {u'type': u'object'}, u'environment': {u'type': u'object'}, u'tags': {u'type': u'object'}, u'type': {u'enum': [u'guard-duty']}, u'timeout': {u'type': u'number'}, u'packages': {u'type': u'array'}, u'runtime': {u'enum': [u'python2.7', u'python3.6']}, u'security_groups': {u'type': u'array'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.policy.GuardDutyMode.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'concurrency': {'type': 'integer'}, 'dead_letter_config': {'type': 'object'}, 'environment': {'type': 'object'}, 'execution-options': {'type': 'object'}, 'function-prefix': {'type': 'string'}, 'kms_key_arn': {'type': 'string'}, 'layers': {'items': {'type': 'string'}, 'type': 'array'}, 'member-role': {'type': 'string'}, 'memory': {'type': 'number'}, 'packages': {'items': {'type': 'string'}, 'type': 'array'}, 'role': {'type': 'string'}, 'runtime': {'enum': ['python2.7', 'python3.6', 'python3.7']}, 'security_groups': {'type': 'array'}, 'subnets': {'type': 'array'}, 'tags': {'type': 'object'}, 'timeout': {'type': 'number'}, 'tracing_config': {'type': 'object'}, 'type': {'enum': ['guard-duty']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.policy.GuardDutyMode.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.GuardDutyMode.supported_resources">
-<code class="descname">supported_resources</code><em class="property"> = (u'account', u'ec2', u'iam-user')</em><a class="headerlink" href="#c7n.policy.GuardDutyMode.supported_resources" title="Permalink to this definition">¶</a></dt>
+<code class="descname">supported_resources</code><em class="property"> = ('account', 'ec2', 'iam-user')</em><a class="headerlink" href="#c7n.policy.GuardDutyMode.supported_resources" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.GuardDutyMode.type">
-<code class="descname">type</code><em class="property"> = u'guard-duty'</em><a class="headerlink" href="#c7n.policy.GuardDutyMode.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'guard-duty'</em><a class="headerlink" href="#c7n.policy.GuardDutyMode.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="c7n.policy.GuardDutyMode.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#GuardDutyMode.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.GuardDutyMode.validate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Validate configuration settings for execution mode.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2214,7 +2292,7 @@ tracing metadata annotation across nested subsegments.</p>
 <p>A policy that runs/executes in lambda.</p>
 <dl class="attribute">
 <dt id="c7n.policy.LambdaMode.POLICY_METRICS">
-<code class="descname">POLICY_METRICS</code><em class="property"> = (u'ResourceCount',)</em><a class="headerlink" href="#c7n.policy.LambdaMode.POLICY_METRICS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">POLICY_METRICS</code><em class="property"> = ('ResourceCount',)</em><a class="headerlink" href="#c7n.policy.LambdaMode.POLICY_METRICS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2225,7 +2303,8 @@ tracing metadata annotation across nested subsegments.</p>
 <dl class="method">
 <dt id="c7n.policy.LambdaMode.get_logs">
 <code class="descname">get_logs</code><span class="sig-paren">(</span><em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#LambdaMode.get_logs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.LambdaMode.get_logs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve logs for the policy</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n.policy.LambdaMode.get_member_account_id">
@@ -2240,12 +2319,14 @@ tracing metadata annotation across nested subsegments.</p>
 <dl class="method">
 <dt id="c7n.policy.LambdaMode.get_metrics">
 <code class="descname">get_metrics</code><span class="sig-paren">(</span><em>start</em>, <em>end</em>, <em>period</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#LambdaMode.get_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.LambdaMode.get_metrics" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve any associated metrics for the policy.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n.policy.LambdaMode.provision">
 <code class="descname">provision</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#LambdaMode.provision"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.LambdaMode.provision" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Provision any resources needed for the policy.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n.policy.LambdaMode.resolve_resources">
@@ -2258,16 +2339,54 @@ tracing metadata annotation across nested subsegments.</p>
 <dd><p>Run policy in push mode against given event.</p>
 <p>Lambda automatically generates cloud watch logs, and metrics
 for us, albeit with some deficienies, metrics no longer count
-against valid resources matches, but against execution.
-Fortunately we already have replacements.</p>
-<p>TODO: better customization around execution context outputs
-TODO: support centralized lambda exec across accounts.</p>
+against valid resources matches, but against execution.</p>
+<p>If metrics execution option is enabled, custodian will generate
+metrics per normal.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.LambdaMode.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'function-prefix': {u'type': u'string'}, u'memory': {u'type': u'number'}, u'role': {u'type': u'string'}, u'member-role': {u'type': u'string'}, u'dead_letter_config': {u'type': u'object'}, u'packages': {u'type': u'array'}, u'subnets': {u'type': u'array'}, u'timeout': {u'type': u'number'}, u'execution-options': {u'type': u'object'}, u'tracing_config': {u'type': u'object'}, u'environment': {u'type': u'object'}, u'tags': {u'type': u'object'}, u'kms_key_arn': {u'type': u'string'}, u'runtime': {u'enum': [u'python2.7', u'python3.6']}, u'security_groups': {u'type': u'array'}}, u'type': u'object'}</em><a class="headerlink" href="#c7n.policy.LambdaMode.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'concurrency': {'type': 'integer'}, 'dead_letter_config': {'type': 'object'}, 'environment': {'type': 'object'}, 'execution-options': {'type': 'object'}, 'function-prefix': {'type': 'string'}, 'kms_key_arn': {'type': 'string'}, 'layers': {'items': {'type': 'string'}, 'type': 'array'}, 'member-role': {'type': 'string'}, 'memory': {'type': 'number'}, 'packages': {'items': {'type': 'string'}, 'type': 'array'}, 'role': {'type': 'string'}, 'runtime': {'enum': ['python2.7', 'python3.6', 'python3.7']}, 'security_groups': {'type': 'array'}, 'subnets': {'type': 'array'}, 'tags': {'type': 'object'}, 'timeout': {'type': 'number'}, 'tracing_config': {'type': 'object'}}, 'type': 'object'}</em><a class="headerlink" href="#c7n.policy.LambdaMode.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.policy.LambdaMode.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#LambdaMode.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.LambdaMode.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate configuration settings for execution mode.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.policy.PHDMode">
+<em class="property">class </em><code class="descclassname">c7n.policy.</code><code class="descname">PHDMode</code><span class="sig-paren">(</span><em>policy</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#PHDMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.PHDMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#c7n.policy.LambdaMode" title="c7n.policy.LambdaMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.policy.LambdaMode</span></code></a></p>
+<p>Personal Health Dashboard event based policy execution.</p>
+<dl class="staticmethod">
+<dt id="c7n.policy.PHDMode.process_event_arns">
+<em class="property">static </em><code class="descname">process_event_arns</code><span class="sig-paren">(</span><em>client</em>, <em>event_arns</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#PHDMode.process_event_arns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.PHDMode.process_event_arns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.policy.PHDMode.resolve_resources">
+<code class="descname">resolve_resources</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#PHDMode.resolve_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.PHDMode.resolve_resources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.policy.PHDMode.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'categories': {'items': {'enum': ['issue', 'accountNotification', 'scheduledChange']}, 'type': 'array'}, 'events': {'items': {'type': 'string'}, 'type': 'array'}, 'statuses': {'items': {'enum': ['open', 'upcoming', 'closed']}, 'type': 'array'}, 'type': {'enum': ['phd']}}, 'required': ['events', 'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.policy.PHDMode.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.policy.PHDMode.type">
+<code class="descname">type</code><em class="property"> = 'phd'</em><a class="headerlink" href="#c7n.policy.PHDMode.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.policy.PHDMode.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#PHDMode.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.PHDMode.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate configuration settings for execution mode.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2278,22 +2397,28 @@ TODO: support centralized lambda exec across accounts.</p>
 <p>A policy that runs in pull mode within lambda.</p>
 <dl class="attribute">
 <dt id="c7n.policy.PeriodicMode.POLICY_METRICS">
-<code class="descname">POLICY_METRICS</code><em class="property"> = (u'ResourceCount', u'ResourceTime', u'ActionTime')</em><a class="headerlink" href="#c7n.policy.PeriodicMode.POLICY_METRICS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">POLICY_METRICS</code><em class="property"> = ('ResourceCount', 'ResourceTime', 'ActionTime')</em><a class="headerlink" href="#c7n.policy.PeriodicMode.POLICY_METRICS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="c7n.policy.PeriodicMode.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>event</em>, <em>lambda_context</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#PeriodicMode.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.PeriodicMode.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Run policy in push mode against given event.</p>
+<p>Lambda automatically generates cloud watch logs, and metrics
+for us, albeit with some deficienies, metrics no longer count
+against valid resources matches, but against execution.</p>
+<p>If metrics execution option is enabled, custodian will generate
+metrics per normal.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.PeriodicMode.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'subnets': {u'type': u'array'}, u'function-prefix': {u'type': u'string'}, u'memory': {u'type': u'number'}, u'role': {u'type': u'string'}, u'member-role': {u'type': u'string'}, u'kms_key_arn': {u'type': u'string'}, u'dead_letter_config': {u'type': u'object'}, u'execution-options': {u'type': u'object'}, u'tracing_config': {u'type': u'object'}, u'environment': {u'type': u'object'}, u'tags': {u'type': u'object'}, u'type': {u'enum': [u'periodic']}, u'timeout': {u'type': u'number'}, u'packages': {u'type': u'array'}, u'runtime': {u'enum': [u'python2.7', u'python3.6']}, u'security_groups': {u'type': u'array'}, 'schedule': {u'type': u'string'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.policy.PeriodicMode.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'concurrency': {'type': 'integer'}, 'dead_letter_config': {'type': 'object'}, 'environment': {'type': 'object'}, 'execution-options': {'type': 'object'}, 'function-prefix': {'type': 'string'}, 'kms_key_arn': {'type': 'string'}, 'layers': {'items': {'type': 'string'}, 'type': 'array'}, 'member-role': {'type': 'string'}, 'memory': {'type': 'number'}, 'packages': {'items': {'type': 'string'}, 'type': 'array'}, 'role': {'type': 'string'}, 'runtime': {'enum': ['python2.7', 'python3.6', 'python3.7']}, 'schedule': {'type': 'string'}, 'security_groups': {'type': 'array'}, 'subnets': {'type': 'array'}, 'tags': {'type': 'object'}, 'timeout': {'type': 'number'}, 'tracing_config': {'type': 'object'}, 'type': {'enum': ['periodic']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.policy.PeriodicMode.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.PeriodicMode.type">
-<code class="descname">type</code><em class="property"> = u'periodic'</em><a class="headerlink" href="#c7n.policy.PeriodicMode.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'periodic'</em><a class="headerlink" href="#c7n.policy.PeriodicMode.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2362,7 +2487,7 @@ TODO: support centralized lambda exec across accounts.</p>
 
 <dl class="attribute">
 <dt id="c7n.policy.Policy.log">
-<code class="descname">log</code><em class="property"> = &lt;logging.Logger object&gt;</em><a class="headerlink" href="#c7n.policy.Policy.log" title="Permalink to this definition">¶</a></dt>
+<code class="descname">log</code><em class="property"> = &lt;Logger custodian.policy (DEBUG)&gt;</em><a class="headerlink" href="#c7n.policy.Policy.log" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2461,7 +2586,7 @@ TODO: support centralized lambda exec across accounts.</p>
 
 <dl class="attribute">
 <dt id="c7n.policy.PolicyCollection.log">
-<code class="descname">log</code><em class="property"> = &lt;logging.Logger object&gt;</em><a class="headerlink" href="#c7n.policy.PolicyCollection.log" title="Permalink to this definition">¶</a></dt>
+<code class="descname">log</code><em class="property"> = &lt;Logger c7n.policies (DEBUG)&gt;</em><a class="headerlink" href="#c7n.policy.PolicyCollection.log" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2484,7 +2609,7 @@ TODO: support centralized lambda exec across accounts.</p>
 <p>Policy execution semantics</p>
 <dl class="attribute">
 <dt id="c7n.policy.PolicyExecutionMode.POLICY_METRICS">
-<code class="descname">POLICY_METRICS</code><em class="property"> = (u'ResourceCount', u'ResourceTime', u'ActionTime')</em><a class="headerlink" href="#c7n.policy.PolicyExecutionMode.POLICY_METRICS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">POLICY_METRICS</code><em class="property"> = ('ResourceCount', 'ResourceTime', 'ActionTime')</em><a class="headerlink" href="#c7n.policy.PolicyExecutionMode.POLICY_METRICS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2528,7 +2653,8 @@ TODO: support centralized lambda exec across accounts.</p>
 <dl class="method">
 <dt id="c7n.policy.PullMode.get_logs">
 <code class="descname">get_logs</code><span class="sig-paren">(</span><em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#PullMode.get_logs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.PullMode.get_logs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve logs for the policy</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n.policy.PullMode.is_runnable">
@@ -2538,16 +2664,17 @@ TODO: support centralized lambda exec across accounts.</p>
 <dl class="method">
 <dt id="c7n.policy.PullMode.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#PullMode.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.PullMode.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Run the actual policy.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.PullMode.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {u'type': {u'enum': [u'pull']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.policy.PullMode.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['pull']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.policy.PullMode.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.policy.PullMode.type">
-<code class="descname">type</code><em class="property"> = u'pull'</em><a class="headerlink" href="#c7n.policy.PullMode.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'pull'</em><a class="headerlink" href="#c7n.policy.PullMode.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2578,7 +2705,7 @@ TODO: support centralized lambda exec across accounts.</p>
 
 <dl class="function">
 <dt id="c7n.policy.load">
-<code class="descclassname">c7n.policy.</code><code class="descname">load</code><span class="sig-paren">(</span><em>options</em>, <em>path</em>, <em>format=u'yaml'</em>, <em>validate=True</em>, <em>vars=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.load" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">c7n.policy.</code><code class="descname">load</code><span class="sig-paren">(</span><em>options</em>, <em>path</em>, <em>format='yaml'</em>, <em>validate=True</em>, <em>vars=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/policy.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.policy.load" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -2650,7 +2777,7 @@ region execution and filtering policies for applicable regions.</p>
 
 <dl class="attribute">
 <dt id="c7n.query.ChildDescribeSource.type">
-<code class="descname">type</code><em class="property"> = u'describe-child'</em><a class="headerlink" href="#c7n.query.ChildDescribeSource.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'describe-child'</em><a class="headerlink" href="#c7n.query.ChildDescribeSource.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2661,7 +2788,7 @@ region execution and filtering policies for applicable regions.</p>
 <dd><p>Bases: <a class="reference internal" href="#c7n.query.QueryResourceManager" title="c7n.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.QueryResourceManager</span></code></a></p>
 <dl class="attribute">
 <dt id="c7n.query.ChildResourceManager.child_source">
-<code class="descname">child_source</code><em class="property"> = u'describe-child'</em><a class="headerlink" href="#c7n.query.ChildResourceManager.child_source" title="Permalink to this definition">¶</a></dt>
+<code class="descname">child_source</code><em class="property"> = 'describe-child'</em><a class="headerlink" href="#c7n.query.ChildResourceManager.child_source" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2695,9 +2822,14 @@ records (parent hosted zone), ecs services (ecs cluster).</p>
 <dd><p>Query a set of resources.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="c7n.query.ChildResourceQuery.get_parent_parameters">
+<code class="descname">get_parent_parameters</code><span class="sig-paren">(</span><em>params</em>, <em>parent_id</em>, <em>parent_key</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/query.html#ChildResourceQuery.get_parent_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.query.ChildResourceQuery.get_parent_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.query.ChildResourceQuery.parent_key">
-<code class="descname">parent_key</code><em class="property"> = u'c7n:parent-id'</em><a class="headerlink" href="#c7n.query.ChildResourceQuery.parent_key" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parent_key</code><em class="property"> = 'c7n:parent-id'</em><a class="headerlink" href="#c7n.query.ChildResourceQuery.parent_key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2738,7 +2870,7 @@ records (parent hosted zone), ecs services (ecs cluster).</p>
 
 <dl class="attribute">
 <dt id="c7n.query.ConfigSource.type">
-<code class="descname">type</code><em class="property"> = u'config'</em><a class="headerlink" href="#c7n.query.ConfigSource.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'config'</em><a class="headerlink" href="#c7n.query.ConfigSource.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2747,6 +2879,12 @@ records (parent hosted zone), ecs services (ecs cluster).</p>
 <dt id="c7n.query.DescribeSource">
 <em class="property">class </em><code class="descclassname">c7n.query.</code><code class="descname">DescribeSource</code><span class="sig-paren">(</span><em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/query.html#DescribeSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.query.DescribeSource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.query.DescribeSource.QueryFactory">
+<code class="descname">QueryFactory</code><a class="headerlink" href="#c7n.query.DescribeSource.QueryFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#c7n.query.ResourceQuery" title="c7n.query.ResourceQuery"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceQuery</span></code></a></p>
+</dd></dl>
+
 <dl class="method">
 <dt id="c7n.query.DescribeSource.augment">
 <code class="descname">augment</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/query.html#DescribeSource.augment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.query.DescribeSource.augment" title="Permalink to this definition">¶</a></dt>
@@ -2769,7 +2907,7 @@ records (parent hosted zone), ecs services (ecs cluster).</p>
 
 <dl class="attribute">
 <dt id="c7n.query.DescribeSource.type">
-<code class="descname">type</code><em class="property"> = u'describe'</em><a class="headerlink" href="#c7n.query.DescribeSource.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = 'describe'</em><a class="headerlink" href="#c7n.query.DescribeSource.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2843,7 +2981,8 @@ filtering behind the resource manager facade for default usage.</p>
 <dl class="classmethod">
 <dt id="c7n.query.QueryResourceManager.get_model">
 <em class="property">classmethod </em><code class="descname">get_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/query.html#QueryResourceManager.get_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.query.QueryResourceManager.get_model" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the resource meta-model.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n.query.QueryResourceManager.get_permissions">
@@ -2853,7 +2992,8 @@ filtering behind the resource manager facade for default usage.</p>
 <dl class="method">
 <dt id="c7n.query.QueryResourceManager.get_resources">
 <code class="descname">get_resources</code><span class="sig-paren">(</span><em>ids</em>, <em>cache=True</em>, <em>augment=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/query.html#QueryResourceManager.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.query.QueryResourceManager.get_resources" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve a set of resources by id.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n.query.QueryResourceManager.get_source">
@@ -2884,7 +3024,7 @@ filtering behind the resource manager facade for default usage.</p>
 
 <dl class="attribute">
 <dt id="c7n.query.QueryResourceManager.resource_type">
-<code class="descname">resource_type</code><em class="property"> = u''</em><a class="headerlink" href="#c7n.query.QueryResourceManager.resource_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">resource_type</code><em class="property"> = ''</em><a class="headerlink" href="#c7n.query.QueryResourceManager.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3013,7 +3153,7 @@ that are not suitable for embedding into the custodian code base.</p>
 
 <dl class="method">
 <dt id="c7n.registry.PluginRegistry.register">
-<code class="descname">register</code><span class="sig-paren">(</span><em>name</em>, <em>klass=None</em>, <em>condition=True</em>, <em>condition_message=u'Missing dependency for {}'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/registry.html#PluginRegistry.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.registry.PluginRegistry.register" title="Permalink to this definition">¶</a></dt>
+<code class="descname">register</code><span class="sig-paren">(</span><em>name</em>, <em>klass=None</em>, <em>condition=True</em>, <em>condition_message='Missing dependency for {}'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/registry.html#PluginRegistry.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.registry.PluginRegistry.register" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3091,12 +3231,12 @@ the keys are the headers and the values are the remaining columns)</p>
 
 <dl class="attribute">
 <dt id="c7n.resolver.ValuesFrom.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': u'False', u'properties': {u'format': {u'enum': [u'csv', u'json', u'txt', u'csv2dict']}, u'url': {u'type': u'string'}, u'expr': {u'oneOf': [{u'type': u'integer'}, {u'type': u'string'}]}}, u'required': [u'url'], u'type': u'object'}</em><a class="headerlink" href="#c7n.resolver.ValuesFrom.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resolver.ValuesFrom.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.resolver.ValuesFrom.supported_formats">
-<code class="descname">supported_formats</code><em class="property"> = (u'json', u'txt', u'csv', u'csv2dict')</em><a class="headerlink" href="#c7n.resolver.ValuesFrom.supported_formats" title="Permalink to this definition">¶</a></dt>
+<code class="descname">supported_formats</code><em class="property"> = ('json', 'txt', 'csv', 'csv2dict')</em><a class="headerlink" href="#c7n.resolver.ValuesFrom.supported_formats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3170,7 +3310,7 @@ provide better results.</p>
 
 <dl class="attribute">
 <dt id="c7n.sqsexec.MessageIterator.msg_attributes">
-<code class="descname">msg_attributes</code><em class="property"> = [u'sequence_id', u'op', u'ser']</em><a class="headerlink" href="#c7n.sqsexec.MessageIterator.msg_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">msg_attributes</code><em class="property"> = ['sequence_id', 'op', 'ser']</em><a class="headerlink" href="#c7n.sqsexec.MessageIterator.msg_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3253,6 +3393,86 @@ provide better results.</p>
 to ec2 (subnets, vpc, security-groups, volumes, instances,
 snapshots).</p>
 <dl class="class">
+<dt id="c7n.tags.CopyRelatedResourceTag">
+<em class="property">class </em><code class="descclassname">c7n.tags.</code><code class="descname">CopyRelatedResourceTag</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#CopyRelatedResourceTag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.CopyRelatedResourceTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#c7n.tags.Tag" title="c7n.tags.Tag"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.tags.Tag</span></code></a></p>
+<p>Copy a related resource tag to its associated resource</p>
+<p>In some scenarios, resource tags from a related resource should be applied
+to its child resource. For example, EBS Volume tags propogating to their
+snapshots. To use this action, specify the resource type that contains the
+tags that are to be copied, which can be found by using the
+<cite>custodian schema</cite> command.</p>
+<p>Then, specify the key on the resource that references the related resource.
+In the case of ebs-snapshot, the VolumeId attribute would be the key that
+identifies the related resource, ebs.</p>
+<p>Finally, specify a list of tag keys to copy from the related resource onto
+the original resource. The special character “*” can be used to signify that
+all tags from the related resource should be copied to the original resource.</p>
+<p>To raise an error when related resources cannot be found, use the
+<cite>skip_missing</cite> option. By default, this is set to True.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">copy-tags-from-ebs-volume-to-snapshot</span>
+      <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ebs-snapshot</span>
+      <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">copy-related-tag</span>
+          <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ebs</span>
+          <span class="l l-Scalar l-Scalar-Plain">skip_missing</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">True</span>
+          <span class="l l-Scalar l-Scalar-Plain">key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">VolumeId</span>
+          <span class="l l-Scalar l-Scalar-Plain">tags</span><span class="p p-Indicator">:</span> <span class="s">&#39;*&#39;</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="c7n.tags.CopyRelatedResourceTag.get_permissions">
+<code class="descname">get_permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#CopyRelatedResourceTag.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.CopyRelatedResourceTag.get_permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.tags.CopyRelatedResourceTag.get_resource_tag_map">
+<code class="descname">get_resource_tag_map</code><span class="sig-paren">(</span><em>r_type</em>, <em>ids</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#CopyRelatedResourceTag.get_resource_tag_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.CopyRelatedResourceTag.get_resource_tag_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a mapping of {resource_id: {tagkey: tagvalue}}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="c7n.tags.CopyRelatedResourceTag.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#CopyRelatedResourceTag.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.CopyRelatedResourceTag.process" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.tags.CopyRelatedResourceTag.process_resource">
+<code class="descname">process_resource</code><span class="sig-paren">(</span><em>client</em>, <em>r</em>, <em>related_tags</em>, <em>tag_keys</em>, <em>tag_action</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#CopyRelatedResourceTag.process_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.CopyRelatedResourceTag.process_resource" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="c7n.tags.CopyRelatedResourceTag.register_resources">
+<em class="property">classmethod </em><code class="descname">register_resources</code><span class="sig-paren">(</span><em>registry</em>, <em>resource_class</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#CopyRelatedResourceTag.register_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.CopyRelatedResourceTag.register_resources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.tags.CopyRelatedResourceTag.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'key': {'type': 'string'}, 'resource': {'type': 'string'}, 'skip_missing': {'type': 'boolean'}, 'tags': {'oneOf': [{'enum': ['*']}, {'type': 'array'}]}, 'type': {'enum': ['copy-related-tag']}}, 'required': ['tags', 'key', 'resource', 'type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.tags.CopyRelatedResourceTag.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.tags.CopyRelatedResourceTag.schema_alias">
+<code class="descname">schema_alias</code><em class="property"> = True</em><a class="headerlink" href="#c7n.tags.CopyRelatedResourceTag.schema_alias" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.tags.CopyRelatedResourceTag.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#CopyRelatedResourceTag.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.CopyRelatedResourceTag.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.tags.NormalizeTag">
 <em class="property">class </em><code class="descclassname">c7n.tags.</code><code class="descname">NormalizeTag</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#NormalizeTag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.NormalizeTag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.actions.html#c7n.actions.core.Action" title="c7n.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.core.Action</span></code></a></p>
@@ -3305,7 +3525,7 @@ from a tag key.</p>
 
 <dl class="attribute">
 <dt id="c7n.tags.NormalizeTag.permissions">
-<code class="descname">permissions</code><em class="property"> = (u'ec2:CreateTags',)</em><a class="headerlink" href="#c7n.tags.NormalizeTag.permissions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">permissions</code><em class="property"> = ('ec2:CreateTags',)</em><a class="headerlink" href="#c7n.tags.NormalizeTag.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3326,7 +3546,7 @@ from a tag key.</p>
 
 <dl class="attribute">
 <dt id="c7n.tags.NormalizeTag.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'action': {u'items': {u'enum': [u'upper', u'lower', u'titlestrip', u'replace']}, u'type': u'string'}, 'key': {u'type': u'string'}, 'value': {u'type': u'string'}, u'type': {u'enum': [u'normalize-tag']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.tags.NormalizeTag.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'action': {'items': {'enum': ['upper', 'lower', 'titlestrip', 'replace']}, 'type': 'string'}, 'key': {'type': 'string'}, 'type': {'enum': ['normalize-tag']}, 'value': {'type': 'string'}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.tags.NormalizeTag.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3351,9 +3571,14 @@ from a tag key.</p>
 <code class="descname">concurrency</code><em class="property"> = 2</em><a class="headerlink" href="#c7n.tags.RemoveTag.concurrency" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.tags.RemoveTag.get_client">
+<code class="descname">get_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#RemoveTag.get_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.RemoveTag.get_client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.tags.RemoveTag.permissions">
-<code class="descname">permissions</code><em class="property"> = (u'ec2:DeleteTags',)</em><a class="headerlink" href="#c7n.tags.RemoveTag.permissions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">permissions</code><em class="property"> = ('ec2:DeleteTags',)</em><a class="headerlink" href="#c7n.tags.RemoveTag.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3363,12 +3588,12 @@ from a tag key.</p>
 
 <dl class="method">
 <dt id="c7n.tags.RemoveTag.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>vol_set</em>, <em>tag_keys</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#RemoveTag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.RemoveTag.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>resource_set</em>, <em>tag_keys</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#RemoveTag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.RemoveTag.process_resource_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.tags.RemoveTag.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'tags': {u'items': {u'type': u'string'}, u'type': u'array'}, u'type': {u'enum': [u'untag', u'unmark', u'remove-tag']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.tags.RemoveTag.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'tags': {'items': {'type': 'string'}, 'type': 'array'}, 'type': {'enum': ['untag', 'unmark', 'remove-tag']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.tags.RemoveTag.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3398,9 +3623,14 @@ from a tag key.</p>
 <code class="descname">filter_resources</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#RenameTag.filter_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.RenameTag.filter_resources" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.tags.RenameTag.get_client">
+<code class="descname">get_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#RenameTag.get_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.RenameTag.get_client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.tags.RenameTag.permissions">
-<code class="descname">permissions</code><em class="property"> = (u'ec2:CreateTags', u'ec2:DeleteTags')</em><a class="headerlink" href="#c7n.tags.RenameTag.permissions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">permissions</code><em class="property"> = ('ec2:CreateTags', 'ec2:DeleteTags')</em><a class="headerlink" href="#c7n.tags.RenameTag.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3410,7 +3640,7 @@ from a tag key.</p>
 
 <dl class="method">
 <dt id="c7n.tags.RenameTag.process_rename">
-<code class="descname">process_rename</code><span class="sig-paren">(</span><em>tag_value</em>, <em>resource_set</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#RenameTag.process_rename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.RenameTag.process_rename" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_rename</code><span class="sig-paren">(</span><em>client</em>, <em>tag_value</em>, <em>resource_set</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#RenameTag.process_rename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.RenameTag.process_rename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move source tag value to destination tag value</p>
 <ul class="simple">
 <li>Collect value from old tag</li>
@@ -3421,7 +3651,7 @@ from a tag key.</p>
 
 <dl class="attribute">
 <dt id="c7n.tags.RenameTag.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'old_key': {u'type': u'string'}, 'new_key': {u'type': u'string'}, u'type': {u'enum': [u'rename-tag']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.tags.RenameTag.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'new_key': {'type': 'string'}, 'old_key': {'type': 'string'}, 'type': {'enum': ['rename-tag']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.tags.RenameTag.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3452,13 +3682,23 @@ from a tag key.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="c7n.tags.Tag.get_client">
+<code class="descname">get_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#Tag.get_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.Tag.get_client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.tags.Tag.id_key">
+<code class="descname">id_key</code><em class="property"> = None</em><a class="headerlink" href="#c7n.tags.Tag.id_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="c7n.tags.Tag.interpolate_values">
 <code class="descname">interpolate_values</code><span class="sig-paren">(</span><em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#Tag.interpolate_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.Tag.interpolate_values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.tags.Tag.permissions">
-<code class="descname">permissions</code><em class="property"> = (u'ec2:CreateTags',)</em><a class="headerlink" href="#c7n.tags.Tag.permissions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">permissions</code><em class="property"> = ('ec2:CreateTags',)</em><a class="headerlink" href="#c7n.tags.Tag.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3468,12 +3708,12 @@ from a tag key.</p>
 
 <dl class="method">
 <dt id="c7n.tags.Tag.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>resource_set</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#Tag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.Tag.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>resource_set</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#Tag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.Tag.process_resource_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.tags.Tag.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'key': {u'type': u'string'}, 'tag': {u'type': u'string'}, 'value': {u'type': u'string'}, u'type': {u'enum': [u'tag', u'mark']}, 'tags': {u'type': u'object'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.tags.Tag.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'key': {'type': 'string'}, 'tag': {'type': 'string'}, 'tags': {'type': 'object'}, 'type': {'enum': ['tag', 'mark']}, 'value': {'type': 'string'}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.tags.Tag.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3528,7 +3768,7 @@ in which to interpret the clock (default value is ‘utc’)</p>
 
 <dl class="attribute">
 <dt id="c7n.tags.TagActionFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'tag': {u'type': u'string'}, 'tz': {u'type': u'string'}, 'op': {u'type': u'string'}, 'skew_hours': {u'minimum': 0, u'type': u'number'}, 'skew': {u'minimum': 0, u'type': u'number'}, u'type': {u'enum': [u'marked-for-op']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.tags.TagActionFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'op': {'type': 'string'}, 'skew': {'minimum': 0, 'type': 'number'}, 'skew_hours': {'minimum': 0, 'type': 'number'}, 'tag': {'type': 'string'}, 'type': {'enum': ['marked-for-op']}, 'tz': {'type': 'string'}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.tags.TagActionFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3539,7 +3779,8 @@ in which to interpret the clock (default value is ‘utc’)</p>
 <dl class="method">
 <dt id="c7n.tags.TagActionFilter.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#TagActionFilter.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.TagActionFilter.validate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>validate filter config, return validation error or self</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -3562,7 +3803,7 @@ in which to interpret the clock (default value is ‘utc’)</p>
 </div>
 <dl class="attribute">
 <dt id="c7n.tags.TagCountFilter.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'count': {u'minimum': 0, u'type': u'integer'}, 'op': {u'enum': [u'regex', u'not-equal', u'ne', u'gte', u'gt', u'eq', u'difference', u'lt', u'ni', u'ge', u'intersect', u'in', u'equal', u'lte', u'le', u'greater-than', u'less-than', u'contains', u'glob', u'not-in']}, u'type': {u'enum': [u'tag-count']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.tags.TagCountFilter.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'count': {'minimum': 0, 'type': 'integer'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'type': {'enum': ['tag-count']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.tags.TagCountFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3581,7 +3822,7 @@ in which to interpret the clock (default value is ‘utc’)</p>
 with a given timezone. The default value is ‘utc’.</p>
 <p>If neither ‘days’ nor ‘hours’ is specified, Cloud Custodian will default
 to marking the resource for action 4 days in the future.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ec2-mark-for-stop-in-future</span>
     <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ec2</span>
     <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
@@ -3605,7 +3846,7 @@ to marking the resource for action 4 days in the future.</p>
 
 <dl class="attribute">
 <dt id="c7n.tags.TagDelayedAction.default_template">
-<code class="descname">default_template</code><em class="property"> = u'Resource does not meet policy: {op}&#64;{action_date}'</em><a class="headerlink" href="#c7n.tags.TagDelayedAction.default_template" title="Permalink to this definition">¶</a></dt>
+<code class="descname">default_template</code><em class="property"> = 'Resource does not meet policy: {op}&#64;{action_date}'</em><a class="headerlink" href="#c7n.tags.TagDelayedAction.default_template" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3613,9 +3854,14 @@ to marking the resource for action 4 days in the future.</p>
 <code class="descname">generate_timestamp</code><span class="sig-paren">(</span><em>days</em>, <em>hours</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#TagDelayedAction.generate_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.TagDelayedAction.generate_timestamp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="c7n.tags.TagDelayedAction.permissions">
-<code class="descname">permissions</code><em class="property"> = (u'ec2:CreateTags',)</em><a class="headerlink" href="#c7n.tags.TagDelayedAction.permissions" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="c7n.tags.TagDelayedAction.get_client">
+<code class="descname">get_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#TagDelayedAction.get_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.TagDelayedAction.get_client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.tags.TagDelayedAction.get_permissions">
+<code class="descname">get_permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#TagDelayedAction.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.TagDelayedAction.get_permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3625,12 +3871,12 @@ to marking the resource for action 4 days in the future.</p>
 
 <dl class="method">
 <dt id="c7n.tags.TagDelayedAction.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>resource_set</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#TagDelayedAction.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.TagDelayedAction.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>resource_set</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#TagDelayedAction.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.TagDelayedAction.process_resource_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.tags.TagDelayedAction.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'tag': {u'type': u'string'}, 'tz': {u'type': u'string'}, 'hours': {u'exclusiveMinimum': False, u'minimum': 0, u'type': u'integer'}, 'days': {u'exclusiveMinimum': False, u'minimum': 0, u'type': u'integer'}, 'msg': {u'type': u'string'}, u'type': {u'enum': [u'mark-for-op']}, 'op': {u'type': u'string'}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.tags.TagDelayedAction.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'days': {'exclusiveMinimum': False, 'minimum': 0, 'type': 'integer'}, 'hours': {'exclusiveMinimum': False, 'minimum': 0, 'type': 'integer'}, 'msg': {'type': 'string'}, 'op': {'type': 'string'}, 'tag': {'type': 'string'}, 'type': {'enum': ['mark-for-op']}, 'tz': {'type': 'string'}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.tags.TagDelayedAction.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3687,7 +3933,7 @@ space while preserving a given set of tags.</p>
 
 <dl class="attribute">
 <dt id="c7n.tags.TagTrim.permissions">
-<code class="descname">permissions</code><em class="property"> = (u'ec2:DeleteTags',)</em><a class="headerlink" href="#c7n.tags.TagTrim.permissions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">permissions</code><em class="property"> = ('ec2:DeleteTags',)</em><a class="headerlink" href="#c7n.tags.TagTrim.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3697,17 +3943,17 @@ space while preserving a given set of tags.</p>
 
 <dl class="method">
 <dt id="c7n.tags.TagTrim.process_resource">
-<code class="descname">process_resource</code><span class="sig-paren">(</span><em>i</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#TagTrim.process_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.TagTrim.process_resource" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_resource</code><span class="sig-paren">(</span><em>client</em>, <em>i</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#TagTrim.process_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.TagTrim.process_resource" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="c7n.tags.TagTrim.process_tag_removal">
-<code class="descname">process_tag_removal</code><span class="sig-paren">(</span><em>resource</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#TagTrim.process_tag_removal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.TagTrim.process_tag_removal" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_tag_removal</code><span class="sig-paren">(</span><em>client</em>, <em>resource</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#TagTrim.process_tag_removal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.TagTrim.process_tag_removal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.tags.TagTrim.schema">
-<code class="descname">schema</code><em class="property"> = {u'additionalProperties': False, u'properties': {'space': {u'type': u'integer'}, 'preserve': {u'items': {u'type': u'string'}, u'type': u'array'}, u'type': {u'enum': [u'tag-trim']}}, u'required': [u'type'], u'type': u'object'}</em><a class="headerlink" href="#c7n.tags.TagTrim.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'preserve': {'items': {'type': 'string'}, 'type': 'array'}, 'space': {'type': 'integer'}, 'type': {'enum': ['tag-trim']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.tags.TagTrim.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3732,9 +3978,14 @@ space while preserving a given set of tags.</p>
 <code class="descname">concurrency</code><em class="property"> = 1</em><a class="headerlink" href="#c7n.tags.UniversalTag.concurrency" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.tags.UniversalTag.get_client">
+<code class="descname">get_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#UniversalTag.get_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.UniversalTag.get_client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.tags.UniversalTag.permissions">
-<code class="descname">permissions</code><em class="property"> = (u'resourcegroupstaggingapi:TagResources',)</em><a class="headerlink" href="#c7n.tags.UniversalTag.permissions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">permissions</code><em class="property"> = ('resourcegroupstaggingapi:TagResources',)</em><a class="headerlink" href="#c7n.tags.UniversalTag.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3744,7 +3995,7 @@ space while preserving a given set of tags.</p>
 
 <dl class="method">
 <dt id="c7n.tags.UniversalTag.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>resource_set</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#UniversalTag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.UniversalTag.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>resource_set</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#UniversalTag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.UniversalTag.process_resource_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3786,9 +4037,14 @@ space while preserving a given set of tags.</p>
 <code class="descname">concurrency</code><em class="property"> = 2</em><a class="headerlink" href="#c7n.tags.UniversalTagDelayedAction.concurrency" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.tags.UniversalTagDelayedAction.get_client">
+<code class="descname">get_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#UniversalTagDelayedAction.get_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.UniversalTagDelayedAction.get_client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.tags.UniversalTagDelayedAction.permissions">
-<code class="descname">permissions</code><em class="property"> = (u'resourcegroupstaggingapi:TagResources',)</em><a class="headerlink" href="#c7n.tags.UniversalTagDelayedAction.permissions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">permissions</code><em class="property"> = ('resourcegroupstaggingapi:TagResources',)</em><a class="headerlink" href="#c7n.tags.UniversalTagDelayedAction.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3798,7 +4054,7 @@ space while preserving a given set of tags.</p>
 
 <dl class="method">
 <dt id="c7n.tags.UniversalTagDelayedAction.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>resource_set</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#UniversalTagDelayedAction.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.UniversalTagDelayedAction.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>resource_set</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#UniversalTagDelayedAction.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.UniversalTagDelayedAction.process_resource_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3818,22 +4074,52 @@ space while preserving a given set of tags.</p>
 <code class="descname">concurrency</code><em class="property"> = 1</em><a class="headerlink" href="#c7n.tags.UniversalUntag.concurrency" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.tags.UniversalUntag.get_client">
+<code class="descname">get_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#UniversalUntag.get_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.UniversalUntag.get_client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.tags.UniversalUntag.permissions">
-<code class="descname">permissions</code><em class="property"> = (u'resourcegroupstaggingapi:UntagResources',)</em><a class="headerlink" href="#c7n.tags.UniversalUntag.permissions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">permissions</code><em class="property"> = ('resourcegroupstaggingapi:UntagResources',)</em><a class="headerlink" href="#c7n.tags.UniversalUntag.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="c7n.tags.UniversalUntag.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>resource_set</em>, <em>tag_keys</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#UniversalUntag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.UniversalUntag.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>resource_set</em>, <em>tag_keys</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#UniversalUntag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.UniversalUntag.process_resource_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="function">
-<dt id="c7n.tags.interpolate_tag_values">
-<code class="descclassname">c7n.tags.</code><code class="descname">interpolate_tag_values</code><span class="sig-paren">(</span><em>tags</em>, <em>params</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#interpolate_tag_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.interpolate_tag_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="c7n.tags.coalesce_copy_user_tags">
+<code class="descclassname">c7n.tags.</code><code class="descname">coalesce_copy_user_tags</code><span class="sig-paren">(</span><em>resource</em>, <em>copy_tags</em>, <em>user_tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#coalesce_copy_user_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.coalesce_copy_user_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of tags from resource and user supplied in
+the format: [{‘Key’: ‘key’, ‘Value’: ‘value’}]</p>
+<p>Due to drift on implementation on copy-tags/tags used throughout
+the code base, the following options are supported:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>copy_tags (Tags to copy from the resource):</dt>
+<dd><ul class="first last simple">
+<li>list of str, e.g. [‘key1’, ‘key2’, ‘*’]</li>
+<li>bool</li>
+</ul>
+</dd>
+<dt>user_tags (User supplied tags to apply):</dt>
+<dd><ul class="first last simple">
+<li>dict of key-value pairs, e.g. {Key: Value, Key2: Value}</li>
+<li>list of dict e.g. [{‘Key’: k, ‘Value’: v}]</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<p>In the case that there is a conflict in a user supplied tag
+and an existing tag on the resource, the user supplied tags will
+take priority.</p>
+<p>Additionally, a value of ‘*’ in copy_tags can be used to signify
+to copy all tags from the resource.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="c7n.tags.register_ec2_tags">
@@ -3842,7 +4128,7 @@ space while preserving a given set of tags.</p>
 
 <dl class="function">
 <dt id="c7n.tags.register_universal_tags">
-<code class="descclassname">c7n.tags.</code><code class="descname">register_universal_tags</code><span class="sig-paren">(</span><em>filters</em>, <em>actions</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#register_universal_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.register_universal_tags" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">c7n.tags.</code><code class="descname">register_universal_tags</code><span class="sig-paren">(</span><em>filters</em>, <em>actions</em>, <em>compatibility=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/tags.html#register_universal_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.tags.register_universal_tags" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -3911,7 +4197,7 @@ Existing environment restored after test.</p>
 
 <dl class="method">
 <dt id="c7n.testing.TestUtils.load_policy">
-<code class="descname">load_policy</code><span class="sig-paren">(</span><em>data</em>, <em>config=None</em>, <em>session_factory=None</em>, <em>validate=True</em>, <em>output_dir=None</em>, <em>cache=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/testing.html#TestUtils.load_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.testing.TestUtils.load_policy" title="Permalink to this definition">¶</a></dt>
+<code class="descname">load_policy</code><span class="sig-paren">(</span><em>data</em>, <em>config=None</em>, <em>session_factory=None</em>, <em>validate=False</em>, <em>output_dir=None</em>, <em>cache=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/testing.html#TestUtils.load_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.testing.TestUtils.load_policy" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3932,7 +4218,7 @@ Existing environment restored after test.</p>
 
 <dl class="method">
 <dt id="c7n.testing.TestUtils.write_policy_file">
-<code class="descname">write_policy_file</code><span class="sig-paren">(</span><em>policy</em>, <em>format=u'yaml'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/testing.html#TestUtils.write_policy_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.testing.TestUtils.write_policy_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_policy_file</code><span class="sig-paren">(</span><em>policy</em>, <em>format='yaml'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/testing.html#TestUtils.write_policy_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.testing.TestUtils.write_policy_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a policy file to disk in the specified format.</p>
 <p>Input a dictionary and a format. Valid formats are <cite>yaml</cite> and <cite>json</cite>
 Returns the file path.</p>
@@ -3964,7 +4250,7 @@ the length of the string.</p>
 <span id="c7n-utils-module"></span><h2>c7n.utils module<a class="headerlink" href="#module-c7n.utils" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="c7n.utils.DateTimeEncoder">
-<em class="property">class </em><code class="descclassname">c7n.utils.</code><code class="descname">DateTimeEncoder</code><span class="sig-paren">(</span><em>skipkeys=False</em>, <em>ensure_ascii=True</em>, <em>check_circular=True</em>, <em>allow_nan=True</em>, <em>sort_keys=False</em>, <em>indent=None</em>, <em>separators=None</em>, <em>encoding='utf-8'</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/utils.html#DateTimeEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.utils.DateTimeEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">c7n.utils.</code><code class="descname">DateTimeEncoder</code><span class="sig-paren">(</span><em>*</em>, <em>skipkeys=False</em>, <em>ensure_ascii=True</em>, <em>check_circular=True</em>, <em>allow_nan=True</em>, <em>sort_keys=False</em>, <em>indent=None</em>, <em>separators=None</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/utils.html#DateTimeEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.utils.DateTimeEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">json.encoder.JSONEncoder</span></code></p>
 <dl class="method">
 <dt id="c7n.utils.DateTimeEncoder.default">
@@ -3996,7 +4282,7 @@ implement default like this:</p>
 <p>a datetime wrapper with extended pyformat syntax</p>
 <dl class="attribute">
 <dt id="c7n.utils.FormatDate.date_increment">
-<code class="descname">date_increment</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#c7n.utils.FormatDate.date_increment" title="Permalink to this definition">¶</a></dt>
+<code class="descname">date_increment</code><em class="property"> = re.compile('\\+[0-9]+[Mdh]')</em><a class="headerlink" href="#c7n.utils.FormatDate.date_increment" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="classmethod">
@@ -4014,8 +4300,9 @@ implement default like this:</p>
 
 <dl class="class">
 <dt id="c7n.utils.UnicodeWriter">
-<em class="property">class </em><code class="descclassname">c7n.utils.</code><code class="descname">UnicodeWriter</code><span class="sig-paren">(</span><em>f</em>, <em>dialect=&lt;class csv.excel&gt;</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/utils.html#UnicodeWriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.utils.UnicodeWriter" title="Permalink to this definition">¶</a></dt>
-<dd><p>utf8 encoding csv writer.</p>
+<em class="property">class </em><code class="descclassname">c7n.utils.</code><code class="descname">UnicodeWriter</code><span class="sig-paren">(</span><em>f</em>, <em>dialect=&lt;class 'csv.excel'&gt;</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/utils.html#UnicodeWriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.utils.UnicodeWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>utf8 encoding csv writer.</p>
 <dl class="method">
 <dt id="c7n.utils.UnicodeWriter.writerow">
 <code class="descname">writerow</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/utils.html#UnicodeWriter.writerow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.utils.UnicodeWriter.writerow" title="Permalink to this definition">¶</a></dt>
@@ -4031,7 +4318,7 @@ implement default like this:</p>
 <dl class="exception">
 <dt id="c7n.utils.VarsSubstitutionError">
 <em class="property">exception </em><code class="descclassname">c7n.utils.</code><code class="descname">VarsSubstitutionError</code><a class="reference internal" href="../../_modules/c7n/utils.html#VarsSubstitutionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.utils.VarsSubstitutionError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">exceptions.Exception</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 </dd></dl>
 
 <dl class="function">
@@ -4075,14 +4362,14 @@ implement default like this:</p>
 
 <dl class="function">
 <dt id="c7n.utils.format_string_values">
-<code class="descclassname">c7n.utils.</code><code class="descname">format_string_values</code><span class="sig-paren">(</span><em>obj</em>, <em>err_fallback=(&lt;type 'exceptions.IndexError'&gt;</em>, <em>&lt;type 'exceptions.KeyError'&gt;)</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/utils.html#format_string_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.utils.format_string_values" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">c7n.utils.</code><code class="descname">format_string_values</code><span class="sig-paren">(</span><em>obj</em>, <em>err_fallback=(&lt;class 'IndexError'&gt;</em>, <em>&lt;class 'KeyError'&gt;)</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/utils.html#format_string_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.utils.format_string_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format all string values in an object.
 Return the updated object</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="c7n.utils.generate_arn">
-<code class="descclassname">c7n.utils.</code><code class="descname">generate_arn</code><span class="sig-paren">(</span><em>service</em>, <em>resource</em>, <em>partition=u'aws'</em>, <em>region=None</em>, <em>account_id=None</em>, <em>resource_type=None</em>, <em>separator=u'/'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/utils.html#generate_arn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.utils.generate_arn" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">c7n.utils.</code><code class="descname">generate_arn</code><span class="sig-paren">(</span><em>service</em>, <em>resource</em>, <em>partition='aws'</em>, <em>region=None</em>, <em>account_id=None</em>, <em>resource_type=None</em>, <em>separator='/'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/utils.html#generate_arn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.utils.generate_arn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate an Amazon Resource Name.
 See <a class="reference external" href="http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html">http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html</a>.</p>
 </dd></dl>
@@ -4265,7 +4552,7 @@ collection (cwl subscription) can still pickup.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -4284,21 +4571,15 @@ collection (cwl subscription) can still pickup.</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

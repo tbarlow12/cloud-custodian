@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -315,7 +318,8 @@
 <span class="sd">        various resources, it may also silently fail to do so unless a tag</span>
 <span class="sd">        is used as a filter.</span>
 
-<span class="sd">        See footnote on http://goo.gl/YozD9Q for official documentation.</span>
+<span class="sd">        See footnote on for official documentation.</span>
+<span class="sd">        https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html#Using_Tags_CLI</span>
 
 <span class="sd">        Apriori we may be using custodian to ensure tags (including</span>
 <span class="sd">        name), so there isn&#39;t a good default to ensure that we will</span>
@@ -372,6 +376,12 @@
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;SubnetId&quot;</span></div>
 
 
+<div class="viewcode-block" id="VpcFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.VpcFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;vpc&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VpcFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">VpcFilter</span><span class="p">):</span>
+
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;VpcId&quot;</span></div>
+
+
 <span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;network-location&#39;</span><span class="p">,</span> <span class="n">net_filters</span><span class="o">.</span><span class="n">NetworkLocation</span><span class="p">)</span>
 
 
@@ -417,7 +427,9 @@
 <span class="sd">    filtering elements (filters or actions) to the instances states</span>
 <span class="sd">    they are valid for.</span>
 
-<span class="sd">    For more details see http://goo.gl/TZH9Q5</span>
+<span class="sd">    For more details see</span>
+<span class="sd">     https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">valid_origin_states</span> <span class="o">=</span> <span class="p">()</span>
 
@@ -993,6 +1005,56 @@
         <span class="k">return</span> <span class="kc">False</span></div></div>
 
 
+<div class="viewcode-block" id="SsmStatus"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.SsmStatus">[docs]</a><span class="nd">@EC2</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;ssm&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SsmStatus</span><span class="p">(</span><span class="n">ValueFilter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter ec2 instances by their ssm status information.</span>
+
+<span class="sd">    :Example:</span>
+
+<span class="sd">    Find ubuntu 18.04 instances are active with ssm.</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">          - name: ec2-recover-instances</span>
+<span class="sd">            resource: ec2</span>
+<span class="sd">            filters:</span>
+<span class="sd">              - type: ssm</span>
+<span class="sd">                key: PingStatus</span>
+<span class="sd">                value: Online</span>
+<span class="sd">              - type: ssm</span>
+<span class="sd">                key: PlatformName</span>
+<span class="sd">                value: Ubuntu</span>
+<span class="sd">              - type: ssm</span>
+<span class="sd">                key: PlatformVersion</span>
+<span class="sd">                value: 18.04</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;ssm&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">ValueFilter</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ssm:DescribeInstanceInformation&#39;</span><span class="p">,)</span>
+    <span class="n">annotation</span> <span class="o">=</span> <span class="s1">&#39;c7n:SsmState&#39;</span>
+
+<div class="viewcode-block" id="SsmStatus.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.SsmStatus.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ssm&#39;</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">resource_set</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">chunks</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="p">],</span> <span class="mi">50</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_resource_set</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation</span><span class="p">]):</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span></div>
+
+<div class="viewcode-block" id="SsmStatus.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.SsmStatus.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">instance_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;InstanceId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">]</span>
+        <span class="n">info_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;InstanceId&#39;</span><span class="p">]:</span> <span class="n">info</span> <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">describe_instance_information</span><span class="p">(</span>
+                <span class="n">Filters</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;Key&#39;</span><span class="p">:</span> <span class="s1">&#39;InstanceIds&#39;</span><span class="p">,</span> <span class="s1">&#39;Values&#39;</span><span class="p">:</span> <span class="n">instance_ids</span><span class="p">}])</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s1">&#39;InstanceInformationList&#39;</span><span class="p">,</span> <span class="p">[])}</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">r</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation</span><span class="p">]</span> <span class="o">=</span> <span class="n">info_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;InstanceId&#39;</span><span class="p">],</span> <span class="p">{})</span></div></div>
+
+
 <div class="viewcode-block" id="InstanceFinding"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.InstanceFinding">[docs]</a><span class="nd">@EC2</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;post-finding&quot;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">InstanceFinding</span><span class="p">(</span><span class="n">PostFinding</span><span class="p">):</span>
 <div class="viewcode-block" id="InstanceFinding.format_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.InstanceFinding.format_resource">[docs]</a>    <span class="k">def</span> <span class="nf">format_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
@@ -1003,17 +1065,18 @@
                 <span class="s2">&quot;NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress&quot;</span><span class="p">,</span> <span class="n">r</span>
             <span class="p">),</span>
             <span class="s2">&quot;KeyName&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;KeyName&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;VpcId&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;VpcId&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;SubnetId&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;SubnetId&quot;</span><span class="p">],</span>
             <span class="s2">&quot;LaunchedAt&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;LaunchTime&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
         <span class="p">}</span>
-
+        <span class="k">if</span> <span class="s2">&quot;VpcId&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+            <span class="n">details</span><span class="p">[</span><span class="s2">&quot;VpcId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;VpcId&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;SubnetId&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+            <span class="n">details</span><span class="p">[</span><span class="s2">&quot;SubnetId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;SubnetId&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;IamInstanceProfile&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
             <span class="n">details</span><span class="p">[</span><span class="s2">&quot;IamInstanceProfileArn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;IamInstanceProfile&quot;</span><span class="p">][</span><span class="s2">&quot;Arn&quot;</span><span class="p">]</span>
 
         <span class="n">instance</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;AwsEc2Instance&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">:instance/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:ec2:</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">:instance/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
                 <span class="n">r</span><span class="p">[</span><span class="s2">&quot;InstanceId&quot;</span><span class="p">]),</span>
@@ -1470,6 +1533,7 @@
     <span class="sd">&quot;&quot;&quot;Modify security groups on an instance.&quot;&quot;&quot;</span>
 
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;ec2:ModifyNetworkInterfaceAttribute&quot;</span><span class="p">,)</span>
+    <span class="n">sg_expr</span> <span class="o">=</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;Groups[].GroupId&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EC2ModifyVpcSecurityGroups.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.EC2ModifyVpcSecurityGroups.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">):</span>
@@ -1893,7 +1957,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -1912,21 +1976,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

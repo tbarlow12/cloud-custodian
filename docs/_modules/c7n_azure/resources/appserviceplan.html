@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -258,27 +261,26 @@
         <span class="p">}</span>
     <span class="p">)</span>
 
-<div class="viewcode-block" id="ResizePlan.process_resource_set"><a class="viewcode-back" href="../../../generated/azure/c7n_azure.resources.html#c7n_azure.resources.appserviceplan.ResizePlan.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plans</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>  <span class="c1"># type: azure.mgmt.web.WebSiteManagementClient</span>
+    <span class="k">def</span> <span class="nf">_prepare_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>  <span class="c1"># type: azure.mgmt.web.WebSiteManagementClient</span>
 
-        <span class="k">for</span> <span class="n">plan</span> <span class="ow">in</span> <span class="n">plans</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">AppServicePlan</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">plan</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">_process_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">AppServicePlan</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">])</span>
 
-            <span class="k">if</span> <span class="s1">&#39;size&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-                <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">)</span>
-                <span class="n">model</span><span class="o">.</span><span class="n">sku</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SkuDescription</span><span class="p">()</span>
-                <span class="n">model</span><span class="o">.</span><span class="n">sku</span><span class="o">.</span><span class="n">tier</span> <span class="o">=</span> <span class="n">ResizePlan</span><span class="o">.</span><span class="n">get_sku_name</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
-                <span class="n">model</span><span class="o">.</span><span class="n">sku</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="k">if</span> <span class="s1">&#39;size&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">sku</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SkuDescription</span><span class="p">()</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">sku</span><span class="o">.</span><span class="n">tier</span> <span class="o">=</span> <span class="n">ResizePlan</span><span class="o">.</span><span class="n">get_sku_name</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">sku</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">size</span>
 
-            <span class="k">if</span> <span class="s1">&#39;count&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-                <span class="n">model</span><span class="o">.</span><span class="n">target_worker_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;count&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">target_worker_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
 
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">client</span><span class="o">.</span><span class="n">app_service_plans</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plan</span><span class="p">[</span><span class="s1">&#39;resourceGroup&#39;</span><span class="p">],</span> <span class="n">plan</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">model</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">models</span><span class="o">.</span><span class="n">DefaultErrorResponseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to resize </span><span class="si">%s</span><span class="s2">.  Inner exception: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
-                               <span class="p">(</span><span class="n">plan</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">e</span><span class="o">.</span><span class="n">inner_exception</span><span class="p">))</span>
-                <span class="k">raise</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">app_service_plans</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;resourceGroup&#39;</span><span class="p">],</span> <span class="n">resource</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">model</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">models</span><span class="o">.</span><span class="n">DefaultErrorResponseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to resize </span><span class="si">%s</span><span class="s2">.  Inner exception: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+                           <span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">e</span><span class="o">.</span><span class="n">inner_exception</span><span class="p">))</span>
 
 <div class="viewcode-block" id="ResizePlan.get_sku_name"><a class="viewcode-back" href="../../../generated/azure/c7n_azure.resources.html#c7n_azure.resources.appserviceplan.ResizePlan.get_sku_name">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_sku_name</span><span class="p">(</span><span class="n">tier</span><span class="p">):</span>
@@ -310,7 +312,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -329,21 +331,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

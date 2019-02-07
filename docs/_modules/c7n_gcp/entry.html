@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -203,10 +206,12 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">c7n_gcp.policy</span>
+<span class="kn">import</span> <span class="nn">c7n_gcp.resources.bigquery</span>
 <span class="kn">import</span> <span class="nn">c7n_gcp.resources.build</span>
 <span class="kn">import</span> <span class="nn">c7n_gcp.resources.compute</span>
 <span class="kn">import</span> <span class="nn">c7n_gcp.resources.function</span>
 <span class="kn">import</span> <span class="nn">c7n_gcp.resources.gke</span>
+<span class="kn">import</span> <span class="nn">c7n_gcp.resources.iam</span>
 <span class="kn">import</span> <span class="nn">c7n_gcp.resources.logging</span>
 <span class="kn">import</span> <span class="nn">c7n_gcp.resources.network</span>
 <span class="kn">import</span> <span class="nn">c7n_gcp.resources.pubsub</span>
@@ -216,8 +221,12 @@
 <span class="kn">import</span> <span class="nn">c7n_gcp.resources.storage</span>
 <span class="kn">import</span> <span class="nn">c7n_gcp.resources.sql</span>  <span class="c1"># noqa: F401</span>
 
+<span class="kn">from</span> <span class="nn">c7n_gcp.provider</span> <span class="k">import</span> <span class="n">resources</span> <span class="k">as</span> <span class="n">gcp_resources</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;googleapiclient.discovery&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+
+<span class="c1"># Let resource registry subscribers have a chance to look at full set of resources.</span>
+<span class="n">gcp_resources</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">gcp_resources</span><span class="o">.</span><span class="n">EVENT_FINAL</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="initialize_gcp"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.entry.initialize_gcp">[docs]</a><span class="k">def</span> <span class="nf">initialize_gcp</span><span class="p">():</span>
@@ -234,7 +243,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -253,21 +262,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

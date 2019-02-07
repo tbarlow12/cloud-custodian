@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -212,6 +215,7 @@
 <span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="k">import</span> <span class="n">ClientError</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">as_completed</span>
 <span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="k">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">parse_date</span>
+<span class="kn">import</span> <span class="nn">six</span>
 
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">ActionRegistry</span><span class="p">,</span> <span class="n">BaseAction</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
@@ -269,10 +273,75 @@
     <span class="n">action_registry</span> <span class="o">=</span> <span class="n">ActionRegistry</span><span class="p">(</span><span class="s1">&#39;ebs-snapshot.actions&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Snapshot.resources"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.Snapshot.resources">[docs]</a>    <span class="k">def</span> <span class="nf">resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">qfilters</span> <span class="o">=</span> <span class="n">QueryParser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="p">[]))</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">query</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">qfilters</span><span class="p">:</span>
+            <span class="n">query</span><span class="p">[</span><span class="s1">&#39;Filters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qfilters</span>
         <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;OwnerIds&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">query</span><span class="p">[</span><span class="s1">&#39;OwnerIds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;self&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Snapshot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">resources</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="QueryParser"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.QueryParser">[docs]</a><span class="k">class</span> <span class="nc">QueryParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">QuerySchema</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
+        <span class="s1">&#39;owner-alias&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;amazon&#39;</span><span class="p">,</span> <span class="s1">&#39;amazon-marketplace&#39;</span><span class="p">,</span> <span class="s1">&#39;microsoft&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;owner-id&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
+        <span class="s1">&#39;progress&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
+        <span class="s1">&#39;snapshot-id&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
+        <span class="s1">&#39;start-time&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
+        <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;pending&#39;</span><span class="p">,</span> <span class="s1">&#39;completed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
+        <span class="s1">&#39;tag-key&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
+        <span class="s1">&#39;volume-id&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
+        <span class="s1">&#39;volume-size&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="QueryParser.parse"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.QueryParser.parse">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">filters</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
+                <span class="s2">&quot;EBS Query invalid format, must be array of dicts </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">data</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
+                    <span class="s2">&quot;EBS Query Filter Invalid </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;Name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d</span> <span class="ow">or</span> <span class="s2">&quot;Values&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
+                    <span class="s2">&quot;EBS Query Filter Invalid Missing Key, Values in </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">data</span><span class="p">)</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">QuerySchema</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;tag:&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
+                    <span class="s2">&quot;EBS Query Filter Invalid Key:</span><span class="si">%s</span><span class="s2"> Valid: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="n">key</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">QuerySchema</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+
+            <span class="n">vtype</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">QuerySchema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">vtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">):</span>
+                <span class="n">vtype</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
+                    <span class="s2">&quot;EBS Query Filter Invalid Values, must be array </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">data</span><span class="p">,))</span>
+
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vtype</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="n">vtype</span> <span class="o">!=</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vtype</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
+                            <span class="s2">&quot;EBS Query Filter Invalid Value: </span><span class="si">%s</span><span class="s2"> Valid: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                                <span class="n">v</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">vtype</span><span class="p">)))</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">vtype</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
+                        <span class="s2">&quot;EBS Query Filter Invalid Value Type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">data</span><span class="p">,))</span>
+
+            <span class="n">filters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">filters</span></div></div>
 
 
 <div class="viewcode-block" id="SnapshotAge"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.SnapshotAge">[docs]</a><span class="nd">@Snapshot</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">)</span>
@@ -477,7 +546,7 @@
 <span class="k">class</span> <span class="nc">CopySnapshot</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Copy a snapshot across regions</span>
 
-<span class="sd">    http://goo.gl/CP3dq</span>
+<span class="sd">    https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-copy-snapshot.html</span>
 
 <span class="sd">    :example:</span>
 
@@ -1269,11 +1338,13 @@
 <span class="k">class</span> <span class="nc">ModifyableVolume</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check if an ebs volume is modifyable online.</span>
 
-<span class="sd">    Considerations - https://goo.gl/CBhfqV</span>
+<span class="sd">    Considerations:</span>
+<span class="sd">     https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/limitations.html</span>
 
 <span class="sd">    Consideration Summary</span>
 <span class="sd">      - only current instance types are supported (one exception m3.medium)</span>
-<span class="sd">        Current Generation Instances (2017-2) https://goo.gl/iuNjPZ</span>
+<span class="sd">        Current Generation Instances (2017-2)</span>
+<span class="sd">        https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html#current-gen-instances</span>
 
 <span class="sd">      - older magnetic volume types are not supported</span>
 <span class="sd">      - shrinking volumes is not supported</span>
@@ -1368,9 +1439,12 @@
 
 <span class="sd">    **Note this action requires use of modifyable filter**</span>
 
-<span class="sd">    Intro Blog &amp; Use Cases - https://goo.gl/E3u4Ue</span>
-<span class="sd">    Docs - https://goo.gl/DJM4T0</span>
-<span class="sd">    Considerations - https://goo.gl/CBhfqV</span>
+<span class="sd">    Intro Blog &amp; Use Cases:</span>
+<span class="sd">     https://aws.amazon.com/blogs/aws/amazon-ebs-update-new-elastic-volumes-change-everything/</span>
+<span class="sd">    Docs:</span>
+<span class="sd">     https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modify-volume.html</span>
+<span class="sd">    Considerations:</span>
+<span class="sd">     https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/limitations.html</span>
 
 <span class="sd">    :example:</span>
 
@@ -1483,7 +1557,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -1502,21 +1576,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

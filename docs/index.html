@@ -114,10 +114,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -362,6 +365,7 @@
 <li class="toctree-l2"><a class="reference internal" href="azure/authentication.html#managed-service-identity">Managed Service Identity</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="azure/examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="azure/examples/autotagusers.html">Automatically tag the creator of a resource or resource group.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/examples/lbfilterbyfrotendip.html">Filter load balancer by front end public ip</a></li>
@@ -378,6 +382,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="azure/policy/index.html">Policies</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="azure/policy/delayedoperation.html">Delayed Operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/genericarmaction.html">Generic Actions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/genericarmfilter.html">Generic Filters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/accesscontrol.html">Access Control</a></li>
@@ -386,6 +391,7 @@
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/batch.html">Batch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/cdn.html">CDN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/cognitiveservices.html">Cognitive Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/containerregistry.html">Container Registry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/containerservice.html">Container Service</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/cosmosdb.html">Cosmos DB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/datafactory.html">Data Factory</a></li>
@@ -400,7 +406,7 @@
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/publicip.html">Public IP Address</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/redis.html">Redis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/resourcegroup.html">Resource Groups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/sqlserver.html">SQl Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/sqlserver.html">SQL Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/storage.html">Storage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/subscription.html">Subscription</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/policy/resources/vm.html">Virtual Machines</a></li>
@@ -413,10 +419,21 @@
 <li class="toctree-l2"><a class="reference internal" href="azure/advanced/azurefunctions.html">Azure Functions Support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/advanced/multiplesubs.html">Advanced Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="azure/advanced/bloboutput.html">Blob Storage Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azure/advanced/appinsightslogging.html">App Insights Logging &amp; Metrics</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="azure/contribute.html">Developer Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="azure/contribute.html#testing">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="azure/contribute.html#install-azure-dependencies">Install Azure Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azure/contribute.html#create-new-azure-resource">Create New Azure Resource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azure/contribute.html#load-new-azure-resource">Load New Azure Resource</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="azure/contribute.html#testing">Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="azure/contribute.html#test-framework">Test framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azure/contribute.html#arm-templates">ARM templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azure/contribute.html#cassettes">Cassettes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="azure/contribute.html#running-tests">Running tests</a></li>
 </ul>
 </li>
 </ul>
@@ -465,7 +482,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -484,21 +501,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/js/expand.js"></script>
+    
 
   
 

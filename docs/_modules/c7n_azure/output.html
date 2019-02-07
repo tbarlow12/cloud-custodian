@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -210,10 +213,19 @@
 <span class="kn">import</span> <span class="nn">tempfile</span>
 
 <span class="kn">from</span> <span class="nn">c7n_azure.storage_utils</span> <span class="k">import</span> <span class="n">StorageUtilities</span>
-<span class="kn">from</span> <span class="nn">c7n.output</span> <span class="k">import</span> <span class="n">DirectoryOutput</span><span class="p">,</span> <span class="n">blob_outputs</span>
-
+<span class="kn">from</span> <span class="nn">c7n_azure.utils</span> <span class="k">import</span> <span class="n">AppInsightsHelper</span>
+<span class="kn">from</span> <span class="nn">c7n.output</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">blob_outputs</span><span class="p">,</span>
+    <span class="n">log_outputs</span><span class="p">,</span>
+    <span class="n">metrics_outputs</span><span class="p">,</span>
+    <span class="n">DirectoryOutput</span><span class="p">,</span>
+    <span class="n">LogOutput</span><span class="p">,</span>
+    <span class="n">Metrics</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span>
 
+<span class="kn">from</span> <span class="nn">applicationinsights</span> <span class="k">import</span> <span class="n">TelemetryClient</span>
+<span class="kn">from</span> <span class="nn">applicationinsights.logging</span> <span class="k">import</span> <span class="n">LoggingHandler</span>
 <span class="kn">from</span> <span class="nn">azure.common</span> <span class="k">import</span> <span class="n">AzureHttpError</span>
 
 
@@ -283,6 +295,90 @@
         <span class="c1"># provides easier test isolation</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">StorageUtilities</span><span class="o">.</span><span class="n">get_blob_client_by_uri</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="MetricsOutput"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.output.MetricsOutput">[docs]</a><span class="nd">@metrics_outputs</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;azure&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MetricsOutput</span><span class="p">(</span><span class="n">Metrics</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Send metrics data to app insights</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MetricsOutput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">namespace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tc</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instrumentation_key</span> <span class="o">=</span> <span class="n">AppInsightsHelper</span><span class="o">.</span><span class="n">get_instrumentation_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tc</span> <span class="o">=</span> <span class="n">TelemetryClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instrumentation_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription_id</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">get_subscription_id</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_format_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span>
+            <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+            <span class="s1">&#39;Dimensions&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;Policy&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s1">&#39;ResType&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">resource_type</span><span class="p">,</span>
+                <span class="s1">&#39;SubscriptionId&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscription_id</span><span class="p">,</span>
+                <span class="s1">&#39;ExecutionId&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">execution_id</span><span class="p">,</span>
+                <span class="s1">&#39;Unit&#39;</span><span class="p">:</span> <span class="n">unit</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;Dimensions&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="k">def</span> <span class="nf">_put_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ns</span><span class="p">,</span> <span class="n">metrics</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tc</span><span class="o">.</span><span class="n">track_metric</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">],</span>
+                                 <span class="n">value</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">],</span>
+                                 <span class="n">properties</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;Dimensions&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tc</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AppInsightsLogHandler"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.output.AppInsightsLogHandler">[docs]</a><span class="k">class</span> <span class="nc">AppInsightsLogHandler</span><span class="p">(</span><span class="n">LoggingHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instrumentation_key</span><span class="p">,</span> <span class="n">policy_name</span><span class="p">,</span> <span class="n">subscription_id</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AppInsightsLogHandler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">instrumentation_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy_name</span> <span class="o">=</span> <span class="n">policy_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription_id</span> <span class="o">=</span> <span class="n">subscription_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execution_id</span> <span class="o">=</span> <span class="n">execution_id</span>
+
+<div class="viewcode-block" id="AppInsightsLogHandler.emit"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.output.AppInsightsLogHandler.emit">[docs]</a>    <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Process&#39;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">processName</span><span class="p">,</span>
+            <span class="s1">&#39;Module&#39;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">module</span><span class="p">,</span>
+            <span class="s1">&#39;FileName&#39;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+            <span class="s1">&#39;LineNumber&#39;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">lineno</span><span class="p">,</span>
+            <span class="s1">&#39;Level&#39;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">levelname</span><span class="p">,</span>
+            <span class="s1">&#39;Policy&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_name</span><span class="p">,</span>
+            <span class="s1">&#39;SubscriptionId&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscription_id</span><span class="p">,</span>
+            <span class="s1">&#39;ExecutionId&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_id</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">exc_info</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">track_exception</span><span class="p">(</span><span class="o">*</span><span class="n">record</span><span class="o">.</span><span class="n">exc_info</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">formatted_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">track_trace</span><span class="p">(</span><span class="n">formatted_message</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">levelname</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="AppInsightsLogOutput"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.output.AppInsightsLogOutput">[docs]</a><span class="nd">@log_outputs</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;azure&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AppInsightsLogOutput</span><span class="p">(</span><span class="n">LogOutput</span><span class="p">):</span>
+
+    <span class="n">log_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
+
+<div class="viewcode-block" id="AppInsightsLogOutput.get_handler"><a class="viewcode-back" href="../../generated/azure/c7n_azure.html#c7n_azure.output.AppInsightsLogOutput.get_handler">[docs]</a>    <span class="k">def</span> <span class="nf">get_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instrumentation_key</span> <span class="o">=</span> <span class="n">AppInsightsHelper</span><span class="o">.</span><span class="n">get_instrumentation_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription_id</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">get_subscription_id</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">AppInsightsLogHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instrumentation_key</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">subscription_id</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">execution_id</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
@@ -295,7 +391,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -314,21 +410,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 

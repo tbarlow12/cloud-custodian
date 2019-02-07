@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -203,14 +206,14 @@
 <span class="c1"># limitations under the License.</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span>
 
-<span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="k">import</span> <span class="n">ClientError</span>
-
 <span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">RemovePolicyBase</span><span class="p">,</span> <span class="n">Action</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
 <span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">CrossAccountAccessFilter</span><span class="p">,</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">ValueFilter</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
-<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">RemovePolicyBase</span><span class="p">,</span> <span class="n">Action</span>
+<span class="kn">from</span> <span class="nn">c7n</span> <span class="k">import</span> <span class="n">tags</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span>
 
 
@@ -224,10 +227,50 @@
         <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;repositoryArn&quot;</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="s1">&#39;repositoryNames&#39;</span>
-        <span class="n">filter_type</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span></div></div>
+        <span class="n">filter_type</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span></div>
+
+<div class="viewcode-block" id="ECR.augment"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecr.ECR.augment">[docs]</a>    <span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ecr&#39;</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">r</span><span class="p">[</span><span class="s1">&#39;Tags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">list_tags_for_resource</span><span class="p">(</span>
+                    <span class="n">resourceArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;repositoryArn&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">)</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RepositoryNotFoundException</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="n">results</span></div></div>
 
 
-<span class="n">ErrPolicyNotFound</span> <span class="o">=</span> <span class="s1">&#39;RepositoryPolicyNotFoundException&#39;</span>
+<div class="viewcode-block" id="ECRTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecr.ECRTag">[docs]</a><span class="nd">@ECR</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ECRTag</span><span class="p">(</span><span class="n">tags</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ecr:TagResource&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="ECRTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecr.ECRTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">tag_resource</span><span class="p">(</span><span class="n">resourceArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;repositoryArn&#39;</span><span class="p">],</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RepositoryNotFoundException</span><span class="p">:</span>
+                <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="ECRRemoveTags"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecr.ECRRemoveTags">[docs]</a><span class="nd">@ECR</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ECRRemoveTags</span><span class="p">(</span><span class="n">tags</span><span class="o">.</span><span class="n">RemoveTag</span><span class="p">):</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ecr:UntagResource&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="ECRRemoveTags.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecr.ECRRemoveTags.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">untag_resource</span><span class="p">(</span><span class="n">resourceArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;repositoryArn&#39;</span><span class="p">],</span> <span class="n">tagKeys</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RepositoryNotFoundException</span><span class="p">:</span>
+                <span class="k">pass</span></div></div>
+
+
+<span class="n">ECR</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">tags</span><span class="o">.</span><span class="n">TagActionFilter</span><span class="p">)</span>
+<span class="n">ECR</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">,</span> <span class="n">tags</span><span class="o">.</span><span class="n">TagDelayedAction</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ECRCrossAccountAccessFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecr.ECRCrossAccountAccessFilter">[docs]</a><span class="nd">@ECR</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;cross-account&#39;</span><span class="p">)</span>
@@ -251,23 +294,21 @@
 
 <div class="viewcode-block" id="ECRCrossAccountAccessFilter.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecr.ECRCrossAccountAccessFilter.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ecr&#39;</span><span class="p">)</span>
+
         <span class="k">def</span> <span class="nf">_augment</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
-            <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ecr&#39;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">r</span><span class="p">[</span><span class="s1">&#39;Policy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_repository_policy</span><span class="p">(</span>
                     <span class="n">repositoryName</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;repositoryName&#39;</span><span class="p">])[</span><span class="s1">&#39;policyText&#39;</span><span class="p">]</span>
-            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">ErrPolicyNotFound</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="kc">None</span>
-                <span class="k">raise</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RepositoryPolicyNotFoundException</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="k">return</span> <span class="n">r</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;fetching policy for </span><span class="si">%d</span><span class="s2"> repos&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">resources</span><span class="p">))</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
             <span class="n">resources</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_augment</span><span class="p">,</span> <span class="n">resources</span><span class="p">)))</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">ECRCrossAccountAccessFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span>
-            <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">ECRCrossAccountAccessFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div></div>
 
 
 <span class="n">LIFECYCLE_RULE_SCHEMA</span> <span class="o">=</span> <span class="p">{</span>
@@ -424,7 +465,7 @@
                         <span class="n">registryId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;registryId&#39;</span><span class="p">],</span>
                         <span class="n">repositoryName</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;repositoryName&#39;</span><span class="p">])</span>
                     <span class="k">continue</span>
-                <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RepositoryPolicyNotFoundException</span><span class="p">:</span>
+                <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">LifecyclePolicyNotFoundException</span><span class="p">:</span>
                     <span class="k">pass</span>
             <span class="n">client</span><span class="o">.</span><span class="n">put_lifecycle_policy</span><span class="p">(</span>
                 <span class="n">registryId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;registryId&#39;</span><span class="p">],</span>
@@ -468,13 +509,8 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">resource</span><span class="p">[</span><span class="s1">&#39;Policy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_repository_policy</span><span class="p">(</span>
                     <span class="n">repositoryName</span><span class="o">=</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;repositoryName&#39;</span><span class="p">])[</span><span class="s1">&#39;policyText&#39;</span><span class="p">]</span>
-            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">ErrPolicyNotFound</span><span class="p">:</span>
-                    <span class="k">raise</span>
-                <span class="n">resource</span><span class="p">[</span><span class="s1">&#39;Policy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">resource</span><span class="p">[</span><span class="s1">&#39;Policy&#39;</span><span class="p">]:</span>
-            <span class="k">return</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RepositoryPolicyNotFoundException</span><span class="p">:</span>
+                <span class="k">return</span>
 
         <span class="n">p</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;Policy&#39;</span><span class="p">])</span>
         <span class="n">statements</span><span class="p">,</span> <span class="n">found</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_policy</span><span class="p">(</span>
@@ -505,7 +541,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -524,21 +560,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/js/expand.js"></script>
+    
 
   
 

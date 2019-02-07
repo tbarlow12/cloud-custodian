@@ -113,10 +113,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/authentication.html#azure-storage-access">Azure Storage access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/policy/index.html">Policies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/advanced/index.html">Advanced Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#adding-new-azure-resources">Adding New Azure Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../azure/contribute.html#testing">Testing</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -201,8 +204,10 @@
 <span class="c1"># limitations under the License.</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
+<span class="kn">from</span> <span class="nn">dateutil.tz</span> <span class="k">import</span> <span class="n">tz</span>
+
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
-<span class="kn">from</span> <span class="nn">c7n.policy</span> <span class="k">import</span> <span class="n">execution</span><span class="p">,</span> <span class="n">ServerlessExecutionMode</span>
+<span class="kn">from</span> <span class="nn">c7n.policy</span> <span class="k">import</span> <span class="n">execution</span><span class="p">,</span> <span class="n">ServerlessExecutionMode</span><span class="p">,</span> <span class="n">PullMode</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span>
 
 <span class="kn">from</span> <span class="nn">c7n_gcp</span> <span class="k">import</span> <span class="n">mu</span>
@@ -211,13 +216,15 @@
 <div class="viewcode-block" id="FunctionMode"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.FunctionMode">[docs]</a><span class="k">class</span> <span class="nc">FunctionMode</span><span class="p">(</span><span class="n">ServerlessExecutionMode</span><span class="p">):</span>
 
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
-        <span class="s1">&#39;gcp-audit&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;gcp&#39;</span><span class="p">,</span>
         <span class="o">**</span><span class="p">{</span><span class="s1">&#39;execution-options&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">},</span>
            <span class="s1">&#39;timeout&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
            <span class="s1">&#39;memory-size&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">},</span>
            <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">},</span>
            <span class="s1">&#39;network&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+           <span class="s1">&#39;region&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
            <span class="s1">&#39;max-instances&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">},</span>
+           <span class="s1">&#39;service-account&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
            <span class="s1">&#39;environment&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">}})</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy</span><span class="p">):</span>
@@ -227,8 +234,54 @@
 <div class="viewcode-block" id="FunctionMode.run"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.FunctionMode.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;subclass responsibility&quot;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="FunctionMode.provision"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.FunctionMode.provision">[docs]</a>    <span class="k">def</span> <span class="nf">provision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Provisioning policy function </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">manager</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">CloudFunctionManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_function</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="FunctionMode.deprovision"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.FunctionMode.deprovision">[docs]</a>    <span class="k">def</span> <span class="nf">deprovision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">manager</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">CloudFunctionManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_function</span><span class="p">())</span></div>
+
 <div class="viewcode-block" id="FunctionMode.validate"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.FunctionMode.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+        <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;subclass responsibility&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PeriodicMode"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.PeriodicMode">[docs]</a><span class="nd">@execution</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;gcp-periodic&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PeriodicMode</span><span class="p">(</span><span class="n">FunctionMode</span><span class="p">,</span> <span class="n">PullMode</span><span class="p">):</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;gcp-periodic&#39;</span><span class="p">,</span>
+        <span class="n">rinherit</span><span class="o">=</span><span class="n">FunctionMode</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;schedule&#39;</span><span class="p">],</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;trigger-type&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;http&#39;</span><span class="p">,</span> <span class="s1">&#39;pubsub&#39;</span><span class="p">]},</span>
+           <span class="s1">&#39;tz&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+           <span class="s1">&#39;schedule&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}})</span>
+
+<div class="viewcode-block" id="PeriodicMode.validate"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.PeriodicMode.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;tz&#39;</span> <span class="ow">in</span> <span class="n">mode</span><span class="p">:</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
+                <span class="s2">&quot;policy:</span><span class="si">%s</span><span class="s2"> gcp-periodic invalid tz:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">mode</span><span class="p">[</span><span class="s1">&#39;tz&#39;</span><span class="p">]))</span>
+            <span class="c1"># We can&#39;t catch all errors statically, our local tz retrieval</span>
+            <span class="c1"># then the form gcp is using, ie. not all the same aliases are</span>
+            <span class="c1"># defined.</span>
+            <span class="n">tzinfo</span> <span class="o">=</span> <span class="n">tz</span><span class="o">.</span><span class="n">gettz</span><span class="p">(</span><span class="n">mode</span><span class="p">[</span><span class="s1">&#39;tz&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">tzinfo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">error</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">mu</span><span class="o">.</span><span class="n">PeriodicEvent</span><span class="p">(</span>
+            <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">session_factory</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">])]</span>
+        <span class="k">return</span> <span class="n">mu</span><span class="o">.</span><span class="n">PolicyFunction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="n">events</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PeriodicMode.run"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.PeriodicMode.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">PullMode</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ApiAuditMode"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.ApiAuditMode">[docs]</a><span class="nd">@execution</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;gcp-audit&#39;</span><span class="p">)</span>
@@ -245,6 +298,8 @@
 <div class="viewcode-block" id="ApiAuditMode.resolve_resources"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.ApiAuditMode.resolve_resources">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Resolve a gcp resource from its audit trail metadata.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resource_type</span><span class="o">.</span><span class="n">get_requires_event</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="n">event</span><span class="p">)]</span>
         <span class="n">resource_info</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;resource&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">resource_info</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s1">&#39;labels&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resource_info</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Could not find resource information in event&quot;</span><span class="p">)</span>
@@ -259,17 +314,8 @@
     <span class="k">def</span> <span class="nf">_get_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">mu</span><span class="o">.</span><span class="n">ApiSubscriber</span><span class="p">(</span>
             <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">session_factory</span><span class="p">),</span>
-            <span class="p">{</span><span class="s1">&#39;methods&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">][</span><span class="s1">&#39;methods&#39;</span><span class="p">]})]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">])]</span>
         <span class="k">return</span> <span class="n">mu</span><span class="o">.</span><span class="n">PolicyFunction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="n">events</span><span class="p">)</span>
-
-<div class="viewcode-block" id="ApiAuditMode.provision"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.ApiAuditMode.provision">[docs]</a>    <span class="k">def</span> <span class="nf">provision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Provisioning policy function </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">manager</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">CloudFunctionManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_function</span><span class="p">())</span></div>
-
-<div class="viewcode-block" id="ApiAuditMode.deprovision"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.ApiAuditMode.deprovision">[docs]</a>    <span class="k">def</span> <span class="nf">deprovision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">manager</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">CloudFunctionManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_function</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="ApiAuditMode.validate"><a class="viewcode-back" href="../../generated/gcp/c7n_gcp.html#c7n_gcp.policy.ApiAuditMode.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resource_type</span><span class="o">.</span><span class="n">get</span><span class="p">:</span>
@@ -307,7 +353,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Capital One Services, LLC.
+        &copy; Copyright 2017, Capital One Services, LLC
 
     </p>
   </div>
@@ -326,21 +372,15 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/expand.js"></script>
+    
 
   
 
