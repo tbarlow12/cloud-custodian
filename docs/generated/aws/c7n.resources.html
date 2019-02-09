@@ -5423,12 +5423,12 @@ so default to disabling context missing output.</p>
 <code class="descname">type</code><em class="property"> = 'function'</em><a class="headerlink" href="#c7n.resources.awslambda.AWSLambda.resource_type.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="c7n.resources.awslambda.AWSLambda.retry">
-<em class="property">static </em><code class="descname">retry</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#c7n.resources.awslambda.AWSLambda.retry" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="c7n.resources.awslambda.AWSLambda.resource_type.universal_taggable">
+<code class="descname">universal_taggable</code><em class="property"> = &lt;object object&gt;</em><a class="headerlink" href="#c7n.resources.awslambda.AWSLambda.resource_type.universal_taggable" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.resources.awslambda.AWSLambda.type">
@@ -5812,46 +5812,6 @@ s3 buckets.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="c7n.resources.awslambda.RemoveTag">
-<em class="property">class </em><code class="descclassname">c7n.resources.awslambda.</code><code class="descname">RemoveTag</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/awslambda.html#RemoveTag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.awslambda.RemoveTag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.tags.RemoveTag" title="c7n.tags.RemoveTag"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.tags.RemoveTag</span></code></a></p>
-<p>Action to remove tag(s) from Lambda Function(s)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">lambda-remove-old-tag</span>
-    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">lambda</span>
-    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="s">&quot;tag:OldTagKey&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
-    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">remove-tag</span>
-        <span class="l l-Scalar l-Scalar-Plain">tags</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">OldTagKey1</span><span class="p p-Indicator">,</span> <span class="nv">OldTagKey2</span><span class="p p-Indicator">]</span>
-</pre></div>
-</div>
-<dl class="attribute">
-<dt id="c7n.resources.awslambda.RemoveTag.permissions">
-<code class="descname">permissions</code><em class="property"> = ('lambda:UntagResource',)</em><a class="headerlink" href="#c7n.resources.awslambda.RemoveTag.permissions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="c7n.resources.awslambda.RemoveTag.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>functions</em>, <em>tag_keys</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/awslambda.html#RemoveTag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.awslambda.RemoveTag.process_resource_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="c7n.resources.awslambda.RemoveTag.type">
-<code class="descname">type</code><em class="property"> = 'remove-tag'</em><a class="headerlink" href="#c7n.resources.awslambda.RemoveTag.type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="c7n.resources.awslambda.ReservedConcurrency">
 <em class="property">class </em><code class="descclassname">c7n.resources.awslambda.</code><code class="descname">ReservedConcurrency</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/awslambda.html#ReservedConcurrency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.awslambda.ReservedConcurrency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.ValueFilter" title="c7n.filters.core.ValueFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.ValueFilter</span></code></a></p>
@@ -5957,80 +5917,6 @@ the resource.</p>
 <dl class="attribute">
 <dt id="c7n.resources.awslambda.SubnetFilter.type">
 <code class="descname">type</code><em class="property"> = 'subnet'</em><a class="headerlink" href="#c7n.resources.awslambda.SubnetFilter.type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="c7n.resources.awslambda.Tag">
-<em class="property">class </em><code class="descclassname">c7n.resources.awslambda.</code><code class="descname">Tag</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/awslambda.html#Tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.awslambda.Tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.tags.Tag" title="c7n.tags.Tag"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.tags.Tag</span></code></a></p>
-<p>Action to add tag(s) to Lambda Function(s)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">lambda-add-owner-tag</span>
-    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">lambda</span>
-    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="s">&quot;tag:OwnerName&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">missing</span>
-    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
-        <span class="l l-Scalar l-Scalar-Plain">key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">OwnerName</span>
-        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">OwnerName</span>
-</pre></div>
-</div>
-<dl class="attribute">
-<dt id="c7n.resources.awslambda.Tag.permissions">
-<code class="descname">permissions</code><em class="property"> = ('lambda:TagResource',)</em><a class="headerlink" href="#c7n.resources.awslambda.Tag.permissions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="c7n.resources.awslambda.Tag.process_resource_set">
-<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>functions</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/awslambda.html#Tag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.awslambda.Tag.process_resource_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="c7n.resources.awslambda.Tag.type">
-<code class="descname">type</code><em class="property"> = 'tag'</em><a class="headerlink" href="#c7n.resources.awslambda.Tag.type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="c7n.resources.awslambda.TagDelayedAction">
-<em class="property">class </em><code class="descclassname">c7n.resources.awslambda.</code><code class="descname">TagDelayedAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/awslambda.html#TagDelayedAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.awslambda.TagDelayedAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.tags.TagDelayedAction" title="c7n.tags.TagDelayedAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.tags.TagDelayedAction</span></code></a></p>
-<p>Action to specify an action to occur at a later date</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">lambda-delete-unused</span>
-    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">lambda</span>
-    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="s">&quot;tag:custodian_cleanup&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
-    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">mark-for-op</span>
-        <span class="l l-Scalar l-Scalar-Plain">tag</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">custodian_cleanup</span>
-        <span class="l l-Scalar l-Scalar-Plain">msg</span><span class="p p-Indicator">:</span> <span class="s">&quot;Unused</span><span class="nv"> </span><span class="s">lambda&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">op</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete</span>
-        <span class="l l-Scalar l-Scalar-Plain">days</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">7</span>
-</pre></div>
-</div>
-<dl class="attribute">
-<dt id="c7n.resources.awslambda.TagDelayedAction.type">
-<code class="descname">type</code><em class="property"> = 'mark-for-op'</em><a class="headerlink" href="#c7n.resources.awslambda.TagDelayedAction.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
