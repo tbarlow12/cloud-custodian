@@ -1170,6 +1170,11 @@ with the extant configuration.</p>
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.acm.Certificate.filter_registry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.resources.acm.Certificate.get_source">
+<code class="descname">get_source</code><span class="sig-paren">(</span><em>source_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/acm.html#Certificate.get_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.acm.Certificate.get_source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="class">
 <dt id="c7n.resources.acm.Certificate.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/acm.html#Certificate.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.acm.Certificate.resource_type" title="Permalink to this definition">¶</a></dt>
@@ -1219,11 +1224,32 @@ with the extant configuration.</p>
 <code class="descname">service</code><em class="property"> = 'acm'</em><a class="headerlink" href="#c7n.resources.acm.Certificate.resource_type.service" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="c7n.resources.acm.Certificate.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'certificate'</em><a class="headerlink" href="#c7n.resources.acm.Certificate.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.acm.Certificate.resource_type.universal_taggable">
+<code class="descname">universal_taggable</code><em class="property"> = &lt;object object&gt;</em><a class="headerlink" href="#c7n.resources.acm.Certificate.resource_type.universal_taggable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.resources.acm.Certificate.type">
 <code class="descname">type</code><em class="property"> = 'acm-certificate'</em><a class="headerlink" href="#c7n.resources.acm.Certificate.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.acm.DescribeCertificate">
+<em class="property">class </em><code class="descclassname">c7n.resources.acm.</code><code class="descname">DescribeCertificate</code><span class="sig-paren">(</span><em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/acm.html#DescribeCertificate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.acm.DescribeCertificate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.DescribeSource" title="c7n.query.DescribeSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.DescribeSource</span></code></a></p>
+<dl class="method">
+<dt id="c7n.resources.acm.DescribeCertificate.augment">
+<code class="descname">augment</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/acm.html#DescribeCertificate.augment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.acm.DescribeCertificate.augment" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -7541,10 +7567,20 @@ organizational trails.</p>
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.code.CodeBuildProject.filter_registry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.resources.code.CodeBuildProject.get_source">
+<code class="descname">get_source</code><span class="sig-paren">(</span><em>source_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/code.html#CodeBuildProject.get_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.code.CodeBuildProject.get_source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="class">
 <dt id="c7n.resources.code.CodeBuildProject.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/code.html#CodeBuildProject.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.code.CodeBuildProject.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.code.CodeBuildProject.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'arn'</em><a class="headerlink" href="#c7n.resources.code.CodeBuildProject.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.code.CodeBuildProject.resource_type.batch_detail_spec">
 <code class="descname">batch_detail_spec</code><em class="property"> = ('batch_get_projects', 'names', None, 'projects', None)</em><a class="headerlink" href="#c7n.resources.code.CodeBuildProject.resource_type.batch_detail_spec" title="Permalink to this definition">¶</a></dt>
@@ -7588,6 +7624,16 @@ organizational trails.</p>
 <dl class="attribute">
 <dt id="c7n.resources.code.CodeBuildProject.resource_type.service">
 <code class="descname">service</code><em class="property"> = 'codebuild'</em><a class="headerlink" href="#c7n.resources.code.CodeBuildProject.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.code.CodeBuildProject.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'project'</em><a class="headerlink" href="#c7n.resources.code.CodeBuildProject.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.code.CodeBuildProject.resource_type.universal_taggable">
+<code class="descname">universal_taggable</code><em class="property"> = &lt;object object&gt;</em><a class="headerlink" href="#c7n.resources.code.CodeBuildProject.resource_type.universal_taggable" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -7835,6 +7881,17 @@ organizational trails.</p>
 <dl class="attribute">
 <dt id="c7n.resources.code.DeleteRepository.type">
 <code class="descname">type</code><em class="property"> = 'delete'</em><a class="headerlink" href="#c7n.resources.code.DeleteRepository.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.code.DescribeBuild">
+<em class="property">class </em><code class="descclassname">c7n.resources.code.</code><code class="descname">DescribeBuild</code><span class="sig-paren">(</span><em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/code.html#DescribeBuild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.code.DescribeBuild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.DescribeSource" title="c7n.query.DescribeSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.DescribeSource</span></code></a></p>
+<dl class="method">
+<dt id="c7n.resources.code.DescribeBuild.augment">
+<code class="descname">augment</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/code.html#DescribeBuild.augment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.code.DescribeBuild.augment" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -9134,6 +9191,11 @@ s3 buckets.</p>
 <code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.action_registry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.resources.directory.CloudDirectory.augment">
+<code class="descname">augment</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.augment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.directory.CloudDirectory.filter_registry">
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.filter_registry" title="Permalink to this definition">¶</a></dt>
@@ -9144,13 +9206,18 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/directory.html#CloudDirectory.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.directory.CloudDirectory.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'DirectoryArn'</em><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.directory.CloudDirectory.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.resources.directory.CloudDirectory.resource_type.enum_spec">
-<code class="descname">enum_spec</code><em class="property"> = ('list_directories', 'Directories', None)</em><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<code class="descname">enum_spec</code><em class="property"> = ('list_directories', 'Directories', {'state': 'ENABLED'})</em><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -9171,6 +9238,16 @@ s3 buckets.</p>
 <dl class="attribute">
 <dt id="c7n.resources.directory.CloudDirectory.resource_type.service">
 <code class="descname">service</code><em class="property"> = 'clouddirectory'</em><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.directory.CloudDirectory.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'directory'</em><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.directory.CloudDirectory.resource_type.universal_taggable">
+<code class="descname">universal_taggable</code><em class="property"> = &lt;object object&gt;</em><a class="headerlink" href="#c7n.resources.directory.CloudDirectory.resource_type.universal_taggable" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

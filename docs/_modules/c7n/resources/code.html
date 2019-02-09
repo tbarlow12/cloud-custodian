@@ -211,7 +211,8 @@
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">BaseAction</span>
 <span class="kn">from</span> <span class="nn">c7n.filters.vpc</span> <span class="k">import</span> <span class="n">SubnetFilter</span><span class="p">,</span> <span class="n">SecurityGroupFilter</span><span class="p">,</span> <span class="n">VpcFilter</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
-<span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
+<span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span><span class="p">,</span> <span class="n">DescribeSource</span><span class="p">,</span> <span class="n">ConfigSource</span>
+<span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">universal_augment</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">get_retry</span><span class="p">,</span> <span class="n">type_schema</span>
 
 
@@ -276,10 +277,29 @@
         <span class="n">batch_detail_spec</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s1">&#39;batch_get_projects&#39;</span><span class="p">,</span> <span class="s1">&#39;names&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;projects&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">name</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;name&#39;</span>
+        <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;arn&#39;</span>
         <span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;created&#39;</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">config_type</span> <span class="o">=</span> <span class="s2">&quot;AWS::CodeBuild::Project&quot;</span></div></div>
+        <span class="n">config_type</span> <span class="o">=</span> <span class="s2">&quot;AWS::CodeBuild::Project&quot;</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;project&#39;</span>
+        <span class="n">universal_taggable</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CodeBuildProject.get_source"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.code.CodeBuildProject.get_source">[docs]</a>    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">source_type</span> <span class="o">==</span> <span class="s1">&#39;describe&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DescribeBuild</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">source_type</span> <span class="o">==</span> <span class="s1">&#39;config&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConfigSource</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported source: </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">source_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_type</span><span class="o">.</span><span class="n">config_type</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="DescribeBuild"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.code.DescribeBuild">[docs]</a><span class="k">class</span> <span class="nc">DescribeBuild</span><span class="p">(</span><span class="n">DescribeSource</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DescribeBuild.augment"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.code.DescribeBuild.augment">[docs]</a>    <span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">universal_augment</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="p">,</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">DescribeBuild</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">augment</span><span class="p">(</span><span class="n">resources</span><span class="p">))</span></div></div>
 
 
 <div class="viewcode-block" id="BuildSubnetFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.code.BuildSubnetFilter">[docs]</a><span class="nd">@CodeBuildProject</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;subnet&#39;</span><span class="p">)</span>

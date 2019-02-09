@@ -210,7 +210,7 @@
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span>
 <span class="kn">from</span> <span class="nn">c7n.filters.vpc</span> <span class="k">import</span> <span class="n">SecurityGroupFilter</span><span class="p">,</span> <span class="n">SubnetFilter</span><span class="p">,</span> <span class="n">VpcFilter</span>
-<span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">RemoveTag</span>
+<span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">RemoveTag</span><span class="p">,</span> <span class="n">universal_augment</span>
 
 
 <div class="viewcode-block" id="Directory"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.directory.Directory">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;directory&#39;</span><span class="p">)</span>
@@ -318,11 +318,15 @@
 
 <div class="viewcode-block" id="CloudDirectory.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.directory.CloudDirectory.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
         <span class="n">service</span> <span class="o">=</span> <span class="s2">&quot;clouddirectory&quot;</span>
-        <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;list_directories&quot;</span><span class="p">,</span> <span class="s2">&quot;Directories&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;DirectoryArn&quot;</span>
+        <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;list_directories&quot;</span><span class="p">,</span> <span class="s2">&quot;Directories&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="s1">&#39;ENABLED&#39;</span><span class="p">})</span>
+        <span class="n">arn</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;DirectoryArn&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Name&quot;</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+        <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;directory&quot;</span>
+        <span class="n">universal_taggable</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span></div>
+
+    <span class="n">augment</span> <span class="o">=</span> <span class="n">universal_augment</span></div>
 </pre></div>
 
            </div>

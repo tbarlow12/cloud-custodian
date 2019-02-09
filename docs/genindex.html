@@ -670,10 +670,10 @@
         <li><a href="generated/gcp/c7n_gcp.resources.html#c7n_gcp.resources.storage.Bucket.action_registry">(c7n_gcp.resources.storage.Bucket attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/aws/c7n.actions.html#c7n.actions.core.ActionRegistry">ActionRegistry (class in c7n.actions.core)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/aws/c7n.html#c7n.mu.BucketLambdaNotification.add">add() (c7n.mu.BucketLambdaNotification method)</a>
 
       <ul>
@@ -898,9 +898,13 @@
 </li>
       <li><a href="generated/azure/c7n_azure.resources.html#c7n_azure.resources.arm.ArmResourceManager.resource_type">ArmResourceManager.resource_type (class in c7n_azure.resources.arm)</a>
 </li>
-      <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.Group.resource_type.arn">arn (c7n.resources.iam.Group.resource_type attribute)</a>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.code.CodeBuildProject.resource_type.arn">arn (c7n.resources.code.CodeBuildProject.resource_type attribute)</a>
 
       <ul>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.directory.CloudDirectory.resource_type.arn">(c7n.resources.directory.CloudDirectory.resource_type attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.Group.resource_type.arn">(c7n.resources.iam.Group.resource_type attribute)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.InstanceProfile.resource_type.arn">(c7n.resources.iam.InstanceProfile.resource_type attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.Policy.resource_type.arn">(c7n.resources.iam.Policy.resource_type attribute)</a>
@@ -961,6 +965,8 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.S3PublicBlock.augment">(c7n.resources.account.S3PublicBlock method)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.acm.DescribeCertificate.augment">(c7n.resources.acm.DescribeCertificate method)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.apigw.DescribeRestResource.augment">(c7n.resources.apigw.DescribeRestResource method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.apigw.DescribeRestStage.augment">(c7n.resources.apigw.DescribeRestStage method)</a>
@@ -983,9 +989,13 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.cloudfront.DescribeStreamingDistribution.augment">(c7n.resources.cloudfront.DescribeStreamingDistribution method)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.code.DescribeBuild.augment">(c7n.resources.code.DescribeBuild method)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.cw.LogGroup.augment">(c7n.resources.cw.LogGroup method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.datapipeline.DataPipeline.augment">(c7n.resources.datapipeline.DataPipeline method)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.directory.CloudDirectory.augment">(c7n.resources.directory.CloudDirectory method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.directory.Directory.augment">(c7n.resources.directory.Directory method)</a>
 </li>
@@ -2965,6 +2975,10 @@
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.batch.DefinitionDeregister.deregister_definition">deregister_definition() (c7n.resources.batch.DefinitionDeregister method)</a>
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.appelb.DescribeAppElb">DescribeAppElb (class in c7n.resources.appelb)</a>
+</li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.code.DescribeBuild">DescribeBuild (class in c7n.resources.code)</a>
+</li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.acm.DescribeCertificate">DescribeCertificate (class in c7n.resources.acm)</a>
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.dynamodb.DescribeDaxCluster">DescribeDaxCluster (class in c7n.resources.dynamodb)</a>
 </li>
@@ -6173,6 +6187,8 @@
       <li><a href="generated/aws/c7n.html#c7n.query.QueryResourceManager.get_source">get_source() (c7n.query.QueryResourceManager method)</a>
 
       <ul>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.acm.Certificate.get_source">(c7n.resources.acm.Certificate method)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.appelb.AppELB.get_source">(c7n.resources.appelb.AppELB method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfig.get_source">(c7n.resources.asg.LaunchConfig method)</a>
@@ -6182,6 +6198,8 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.cloudfront.Distribution.get_source">(c7n.resources.cloudfront.Distribution method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.cloudfront.StreamingDistribution.get_source">(c7n.resources.cloudfront.StreamingDistribution method)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.code.CodeBuildProject.get_source">(c7n.resources.code.CodeBuildProject method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.dms.ReplicationInstance.get_source">(c7n.resources.dms.ReplicationInstance method)</a>
 </li>
@@ -13693,6 +13711,8 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.acm.Certificate.type">(c7n.resources.acm.Certificate attribute)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.acm.Certificate.resource_type.type">(c7n.resources.acm.Certificate.resource_type attribute)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ami.AMI.type">(c7n.resources.ami.AMI attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ami.AMI.resource_type.type">(c7n.resources.ami.AMI.resource_type attribute)</a>
@@ -13977,6 +13997,8 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.code.CodeBuildProject.type">(c7n.resources.code.CodeBuildProject attribute)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.code.CodeBuildProject.resource_type.type">(c7n.resources.code.CodeBuildProject.resource_type attribute)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.code.CodeDeployPipeline.type">(c7n.resources.code.CodeDeployPipeline attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.code.CodeRepository.type">(c7n.resources.code.CodeRepository attribute)</a>
@@ -14048,6 +14070,8 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.directconnect.DirectConnect.type">(c7n.resources.directconnect.DirectConnect attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.directory.CloudDirectory.type">(c7n.resources.directory.CloudDirectory attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.directory.CloudDirectory.resource_type.type">(c7n.resources.directory.CloudDirectory.resource_type attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.directory.Directory.type">(c7n.resources.directory.Directory attribute)</a>
 </li>
@@ -15404,14 +15428,20 @@
 </li>
       <li><a href="generated/aws/c7n.html#c7n.tags.universal_retry">universal_retry() (in module c7n.tags)</a>
 </li>
-      <li><a href="generated/aws/c7n.resources.html#c7n.resources.apigw.RestStage.resource_type.universal_taggable">universal_taggable (c7n.resources.apigw.RestStage.resource_type attribute)</a>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.acm.Certificate.resource_type.universal_taggable">universal_taggable (c7n.resources.acm.Certificate.resource_type attribute)</a>
 
       <ul>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.apigw.RestStage.resource_type.universal_taggable">(c7n.resources.apigw.RestStage.resource_type attribute)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.awslambda.AWSLambda.resource_type.universal_taggable">(c7n.resources.awslambda.AWSLambda.resource_type attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.cloudfront.Distribution.resource_type.universal_taggable">(c7n.resources.cloudfront.Distribution.resource_type attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.cloudfront.StreamingDistribution.resource_type.universal_taggable">(c7n.resources.cloudfront.StreamingDistribution.resource_type attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.code.CodeBuildProject.resource_type.universal_taggable">(c7n.resources.code.CodeBuildProject.resource_type attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.directory.CloudDirectory.resource_type.universal_taggable">(c7n.resources.directory.CloudDirectory.resource_type attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.elasticache.ElastiCacheCluster.resource_type.universal_taggable">(c7n.resources.elasticache.ElastiCacheCluster.resource_type attribute)</a>
 </li>
@@ -15468,10 +15498,10 @@
       </ul></li>
       <li><a href="generated/azure/c7n_azure.html#c7n_azure.tags.TagHelper.update_resource_tags">update_resource_tags() (c7n_azure.tags.TagHelper static method)</a>
 </li>
-      <li><a href="generated/aws/c7n.resources.html#c7n.resources.apigw.UpdateAccount">UpdateAccount (class in c7n.resources.apigw)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.apigw.UpdateAccount">UpdateAccount (class in c7n.resources.apigw)</a>
+</li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.UpdateAgent">UpdateAgent (class in c7n.resources.ecs)</a>
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.apigw.UpdateApi">UpdateApi (class in c7n.resources.apigw)</a>
