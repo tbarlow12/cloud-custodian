@@ -10090,6 +10090,17 @@ s3 buckets.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.dynamodb.ConfigTable">
+<em class="property">class </em><code class="descclassname">c7n.resources.dynamodb.</code><code class="descname">ConfigTable</code><span class="sig-paren">(</span><em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#ConfigTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.ConfigTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.ConfigSource" title="c7n.query.ConfigSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.ConfigSource</span></code></a></p>
+<dl class="method">
+<dt id="c7n.resources.dynamodb.ConfigTable.load_resource">
+<code class="descname">load_resource</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#ConfigTable.load_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.ConfigTable.load_resource" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.dynamodb.CreateBackup">
 <em class="property">class </em><code class="descclassname">c7n.resources.dynamodb.</code><code class="descname">CreateBackup</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#CreateBackup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.CreateBackup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.actions.html#c7n.actions.core.Action" title="c7n.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.core.Action</span></code></a>, <a class="reference internal" href="#c7n.resources.dynamodb.StatusFilter" title="c7n.resources.dynamodb.StatusFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.dynamodb.StatusFilter</span></code></a></p>
@@ -10540,6 +10551,16 @@ the backup prefix will default to ‘Backup’.</dd>
 <code class="descname">augment</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#DescribeTable.augment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.DescribeTable.augment" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.resources.dynamodb.DescribeTable.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><em>ids</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#DescribeTable.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.DescribeTable.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.dynamodb.DescribeTable.get_waiter">
+<code class="descname">get_waiter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#DescribeTable.get_waiter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.DescribeTable.get_waiter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -10559,11 +10580,6 @@ the backup prefix will default to ‘Backup’.</dd>
 <dl class="method">
 <dt id="c7n.resources.dynamodb.DynamoDbAccelerator.get_source">
 <code class="descname">get_source</code><span class="sig-paren">(</span><em>source_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#DynamoDbAccelerator.get_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.DynamoDbAccelerator.get_source" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="c7n.resources.dynamodb.DynamoDbAccelerator.log">
-<code class="descname">log</code><em class="property"> = &lt;Logger custodian.dax (DEBUG)&gt;</em><a class="headerlink" href="#c7n.resources.dynamodb.DynamoDbAccelerator.log" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -10626,11 +10642,6 @@ the backup prefix will default to ‘Backup’.</dd>
 <dd></dd></dl>
 
 </dd></dl>
-
-<dl class="staticmethod">
-<dt id="c7n.resources.dynamodb.DynamoDbAccelerator.retry">
-<em class="property">static </em><code class="descname">retry</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#c7n.resources.dynamodb.DynamoDbAccelerator.retry" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.resources.dynamodb.DynamoDbAccelerator.type">
@@ -10837,7 +10848,7 @@ of the kms key by using ‘c7n:AliasName’</p>
 
 <dl class="attribute">
 <dt id="c7n.resources.dynamodb.Table.permissions">
-<code class="descname">permissions</code><em class="property"> = 'dynamodb:ListTagsOfResource'</em><a class="headerlink" href="#c7n.resources.dynamodb.Table.permissions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">permissions</code><em class="property"> = ('dynamodb:ListTagsOfResource',)</em><a class="headerlink" href="#c7n.resources.dynamodb.Table.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
@@ -10895,11 +10906,6 @@ of the kms key by using ‘c7n:AliasName’</p>
 <dd></dd></dl>
 
 </dd></dl>
-
-<dl class="staticmethod">
-<dt id="c7n.resources.dynamodb.Table.retry">
-<em class="property">static </em><code class="descname">retry</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#c7n.resources.dynamodb.Table.retry" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.resources.dynamodb.Table.type">
