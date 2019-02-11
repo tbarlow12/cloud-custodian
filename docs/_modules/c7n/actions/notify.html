@@ -428,8 +428,10 @@
             <span class="n">topic_arn</span> <span class="o">=</span> <span class="n">topic</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">region</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">]</span>
-            <span class="n">topic_arn</span> <span class="o">=</span> <span class="s2">&quot;arn:aws:sns:</span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                <span class="n">message</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">],</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;account_id&#39;</span><span class="p">],</span> <span class="n">topic</span><span class="p">)</span>
+            <span class="n">topic_arn</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">generate_arn</span><span class="p">(</span>
+                <span class="n">service</span><span class="o">=</span><span class="s1">&#39;sns&#39;</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">topic</span><span class="p">,</span>
+                <span class="n">account_id</span><span class="o">=</span><span class="n">message</span><span class="p">[</span><span class="s1">&#39;account_id&#39;</span><span class="p">],</span>
+                <span class="n">region</span><span class="o">=</span><span class="n">message</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">])</span>
         <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">(</span>
             <span class="n">region</span><span class="o">=</span><span class="n">region</span><span class="p">,</span> <span class="n">assume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assume_role</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;sns&#39;</span><span class="p">)</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
@@ -459,7 +461,7 @@
         <span class="k">elif</span> <span class="n">queue</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;https://sqs.&#39;</span><span class="p">):</span>
             <span class="n">region</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">queue_url</span> <span class="o">=</span> <span class="n">queue</span>
-        <span class="k">elif</span> <span class="n">queue</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;arn:aws:sqs&#39;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="n">queue</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;arn:&#39;</span><span class="p">):</span>
             <span class="n">queue_arn_split</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
             <span class="n">region</span> <span class="o">=</span> <span class="n">queue_arn_split</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
             <span class="n">owner_id</span> <span class="o">=</span> <span class="n">queue_arn_split</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>

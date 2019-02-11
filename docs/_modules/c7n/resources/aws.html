@@ -207,7 +207,7 @@
 
 <span class="kn">from</span> <span class="nn">c7n.provider</span> <span class="k">import</span> <span class="n">clouds</span>
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">namedtuple</span>
 <span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
@@ -321,6 +321,25 @@
     <span class="n">report</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">has_errors</span><span class="p">():</span>
         <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">generate_report</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Arn"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.aws.Arn">[docs]</a><span class="k">class</span> <span class="nc">Arn</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;_Arn&#39;</span><span class="p">,</span> <span class="p">(</span>
+        <span class="s1">&#39;arn&#39;</span><span class="p">,</span> <span class="s1">&#39;partition&#39;</span><span class="p">,</span> <span class="s1">&#39;service&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;account_id&#39;</span><span class="p">,</span> <span class="s1">&#39;resource&#39;</span><span class="p">,</span> <span class="s1">&#39;resource_type&#39;</span><span class="p">))):</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+
+<div class="viewcode-block" id="Arn.parse"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.aws.Arn.parse">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">arn</span><span class="p">):</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">arn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="c1"># a few resources use qualifiers without specifying type</span>
+        <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="s1">&#39;apigateway&#39;</span><span class="p">,</span> <span class="s1">&#39;execute-api&#39;</span><span class="p">):</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">parts</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">parts</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="n">parts</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="MetricsOutput"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.aws.MetricsOutput">[docs]</a><span class="nd">@metrics_outputs</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;aws&#39;</span><span class="p">)</span>

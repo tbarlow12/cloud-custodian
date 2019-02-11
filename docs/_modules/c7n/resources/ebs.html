@@ -217,10 +217,10 @@
 <span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="k">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">parse_date</span>
 <span class="kn">import</span> <span class="nn">six</span>
 
-<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">ActionRegistry</span><span class="p">,</span> <span class="n">BaseAction</span>
+<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">BaseAction</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
 <span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">CrossAccountAccessFilter</span><span class="p">,</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">FilterRegistry</span><span class="p">,</span> <span class="n">AgeFilter</span><span class="p">,</span> <span class="n">ValueFilter</span><span class="p">,</span>
+    <span class="n">CrossAccountAccessFilter</span><span class="p">,</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">AgeFilter</span><span class="p">,</span> <span class="n">ValueFilter</span><span class="p">,</span>
     <span class="n">ANNOTATION_KEY</span><span class="p">,</span> <span class="n">OPERATORS</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">c7n.filters.health</span> <span class="k">import</span> <span class="n">HealthEventFilter</span>
 
@@ -234,14 +234,11 @@
     <span class="n">local_session</span><span class="p">,</span>
     <span class="n">set_annotation</span><span class="p">,</span>
     <span class="n">type_schema</span><span class="p">,</span>
-    <span class="n">worker</span><span class="p">,</span>
+    <span class="n">QueryParser</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">c7n.resources.ami</span> <span class="k">import</span> <span class="n">AMI</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;custodian.ebs&#39;</span><span class="p">)</span>
-
-<span class="n">filters</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="p">(</span><span class="s1">&#39;ebs.filters&#39;</span><span class="p">)</span>
-<span class="n">actions</span> <span class="o">=</span> <span class="n">ActionRegistry</span><span class="p">(</span><span class="s1">&#39;ebs.actions&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Snapshot"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.Snapshot">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;ebs-snapshot&#39;</span><span class="p">)</span>
@@ -269,11 +266,8 @@
             <span class="s1">&#39;State&#39;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-    <span class="n">filter_registry</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="p">(</span><span class="s1">&#39;ebs-snapshot.filters&#39;</span><span class="p">)</span>
-    <span class="n">action_registry</span> <span class="o">=</span> <span class="n">ActionRegistry</span><span class="p">(</span><span class="s1">&#39;ebs-snapshot.actions&#39;</span><span class="p">)</span>
-
 <div class="viewcode-block" id="Snapshot.resources"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.Snapshot.resources">[docs]</a>    <span class="k">def</span> <span class="nf">resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">qfilters</span> <span class="o">=</span> <span class="n">QueryParser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+        <span class="n">qfilters</span> <span class="o">=</span> <span class="n">SnapshotQueryParser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="p">[]))</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">query</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">qfilters</span><span class="p">:</span>
             <span class="n">query</span><span class="p">[</span><span class="s1">&#39;Filters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qfilters</span>
@@ -282,7 +276,7 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Snapshot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">resources</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="QueryParser"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.QueryParser">[docs]</a><span class="k">class</span> <span class="nc">QueryParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="SnapshotQueryParser"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.SnapshotQueryParser">[docs]</a><span class="k">class</span> <span class="nc">SnapshotQueryParser</span><span class="p">(</span><span class="n">QueryParser</span><span class="p">):</span>
 
     <span class="n">QuerySchema</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
@@ -298,50 +292,7 @@
         <span class="s1">&#39;volume-size&#39;</span><span class="p">:</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span>
     <span class="p">}</span>
 
-<div class="viewcode-block" id="QueryParser.parse"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.QueryParser.parse">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="n">filters</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-            <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
-                <span class="s2">&quot;EBS Query invalid format, must be array of dicts </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                    <span class="n">data</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
-                    <span class="s2">&quot;EBS Query Filter Invalid </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">data</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s2">&quot;Name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d</span> <span class="ow">or</span> <span class="s2">&quot;Values&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
-                    <span class="s2">&quot;EBS Query Filter Invalid Missing Key, Values in </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">data</span><span class="p">)</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span>
-
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">QuerySchema</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;tag:&#39;</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
-                    <span class="s2">&quot;EBS Query Filter Invalid Key:</span><span class="si">%s</span><span class="s2"> Valid: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                        <span class="n">key</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">QuerySchema</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
-
-            <span class="n">vtype</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">QuerySchema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">vtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">):</span>
-                <span class="n">vtype</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
-                    <span class="s2">&quot;EBS Query Filter Invalid Values, must be array </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">data</span><span class="p">,))</span>
-
-            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vtype</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="n">vtype</span> <span class="o">!=</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vtype</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
-                            <span class="s2">&quot;EBS Query Filter Invalid Value: </span><span class="si">%s</span><span class="s2"> Valid: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                                <span class="n">v</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">vtype</span><span class="p">)))</span>
-                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">vtype</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">PolicyValidationError</span><span class="p">(</span>
-                        <span class="s2">&quot;EBS Query Filter Invalid Value Type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">data</span><span class="p">,))</span>
-
-            <span class="n">filters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">filters</span></div></div>
+    <span class="n">type_name</span> <span class="o">=</span> <span class="s1">&#39;EBS&#39;</span></div>
 
 
 <div class="viewcode-block" id="SnapshotAge"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.SnapshotAge">[docs]</a><span class="nd">@Snapshot</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">)</span>
@@ -524,8 +475,7 @@
                             <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">()))</span>
         <span class="k">return</span> <span class="n">snapshots</span></div>
 
-<div class="viewcode-block" id="SnapshotDelete.process_snapshot_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.SnapshotDelete.process_snapshot_set">[docs]</a>    <span class="nd">@worker</span>
-    <span class="k">def</span> <span class="nf">process_snapshot_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">snapshots_set</span><span class="p">):</span>
+<div class="viewcode-block" id="SnapshotDelete.process_snapshot_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.SnapshotDelete.process_snapshot_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_snapshot_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">snapshots_set</span><span class="p">):</span>
         <span class="n">retry</span> <span class="o">=</span> <span class="n">get_retry</span><span class="p">((</span>
             <span class="s1">&#39;RequestLimitExceeded&#39;</span><span class="p">,</span> <span class="s1">&#39;Client.RequestLimitExceeded&#39;</span><span class="p">))</span>
 
@@ -593,8 +543,7 @@
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
             <span class="nb">list</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_resource_set</span><span class="p">,</span> <span class="n">chunks</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="mi">20</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="CopySnapshot.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.CopySnapshot.process_resource_set">[docs]</a>    <span class="nd">@worker</span>
-    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">):</span>
+<div class="viewcode-block" id="CopySnapshot.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.CopySnapshot.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">):</span>
         <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">(</span>
             <span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;target_region&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ec2&#39;</span><span class="p">)</span>
 
@@ -652,10 +601,7 @@
             <span class="s1">&#39;Size&#39;</span><span class="p">,</span>
             <span class="s1">&#39;VolumeType&#39;</span><span class="p">,</span>
             <span class="s1">&#39;KmsKeyId&#39;</span>
-        <span class="p">)</span></div>
-
-    <span class="n">filter_registry</span> <span class="o">=</span> <span class="n">filters</span>
-    <span class="n">action_registry</span> <span class="o">=</span> <span class="n">actions</span></div>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="VolumeDetach"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.VolumeDetach">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;detach&#39;</span><span class="p">)</span>
@@ -695,7 +641,7 @@
                                 <span class="n">Force</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;force&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span></div></div>
 
 
-<div class="viewcode-block" id="AttachedInstanceFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.AttachedInstanceFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;instance&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="AttachedInstanceFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.AttachedInstanceFilter">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;instance&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">AttachedInstanceFilter</span><span class="p">(</span><span class="n">ValueFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter volumes based on filtering on their attached instance</span>
 
@@ -739,14 +685,14 @@
         <span class="k">return</span> <span class="p">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;InstanceId&#39;</span><span class="p">]:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">}</span></div></div>
 
 
-<div class="viewcode-block" id="KmsKeyAlias"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.KmsKeyAlias">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;kms-alias&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="KmsKeyAlias"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.KmsKeyAlias">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;kms-alias&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">KmsKeyAlias</span><span class="p">(</span><span class="n">ResourceKmsKeyAlias</span><span class="p">):</span>
 
 <div class="viewcode-block" id="KmsKeyAlias.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.KmsKeyAlias.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matching_aliases</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="FaultTolerantSnapshots"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.FaultTolerantSnapshots">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;fault-tolerant&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="FaultTolerantSnapshots"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.FaultTolerantSnapshots">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;fault-tolerant&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">FaultTolerantSnapshots</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This filter will return any EBS volume that does/does not have a</span>
@@ -782,7 +728,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;VolumeId&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">flagged</span><span class="p">]</span></div></div>
 
 
-<div class="viewcode-block" id="HealthFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.HealthFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;health-event&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="HealthFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.HealthFilter">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;health-event&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">HealthFilter</span><span class="p">(</span><span class="n">HealthEventFilter</span><span class="p">):</span>
 
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
@@ -836,7 +782,7 @@
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;VolumeId&quot;</span><span class="p">:</span> <span class="n">rid</span><span class="p">}</span></div></div>
 
 
-<div class="viewcode-block" id="CopyInstanceTags"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.CopyInstanceTags">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;copy-instance-tags&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="CopyInstanceTags"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.CopyInstanceTags">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;copy-instance-tags&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">CopyInstanceTags</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Copy instance tags to its attached volume.</span>
 
@@ -973,7 +919,7 @@
         <span class="k">return</span> <span class="n">copy_tags</span></div></div>
 
 
-<div class="viewcode-block" id="EncryptInstanceVolumes"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.EncryptInstanceVolumes">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;encrypt-instance-volumes&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="EncryptInstanceVolumes"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.EncryptInstanceVolumes">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;encrypt-instance-volumes&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">EncryptInstanceVolumes</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Encrypt extant volumes attached to an instance</span>
 
@@ -1253,7 +1199,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Instance: </span><span class="si">%s</span><span class="s2"> stopped&quot;</span> <span class="o">%</span> <span class="n">instance_id</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="CreateSnapshot"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.CreateSnapshot">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;snapshot&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="CreateSnapshot"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.CreateSnapshot">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;snapshot&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">CreateSnapshot</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Snapshot an EBS volume</span>
 
@@ -1281,7 +1227,7 @@
             <span class="n">retry</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">create_snapshot</span><span class="p">,</span> <span class="n">VolumeId</span><span class="o">=</span><span class="n">vol_id</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="Delete"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.Delete">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Delete"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.Delete">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Delete</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Delete an ebs volume.</span>
 
@@ -1334,7 +1280,7 @@
             <span class="k">raise</span></div></div>
 
 
-<div class="viewcode-block" id="ModifyableVolume"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.ModifyableVolume">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;modifyable&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="ModifyableVolume"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.ModifyableVolume">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;modifyable&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ModifyableVolume</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check if an ebs volume is modifyable online.</span>
 
@@ -1433,7 +1379,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;VolumeId&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">modifying</span><span class="p">]</span></div></div>
 
 
-<div class="viewcode-block" id="ModifyVolume"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.ModifyVolume">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;modify&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="ModifyVolume"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ebs.ModifyVolume">[docs]</a><span class="nd">@EBS</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;modify&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ModifyVolume</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Modify an ebs volume online.</span>
 

@@ -5199,6 +5199,17 @@ region from the partition must be passed in.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.aws.Arn">
+<em class="property">class </em><code class="descclassname">c7n.resources.aws.</code><code class="descname">Arn</code><a class="reference internal" href="../../_modules/c7n/resources/aws.html#Arn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.aws.Arn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.aws._Arn</span></code></p>
+<dl class="classmethod">
+<dt id="c7n.resources.aws.Arn.parse">
+<em class="property">classmethod </em><code class="descname">parse</code><span class="sig-paren">(</span><em>arn</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/aws.html#Arn.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.aws.Arn.parse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.aws.CloudWatchLogOutput">
 <em class="property">class </em><code class="descclassname">c7n.resources.aws.</code><code class="descname">CloudWatchLogOutput</code><span class="sig-paren">(</span><em>ctx</em>, <em>config=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/aws.html#CloudWatchLogOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.aws.CloudWatchLogOutput" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.output.LogOutput" title="c7n.output.LogOutput"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.output.LogOutput</span></code></a></p>
@@ -11660,22 +11671,6 @@ Current Generation Instances (2017-2)
 </dd></dl>
 
 <dl class="class">
-<dt id="c7n.resources.ebs.QueryParser">
-<em class="property">class </em><code class="descclassname">c7n.resources.ebs.</code><code class="descname">QueryParser</code><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#QueryParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.QueryParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="attribute">
-<dt id="c7n.resources.ebs.QueryParser.QuerySchema">
-<code class="descname">QuerySchema</code><em class="property"> = {'description': (&lt;class 'str'&gt;,), 'owner-alias': ('amazon', 'amazon-marketplace', 'microsoft'), 'owner-id': (&lt;class 'str'&gt;,), 'progress': (&lt;class 'str'&gt;,), 'snapshot-id': (&lt;class 'str'&gt;,), 'start-time': (&lt;class 'str'&gt;,), 'status': ('pending', 'completed', 'error'), 'tag': (&lt;class 'str'&gt;,), 'tag-key': (&lt;class 'str'&gt;,), 'volume-id': (&lt;class 'str'&gt;,), 'volume-size': (&lt;class 'str'&gt;,)}</em><a class="headerlink" href="#c7n.resources.ebs.QueryParser.QuerySchema" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="classmethod">
-<dt id="c7n.resources.ebs.QueryParser.parse">
-<em class="property">classmethod </em><code class="descname">parse</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#QueryParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.QueryParser.parse" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="c7n.resources.ebs.Snapshot">
 <em class="property">class </em><code class="descclassname">c7n.resources.ebs.</code><code class="descname">Snapshot</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#Snapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.Snapshot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.QueryResourceManager" title="c7n.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.QueryResourceManager</span></code></a></p>
@@ -11876,6 +11871,22 @@ Current Generation Instances (2017-2)
 <dl class="attribute">
 <dt id="c7n.resources.ebs.SnapshotDelete.type">
 <code class="descname">type</code><em class="property"> = 'delete'</em><a class="headerlink" href="#c7n.resources.ebs.SnapshotDelete.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.ebs.SnapshotQueryParser">
+<em class="property">class </em><code class="descclassname">c7n.resources.ebs.</code><code class="descname">SnapshotQueryParser</code><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#SnapshotQueryParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.SnapshotQueryParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.utils.QueryParser" title="c7n.utils.QueryParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.utils.QueryParser</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n.resources.ebs.SnapshotQueryParser.QuerySchema">
+<code class="descname">QuerySchema</code><em class="property"> = {'description': (&lt;class 'str'&gt;,), 'owner-alias': ('amazon', 'amazon-marketplace', 'microsoft'), 'owner-id': (&lt;class 'str'&gt;,), 'progress': (&lt;class 'str'&gt;,), 'snapshot-id': (&lt;class 'str'&gt;,), 'start-time': (&lt;class 'str'&gt;,), 'status': ('pending', 'completed', 'error'), 'tag': (&lt;class 'str'&gt;,), 'tag-key': (&lt;class 'str'&gt;,), 'volume-id': (&lt;class 'str'&gt;,), 'volume-size': (&lt;class 'str'&gt;,)}</em><a class="headerlink" href="#c7n.resources.ebs.SnapshotQueryParser.QuerySchema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ebs.SnapshotQueryParser.type_name">
+<code class="descname">type_name</code><em class="property"> = 'EBS'</em><a class="headerlink" href="#c7n.resources.ebs.SnapshotQueryParser.type_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -19099,6 +19110,11 @@ into boolean values.</p>
 <code class="descname">get_resources</code><span class="sig-paren">(</span><em>resource_ids</em>, <em>cache=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#DescribePolicy.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.DescribePolicy.get_resources" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.resources.iam.DescribePolicy.resources">
+<code class="descname">resources</code><span class="sig-paren">(</span><em>query=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#DescribePolicy.resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.DescribePolicy.resources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -19721,6 +19737,27 @@ False: Filter users that do not have an inline-policy</p>
 <dl class="attribute">
 <dt id="c7n.resources.iam.PolicyDelete.type">
 <code class="descname">type</code><em class="property"> = 'delete'</em><a class="headerlink" href="#c7n.resources.iam.PolicyDelete.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.iam.PolicyQueryParser">
+<em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">PolicyQueryParser</code><a class="reference internal" href="../../_modules/c7n/resources/iam.html#PolicyQueryParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.PolicyQueryParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.utils.QueryParser" title="c7n.utils.QueryParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.utils.QueryParser</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n.resources.iam.PolicyQueryParser.QuerySchema">
+<code class="descname">QuerySchema</code><em class="property"> = {'OnlyAttached': &lt;class 'bool'&gt;, 'PathPrefix': (&lt;class 'str'&gt;,), 'PolicyUsageFilter': ('PermissionsPolicy', 'PermissionsBoundary'), 'Scope': ('All', 'AWS', 'Local')}</em><a class="headerlink" href="#c7n.resources.iam.PolicyQueryParser.QuerySchema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.PolicyQueryParser.multi_value">
+<code class="descname">multi_value</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.iam.PolicyQueryParser.multi_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.PolicyQueryParser.value_key">
+<code class="descname">value_key</code><em class="property"> = 'Value'</em><a class="headerlink" href="#c7n.resources.iam.PolicyQueryParser.value_key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

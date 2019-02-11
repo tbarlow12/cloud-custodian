@@ -1076,7 +1076,8 @@
 
         <span class="n">instance</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;AwsEc2Instance&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:ec2:</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">:instance/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:</span><span class="si">{}</span><span class="s2">:ec2:</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">:instance/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">utils</span><span class="o">.</span><span class="n">REGION_PARTITION_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="s1">&#39;aws&#39;</span><span class="p">),</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
                 <span class="n">r</span><span class="p">[</span><span class="s2">&quot;InstanceId&quot;</span><span class="p">]),</span>
@@ -1606,7 +1607,9 @@
                 <span class="n">AlarmDescription</span><span class="o">=</span><span class="s1">&#39;Auto Recover </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;InstanceId&#39;</span><span class="p">]),</span>
                 <span class="n">ActionsEnabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">AlarmActions</span><span class="o">=</span><span class="p">[</span>
-                    <span class="s1">&#39;arn:aws:automate:</span><span class="si">{}</span><span class="s1">:ec2:recover&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s1">&#39;arn:</span><span class="si">{}</span><span class="s1">:automate:</span><span class="si">{}</span><span class="s1">:ec2:recover&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">utils</span><span class="o">.</span><span class="n">REGION_PARTITION_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="s1">&#39;aws&#39;</span><span class="p">),</span>
                         <span class="n">i</span><span class="p">[</span><span class="s1">&#39;Placement&#39;</span><span class="p">][</span><span class="s1">&#39;AvailabilityZone&#39;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
                 <span class="p">],</span>
                 <span class="n">MetricName</span><span class="o">=</span><span class="s1">&#39;StatusCheckFailed_System&#39;</span><span class="p">,</span>
