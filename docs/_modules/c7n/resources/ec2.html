@@ -1948,6 +1948,83 @@
             <span class="n">keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;InstanceId&#39;</span><span class="p">)</span>
             <span class="n">resource</span><span class="p">[</span><span class="s1">&#39;c7n:attribute-</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">attribute</span><span class="p">]</span> <span class="o">=</span> <span class="n">fetched_attribute</span><span class="p">[</span>
                 <span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span></div></div>
+
+
+<div class="viewcode-block" id="LaunchTemplate"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.LaunchTemplate">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;launch-template-version&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LaunchTemplate</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">QueryResourceManager</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LaunchTemplate.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.LaunchTemplate.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;LaunchTemplateName&#39;</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;ec2&#39;</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;CreateTime&#39;</span>
+        <span class="n">dimension</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span>
+        <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;describe_launch_templates&#39;</span><span class="p">,</span> <span class="s1">&#39;LaunchTemplates&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">filter_name</span> <span class="o">=</span> <span class="s1">&#39;LaunchTemplateIds&#39;</span>
+        <span class="n">filter_type</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span></div>
+
+<div class="viewcode-block" id="LaunchTemplate.augment"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.LaunchTemplate.augment">[docs]</a>    <span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">local_session</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ec2&#39;</span><span class="p">)</span>
+        <span class="n">template_versions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">template_versions</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">describe_launch_template_versions</span><span class="p">(</span>
+                    <span class="n">LaunchTemplateId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LaunchTemplateId&#39;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">template_versions</span></div>
+
+<div class="viewcode-block" id="LaunchTemplate.get_resources"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.LaunchTemplate.get_resources">[docs]</a>    <span class="k">def</span> <span class="nf">get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rids</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="c1"># Launch template versions have a compound primary key</span>
+        <span class="c1">#</span>
+        <span class="c1"># Support one of four forms of resource ids:</span>
+        <span class="c1">#</span>
+        <span class="c1">#  - array of launch template ids</span>
+        <span class="c1">#  - array of tuples (launch template id, version id)</span>
+        <span class="c1">#  - array of dicts (with LaunchTemplateId and VersionNumber)</span>
+        <span class="c1">#  - array of dicts (with LaunchTemplateId and LatestVersionNumber)</span>
+        <span class="c1">#</span>
+        <span class="c1"># If an alias version is given $Latest, $Default, the alias will be</span>
+        <span class="c1"># preserved as an annotation on the returned object &#39;c7n:VersionAlias&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">rids</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="n">t_versions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rids</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">tversion</span> <span class="ow">in</span> <span class="n">rids</span><span class="p">:</span>
+                <span class="n">t_versions</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tversion</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rids</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">tinfo</span> <span class="ow">in</span> <span class="n">rids</span><span class="p">:</span>
+                <span class="n">t_versions</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+                    <span class="n">tinfo</span><span class="p">[</span><span class="s1">&#39;LaunchTemplateId&#39;</span><span class="p">],</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">tinfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;VersionNumber&#39;</span><span class="p">,</span> <span class="n">tinfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LatestVersionNumber&#39;</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rids</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="n">rids</span><span class="p">:</span>
+                <span class="n">t_versions</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ec2&#39;</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># We may end up fetching duplicates on $Latest and $Version</span>
+        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">tversions</span> <span class="ow">in</span> <span class="n">t_versions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">tversion</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">tversions</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">describe_launch_template_versions</span><span class="p">(</span>
+                    <span class="n">LaunchTemplateId</span><span class="o">=</span><span class="n">tid</span><span class="p">,</span> <span class="n">Versions</span><span class="o">=</span><span class="n">tversions</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="s1">&#39;LaunchTemplateVersions&#39;</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">tversion</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                    <span class="n">t</span><span class="p">[</span><span class="s1">&#39;c7n:VersionAlias&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tversion</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span></div>
+
+<div class="viewcode-block" id="LaunchTemplate.get_asg_templates"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.LaunchTemplate.get_asg_templates">[docs]</a>    <span class="k">def</span> <span class="nf">get_asg_templates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
+        <span class="n">templates</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asgs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;LaunchTemplate&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;LaunchTemplate&#39;</span><span class="p">]</span>
+            <span class="n">templates</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;LaunchTemplateId&#39;</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Version&#39;</span><span class="p">]),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">a</span><span class="p">[</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">templates</span></div></div>
 </pre></div>
 
            </div>

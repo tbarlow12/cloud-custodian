@@ -219,32 +219,20 @@
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">ActionRegistry</span>
+<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">Action</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
-<span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">FilterRegistry</span><span class="p">,</span> <span class="n">ValueFilter</span><span class="p">,</span> <span class="n">AgeFilter</span><span class="p">,</span> <span class="n">Filter</span><span class="p">,</span>
-    <span class="n">OPERATORS</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">ValueFilter</span><span class="p">,</span> <span class="n">AgeFilter</span><span class="p">,</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">OPERATORS</span>
 <span class="kn">from</span> <span class="nn">c7n.filters.offhours</span> <span class="k">import</span> <span class="n">OffHour</span><span class="p">,</span> <span class="n">OnHour</span><span class="p">,</span> <span class="n">Time</span>
 <span class="kn">import</span> <span class="nn">c7n.filters.vpc</span> <span class="k">as</span> <span class="nn">net_filters</span>
 
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n</span> <span class="k">import</span> <span class="n">query</span>
 <span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">TagActionFilter</span><span class="p">,</span> <span class="n">DEFAULT_TAG</span><span class="p">,</span> <span class="n">TagCountFilter</span><span class="p">,</span> <span class="n">TagTrim</span>
-<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">get_retry</span><span class="p">,</span> <span class="n">worker</span><span class="p">)</span>
-
+<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">get_retry</span>
 
 <span class="kn">from</span> <span class="nn">.ec2</span> <span class="k">import</span> <span class="n">deserialize_user_data</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;custodian.asg&#39;</span><span class="p">)</span>
-
-<span class="n">filters</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="p">(</span><span class="s1">&#39;asg.filters&#39;</span><span class="p">)</span>
-<span class="n">actions</span> <span class="o">=</span> <span class="n">ActionRegistry</span><span class="p">(</span><span class="s1">&#39;asg.actions&#39;</span><span class="p">)</span>
-
-<span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;offhour&#39;</span><span class="p">,</span> <span class="n">OffHour</span><span class="p">)</span>
-<span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;onhour&#39;</span><span class="p">,</span> <span class="n">OnHour</span><span class="p">)</span>
-<span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag-count&#39;</span><span class="p">,</span> <span class="n">TagCountFilter</span><span class="p">)</span>
-<span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ASG"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ASG">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;asg&#39;</span><span class="p">)</span>
@@ -271,71 +259,133 @@
             <span class="s1">&#39;list:LoadBalancerNames&#39;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-    <span class="n">filter_registry</span> <span class="o">=</span> <span class="n">filters</span>
-    <span class="n">action_registry</span> <span class="o">=</span> <span class="n">actions</span>
-
     <span class="n">retry</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">get_retry</span><span class="p">((</span><span class="s1">&#39;ResourceInUse&#39;</span><span class="p">,</span> <span class="s1">&#39;Throttling&#39;</span><span class="p">,)))</span></div>
 
 
-<div class="viewcode-block" id="LaunchConfigFilterBase"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfigFilterBase">[docs]</a><span class="k">class</span> <span class="nc">LaunchConfigFilterBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Mixin base class for querying asg launch configs.&quot;&quot;&quot;</span>
+<span class="n">ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;offhour&#39;</span><span class="p">,</span> <span class="n">OffHour</span><span class="p">)</span>
+<span class="n">ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;onhour&#39;</span><span class="p">,</span> <span class="n">OnHour</span><span class="p">)</span>
+<span class="n">ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag-count&#39;</span><span class="p">,</span> <span class="n">TagCountFilter</span><span class="p">)</span>
+<span class="n">ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">)</span>
+<span class="n">ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;network-location&#39;</span><span class="p">,</span> <span class="n">net_filters</span><span class="o">.</span><span class="n">NetworkLocation</span><span class="p">)</span>
 
-    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;autoscaling:DescribeLaunchConfigurations&quot;</span><span class="p">,)</span>
-    <span class="n">configs</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="LaunchConfigFilterBase.initialize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfigFilterBase.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get launch configs for the set of asgs&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LaunchInfo"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchInfo">[docs]</a><span class="k">class</span> <span class="nc">LaunchInfo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;ec2:DescribeLaunchTemplateVersions&quot;</span><span class="p">,</span>
+                   <span class="s2">&quot;autoscaling:DescribeLaunchConfigurations&quot;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">manager</span>
+
+<div class="viewcode-block" id="LaunchInfo.initialize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchInfo.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">templates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_launch_templates</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_launch_configs</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="LaunchInfo.get_launch_templates"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchInfo.get_launch_templates">[docs]</a>    <span class="k">def</span> <span class="nf">get_launch_templates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
+        <span class="n">tmpl_mgr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;launch-template-version&#39;</span><span class="p">)</span>
+        <span class="c1"># template ids include version identifiers</span>
+        <span class="n">template_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmpl_mgr</span><span class="o">.</span><span class="n">get_asg_templates</span><span class="p">(</span><span class="n">asgs</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_ids</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;LaunchTemplateId&#39;</span><span class="p">],</span>
+             <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c7n:VersionAlias&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;VersionNumber&#39;</span><span class="p">])):</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;LaunchTemplateData&#39;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tmpl_mgr</span><span class="o">.</span><span class="n">get_resources</span><span class="p">(</span><span class="n">template_ids</span><span class="p">)}</span></div>
+
+<div class="viewcode-block" id="LaunchInfo.get_launch_configs"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchInfo.get_launch_configs">[docs]</a>    <span class="k">def</span> <span class="nf">get_launch_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a mapping of launch configs for the given set of asgs&quot;&quot;&quot;</span>
         <span class="n">config_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">skip</span> <span class="o">=</span> <span class="p">[]</span>
-
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asgs</span><span class="p">:</span>
-            <span class="c1"># Per https://github.com/capitalone/cloud-custodian/issues/143</span>
             <span class="k">if</span> <span class="s1">&#39;LaunchConfigurationName&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
-                <span class="n">skip</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="n">config_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">])</span>
-
-        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
-            <span class="n">asgs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">configs</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-            <span class="s2">&quot;Querying launch configs for filter </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config_names</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
         <span class="n">lc_resources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;launch-config&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">config_names</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
             <span class="n">configs</span> <span class="o">=</span> <span class="n">lc_resources</span><span class="o">.</span><span class="n">get_resources</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">config_names</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">configs</span> <span class="o">=</span> <span class="n">lc_resources</span><span class="o">.</span><span class="n">resources</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">configs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
             <span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">]:</span> <span class="n">cfg</span> <span class="k">for</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="n">configs</span>
-            <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">config_names</span><span class="p">}</span></div></div>
+            <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">config_names</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="LaunchInfo.get_launch_id"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchInfo.get_launch_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_launch_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
+        <span class="n">lid</span> <span class="o">=</span> <span class="n">asg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># We&#39;ve noticed trailing white space allowed in some asgs</span>
+            <span class="k">return</span> <span class="n">lid</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">lid</span> <span class="o">=</span> <span class="n">asg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LaunchTemplate&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">lid</span><span class="p">[</span><span class="s1">&#39;LaunchTemplateId&#39;</span><span class="p">],</span> <span class="n">lid</span><span class="p">[</span><span class="s1">&#39;LaunchTemplateVersion&#39;</span><span class="p">])</span>
+
+        <span class="c1"># we&#39;ve noticed some corner cases where the asg name is the lc name, but not</span>
+        <span class="c1"># explicitly specified as launchconfiguration attribute.</span>
+        <span class="n">lid</span> <span class="o">=</span> <span class="n">asg</span><span class="p">[</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">lid</span></div>
+
+<div class="viewcode-block" id="LaunchInfo.get"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchInfo.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
+        <span class="n">lid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_launch_id</span><span class="p">(</span><span class="n">asg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lid</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">lid</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">lid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LaunchInfo.items"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchInfo.items">[docs]</a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span></div>
+
+<div class="viewcode-block" id="LaunchInfo.get_image_ids"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchInfo.get_image_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_image_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">image_ids</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">cid</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">image_ids</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">],</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">image_ids</span></div>
+
+<div class="viewcode-block" id="LaunchInfo.get_image_map"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchInfo.get_image_map">[docs]</a>    <span class="k">def</span> <span class="nf">get_image_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># The describe_images api historically would return errors</span>
+        <span class="c1"># on an unknown ami in the set of images ids passed in.</span>
+        <span class="c1"># It now just silently drops those items, which is actually</span>
+        <span class="c1"># ideally for our use case.</span>
+        <span class="c1">#</span>
+        <span class="c1"># We used to do some balancing of picking up our asgs using</span>
+        <span class="c1"># the resource manager abstraction to take advantage of</span>
+        <span class="c1"># resource caching, but then we needed to do separate api</span>
+        <span class="c1"># calls to intersect with third party amis. Given the new</span>
+        <span class="c1"># describe behavior, we&#39;ll just do the api call to fetch the</span>
+        <span class="c1"># amis, it doesn&#39;t seem to have any upper bound on number of</span>
+        <span class="c1"># ImageIds to pass (Tested with 1k+ ImageIds)</span>
+        <span class="c1">#</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">]:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;ami&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_resources</span><span class="p">(</span>
+                    <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_image_ids</span><span class="p">()),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)}</span></div>
+
+<div class="viewcode-block" id="LaunchInfo.get_security_group_ids"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchInfo.get_security_group_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_security_group_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># return set of security group ids for given asg</span>
+        <span class="n">sg_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">sg_ids</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SecurityGroupIds&#39;</span><span class="p">,</span> <span class="p">()))</span>
+            <span class="n">sg_ids</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SecurityGroups&#39;</span><span class="p">,</span> <span class="p">()))</span>
+        <span class="k">return</span> <span class="n">sg_ids</span></div></div>
 
 
-<div class="viewcode-block" id="SecurityGroupFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.SecurityGroupFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;security-group&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">SecurityGroupFilter</span><span class="p">(</span>
-        <span class="n">net_filters</span><span class="o">.</span><span class="n">SecurityGroupFilter</span><span class="p">,</span> <span class="n">LaunchConfigFilterBase</span><span class="p">):</span>
+<div class="viewcode-block" id="SecurityGroupFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.SecurityGroupFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;security-group&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SecurityGroupFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">SecurityGroupFilter</span><span class="p">):</span>
 
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-<div class="viewcode-block" id="SecurityGroupFilter.get_permissions"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.SecurityGroupFilter.get_permissions">[docs]</a>    <span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;autoscaling:DescribeLaunchConfigurations&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;ec2:DescribeSecurityGroups&quot;</span><span class="p">,)</span></div>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ec2:DescribeSecurityGroups&#39;</span><span class="p">,)</span> <span class="o">+</span> <span class="n">LaunchInfo</span><span class="o">.</span><span class="n">permissions</span>
 
 <div class="viewcode-block" id="SecurityGroupFilter.get_related_ids"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.SecurityGroupFilter.get_related_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_related_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
-        <span class="n">group_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">asg</span> <span class="ow">in</span> <span class="n">asgs</span><span class="p">:</span>
-            <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asg</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">])</span>
-            <span class="n">group_ids</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SecurityGroups&#39;</span><span class="p">,</span> <span class="p">()))</span>
-        <span class="k">return</span> <span class="n">group_ids</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get_security_group_ids</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SecurityGroupFilter.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.SecurityGroupFilter.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span> <span class="o">=</span> <span class="n">LaunchInfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">SecurityGroupFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="SubnetFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.SubnetFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;subnet&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="SubnetFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.SubnetFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;subnet&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">SubnetFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">SubnetFilter</span><span class="p">):</span>
 
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -348,12 +398,12 @@
         <span class="k">return</span> <span class="n">subnet_ids</span></div></div>
 
 
-<span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;network-location&#39;</span><span class="p">,</span> <span class="n">net_filters</span><span class="o">.</span><span class="n">NetworkLocation</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="LaunchConfigFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfigFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;launch-config&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">LaunchConfigFilter</span><span class="p">(</span><span class="n">ValueFilter</span><span class="p">,</span> <span class="n">LaunchConfigFilterBase</span><span class="p">):</span>
+<div class="viewcode-block" id="LaunchConfigFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfigFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;launch-config&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LaunchConfigFilter</span><span class="p">(</span><span class="n">ValueFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter asg by launch config attributes.</span>
+
+<span class="sd">    This will also filter to launch template data in addition</span>
+<span class="sd">    to launch configurations.</span>
 
 <span class="sd">    :example:</span>
 
@@ -372,16 +422,14 @@
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;autoscaling:DescribeLaunchConfigurations&quot;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="LaunchConfigFilter.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfigFilter.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span> <span class="o">=</span> <span class="n">LaunchInfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">LaunchConfigFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
-        <span class="c1"># Active launch configs can be deleted..</span>
-        <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asg</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asg</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="ConfigValidFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ConfigValidFilter">[docs]</a><span class="k">class</span> <span class="nc">ConfigValidFilter</span><span class="p">(</span><span class="n">Filter</span><span class="p">,</span> <span class="n">LaunchConfigFilterBase</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigValidFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ConfigValidFilter">[docs]</a><span class="k">class</span> <span class="nc">ConfigValidFilter</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
 
 <div class="viewcode-block" id="ConfigValidFilter.get_permissions"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ConfigValidFilter.get_permissions">[docs]</a>    <span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">([</span>
@@ -396,7 +444,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="ConfigValidFilter.initialize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ConfigValidFilter.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ConfigValidFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span> <span class="o">=</span> <span class="n">LaunchInfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
         <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subnets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_subnets</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">security_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_security_groups</span><span class="p">()</span>
@@ -427,42 +475,10 @@
         <span class="k">return</span> <span class="nb">set</span><span class="p">([</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;TargetGroupArn&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">manager</span><span class="o">.</span><span class="n">resources</span><span class="p">()])</span></div>
 
 <div class="viewcode-block" id="ConfigValidFilter.get_images"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ConfigValidFilter.get_images">[docs]</a>    <span class="k">def</span> <span class="nf">get_images</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;ami&#39;</span><span class="p">)</span>
-        <span class="n">images</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get_image_map</span><span class="p">()</span>
         <span class="n">image_snaps</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">image_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">({</span><span class="n">lc</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">lc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">values</span><span class="p">()})</span>
 
-        <span class="c1"># Pull account images, we should be able to utilize cached values,</span>
-        <span class="c1"># drawn down the image population to just images not in the account.</span>
-        <span class="n">account_images</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">manager</span><span class="o">.</span><span class="n">resources</span><span class="p">()</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">image_ids</span><span class="p">]</span>
-        <span class="n">account_image_ids</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">account_images</span><span class="p">}</span>
-        <span class="n">image_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">image_id</span> <span class="k">for</span> <span class="n">image_id</span> <span class="ow">in</span> <span class="n">image_ids</span>
-                     <span class="k">if</span> <span class="n">image_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">account_image_ids</span><span class="p">]</span>
-
-        <span class="c1"># To pull third party images, we explicitly use a describe</span>
-        <span class="c1"># source without any cache.</span>
-        <span class="c1">#</span>
-        <span class="c1"># Can&#39;t use a config source since it won&#39;t have state for</span>
-        <span class="c1"># third party ami, we auto propagate source normally, so we</span>
-        <span class="c1"># explicitly pull a describe source. Can&#39;t use a cache either</span>
-        <span class="c1"># as their not in the account.</span>
-        <span class="c1">#</span>
-        <span class="k">while</span> <span class="n">image_ids</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">amis</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="s1">&#39;describe&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_resources</span><span class="p">(</span>
-                    <span class="n">image_ids</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                <span class="n">account_images</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">amis</span><span class="p">)</span>
-                <span class="k">break</span>
-            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">msg</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Message&#39;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;InvalidAMIID.NotFound&#39;</span><span class="p">:</span>
-                    <span class="k">raise</span>
-                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span> <span class="n">msg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">):</span>
-                    <span class="n">image_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-
-        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">account_images</span><span class="p">:</span>
-            <span class="n">images</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">images</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="c1"># Capture any snapshots, images strongly reference their</span>
             <span class="c1"># snapshots, and some of these will be third party in the</span>
             <span class="c1"># case of a third party image.</span>
@@ -470,12 +486,19 @@
                 <span class="k">if</span> <span class="s1">&#39;Ebs&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bd</span> <span class="ow">or</span> <span class="s1">&#39;SnapshotId&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bd</span><span class="p">[</span><span class="s1">&#39;Ebs&#39;</span><span class="p">]:</span>
                     <span class="k">continue</span>
                 <span class="n">image_snaps</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bd</span><span class="p">[</span><span class="s1">&#39;Ebs&#39;</span><span class="p">][</span><span class="s1">&#39;SnapshotId&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-
-        <span class="k">return</span> <span class="n">images</span><span class="p">,</span> <span class="n">image_snaps</span></div>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="n">image_snaps</span></div>
 
 <div class="viewcode-block" id="ConfigValidFilter.get_snapshots"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ConfigValidFilter.get_snapshots">[docs]</a>    <span class="k">def</span> <span class="nf">get_snapshots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">snaps</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">cid</span><span class="p">,</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;BlockDeviceMappings&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="s1">&#39;Ebs&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bd</span> <span class="ow">or</span> <span class="s1">&#39;SnapshotId&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bd</span><span class="p">[</span><span class="s1">&#39;Ebs&#39;</span><span class="p">]:</span>
+                    <span class="k">continue</span>
+                <span class="n">snaps</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bd</span><span class="p">[</span><span class="s1">&#39;Ebs&#39;</span><span class="p">][</span><span class="s1">&#39;SnapshotId&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
         <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;ebs-snapshot&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">set</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;SnapshotId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">manager</span><span class="o">.</span><span class="n">resources</span><span class="p">()])</span></div>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">([</span>
+            <span class="n">s</span><span class="p">[</span><span class="s1">&#39;SnapshotId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_resources</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">snaps</span><span class="p">),</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)])</span></div>
 
 <div class="viewcode-block" id="ConfigValidFilter.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ConfigValidFilter.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
@@ -500,11 +523,8 @@
             <span class="k">if</span> <span class="n">appelb_target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">appelb_target_groups</span><span class="p">:</span>
                 <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;invalid-appelb-target-group&#39;</span><span class="p">,</span> <span class="n">appelb_target</span><span class="p">))</span>
 
-        <span class="n">cfg_id</span> <span class="o">=</span> <span class="n">asg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">,</span> <span class="n">asg</span><span class="p">[</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">])</span>
-        <span class="n">cfg_id</span> <span class="o">=</span> <span class="n">cfg_id</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-        <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cfg_id</span><span class="p">)</span>
+        <span class="n">cfg_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get_launch_id</span><span class="p">(</span><span class="n">asg</span><span class="p">)</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asg</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">cfg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;invalid-config&#39;</span><span class="p">,</span> <span class="n">cfg_id</span><span class="p">))</span>
@@ -513,7 +533,8 @@
             <span class="n">asg</span><span class="p">[</span><span class="s1">&#39;Invalid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">errors</span>
             <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;SecurityGroups&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">(</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SecurityGroups&#39;</span><span class="p">,</span> <span class="p">()),</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SecurityGroupIds&#39;</span><span class="p">,</span> <span class="p">()))):</span>
             <span class="n">sg</span> <span class="o">=</span> <span class="n">sg</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">sg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">security_groups</span><span class="p">:</span>
                 <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;invalid-security-group&#39;</span><span class="p">,</span> <span class="n">sg</span><span class="p">))</span>
@@ -535,7 +556,7 @@
         <span class="k">return</span> <span class="n">errors</span></div></div>
 
 
-<div class="viewcode-block" id="ValidConfigFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ValidConfigFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;valid&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="ValidConfigFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ValidConfigFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;valid&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ValidConfigFilter</span><span class="p">(</span><span class="n">ConfigValidFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filters autoscale groups to find those that are structurally valid.</span>
 
@@ -562,7 +583,7 @@
         <span class="k">return</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="InvalidConfigFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.InvalidConfigFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;invalid&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="InvalidConfigFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.InvalidConfigFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;invalid&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">InvalidConfigFilter</span><span class="p">(</span><span class="n">ConfigValidFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter autoscale groups to find those that are structurally invalid.</span>
 
@@ -598,8 +619,8 @@
             <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="NotEncryptedFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;not-encrypted&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">NotEncryptedFilter</span><span class="p">(</span><span class="n">Filter</span><span class="p">,</span> <span class="n">LaunchConfigFilterBase</span><span class="p">):</span>
+<div class="viewcode-block" id="NotEncryptedFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;not-encrypted&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">NotEncryptedFilter</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check if an ASG is configured to have unencrypted volumes.</span>
 
 <span class="sd">    Checks both the ami snapshots and the launch configuration.</span>
@@ -627,60 +648,37 @@
     <span class="c1"># TODO: resource-manager, notfound err mgr</span>
 
 <div class="viewcode-block" id="NotEncryptedFilter.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span> <span class="o">=</span> <span class="n">LaunchInfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get_image_map</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;exclude_image&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unencrypted_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unencrypted_images</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">unencrypted_launch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unencrypted_configs</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">NotEncryptedFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
-        <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asg</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg</span><span class="p">:</span>
+        <span class="n">launch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">launch</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;ASG </span><span class="si">%s</span><span class="s2"> instances: </span><span class="si">%d</span><span class="s2"> has missing config: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="n">asg</span><span class="p">[</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">asg</span><span class="p">[</span><span class="s1">&#39;Instances&#39;</span><span class="p">]),</span>
-                <span class="n">asg</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">])</span>
+                <span class="s2">&quot;ASG </span><span class="si">%s</span><span class="s2"> instances: </span><span class="si">%d</span><span class="s2"> has missing config or template&quot;</span><span class="p">,</span>
+                <span class="n">asg</span><span class="p">[</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">asg</span><span class="p">[</span><span class="s1">&#39;Instances&#39;</span><span class="p">]))</span>
             <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">launch_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get_launch_id</span><span class="p">(</span><span class="n">asg</span><span class="p">)</span>
         <span class="n">unencrypted</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;exclude_image&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">unencrypted_images</span><span class="p">):</span>
-            <span class="n">unencrypted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Image&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">unencrypted_configs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;exclude_image&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">launch</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">unencrypted_images</span><span class="p">:</span>
+                <span class="n">unencrypted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Image&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">launch_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">unencrypted_launch</span><span class="p">:</span>
             <span class="n">unencrypted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;LaunchConfig&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">unencrypted</span><span class="p">:</span>
             <span class="n">asg</span><span class="p">[</span><span class="s1">&#39;Unencrypted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unencrypted</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">unencrypted</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NotEncryptedFilter.initialize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">NotEncryptedFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
-        <span class="n">ec2</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ec2&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">unencrypted_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unencrypted_images</span><span class="p">(</span><span class="n">ec2</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">unencrypted_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unencrypted_configs</span><span class="p">(</span><span class="n">ec2</span><span class="p">)</span></div>
-
-    <span class="k">def</span> <span class="nf">_fetch_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ec2</span><span class="p">,</span> <span class="n">image_ids</span><span class="p">):</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">ec2</span><span class="o">.</span><span class="n">describe_images</span><span class="p">(</span><span class="n">ImageIds</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">image_ids</span><span class="p">))</span>
-            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;InvalidAMIID.NotFound&#39;</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Message&#39;</span><span class="p">]</span>
-                    <span class="n">e_ami_ids</span> <span class="o">=</span> <span class="p">[</span>
-                        <span class="n">e_ami_id</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">e_ami_id</span>
-                        <span class="ow">in</span> <span class="n">msg</span><span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;&#39;[&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:</span><span class="n">msg</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;]&#39;&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s2">&quot;asg:not-encrypted filter image not found </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="n">e_ami_ids</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">e_ami_id</span> <span class="ow">in</span> <span class="n">e_ami_ids</span><span class="p">:</span>
-                        <span class="n">image_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">e_ami_id</span><span class="p">)</span>
-                    <span class="k">continue</span>
-                <span class="k">raise</span>
-
-<div class="viewcode-block" id="NotEncryptedFilter.get_unencrypted_images"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter.get_unencrypted_images">[docs]</a>    <span class="k">def</span> <span class="nf">get_unencrypted_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ec2</span><span class="p">):</span>
+<div class="viewcode-block" id="NotEncryptedFilter.get_unencrypted_images"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter.get_unencrypted_images">[docs]</a>    <span class="k">def</span> <span class="nf">get_unencrypted_images</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;retrieve images which have unencrypted snapshots referenced.&quot;&quot;&quot;</span>
-        <span class="n">image_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">image_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">])</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;querying </span><span class="si">%d</span><span class="s2"> images&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_ids</span><span class="p">))</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_images</span><span class="p">(</span><span class="n">ec2</span><span class="p">,</span> <span class="n">image_ids</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">]:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;Images&#39;</span><span class="p">]}</span>
-
         <span class="n">unencrypted_images</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;BlockDeviceMappings&#39;</span><span class="p">]:</span>
@@ -689,19 +687,20 @@
                     <span class="k">break</span>
         <span class="k">return</span> <span class="n">unencrypted_images</span></div>
 
-<div class="viewcode-block" id="NotEncryptedFilter.get_unencrypted_configs"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter.get_unencrypted_configs">[docs]</a>    <span class="k">def</span> <span class="nf">get_unencrypted_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ec2</span><span class="p">):</span>
+<div class="viewcode-block" id="NotEncryptedFilter.get_unencrypted_configs"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter.get_unencrypted_configs">[docs]</a>    <span class="k">def</span> <span class="nf">get_unencrypted_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;retrieve configs that have unencrypted ebs voluems referenced.&quot;&quot;&quot;</span>
         <span class="n">unencrypted_configs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">snaps</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">cid</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+        <span class="k">for</span> <span class="n">cid</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">])</span>
-            <span class="c1"># image deregistered/unavailable</span>
+            <span class="c1"># image deregistered/unavailable or exclude_image set</span>
             <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">image_block_devs</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="n">bd</span><span class="p">[</span><span class="s1">&#39;DeviceName&#39;</span><span class="p">]:</span> <span class="n">bd</span><span class="p">[</span><span class="s1">&#39;Ebs&#39;</span><span class="p">]</span>
-                    <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span> <span class="n">image</span><span class="p">[</span><span class="s1">&#39;BlockDeviceMappings&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;Ebs&#39;</span> <span class="ow">in</span> <span class="n">bd</span><span class="p">}</span>
+                    <span class="n">bd</span><span class="p">[</span><span class="s1">&#39;DeviceName&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span>
+                    <span class="n">image</span><span class="p">[</span><span class="s1">&#39;BlockDeviceMappings&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;Ebs&#39;</span> <span class="ow">in</span> <span class="n">bd</span><span class="p">}</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">image_block_devs</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">image_block_devs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;BlockDeviceMappings&#39;</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="s1">&#39;Ebs&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bd</span><span class="p">:</span>
                     <span class="k">continue</span>
@@ -717,44 +716,19 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">snaps</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">unencrypted_configs</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;querying </span><span class="si">%d</span><span class="s2"> snapshots&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">snaps</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_snapshots</span><span class="p">(</span><span class="n">ec2</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">snaps</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_snapshots</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">snaps</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Encrypted&#39;</span><span class="p">):</span>
                 <span class="n">unencrypted_configs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">snaps</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;SnapshotId&#39;</span><span class="p">]])</span>
         <span class="k">return</span> <span class="n">unencrypted_configs</span></div>
 
-<div class="viewcode-block" id="NotEncryptedFilter.get_snapshots"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter.get_snapshots">[docs]</a>    <span class="k">def</span> <span class="nf">get_snapshots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ec2</span><span class="p">,</span> <span class="n">snap_ids</span><span class="p">):</span>
+<div class="viewcode-block" id="NotEncryptedFilter.get_snapshots"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter.get_snapshots">[docs]</a>    <span class="k">def</span> <span class="nf">get_snapshots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">snap_ids</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;get snapshots corresponding to id, but tolerant of invalid id&#39;s.&quot;&quot;&quot;</span>
-        <span class="k">while</span> <span class="n">snap_ids</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">describe_snapshots</span><span class="p">(</span><span class="n">SnapshotIds</span><span class="o">=</span><span class="n">snap_ids</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">bad_snap</span> <span class="o">=</span> <span class="n">NotEncryptedFilter</span><span class="o">.</span><span class="n">get_bad_snapshot</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">bad_snap</span><span class="p">:</span>
-                    <span class="n">snap_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">bad_snap</span><span class="p">)</span>
-                    <span class="k">continue</span>
-                <span class="k">raise</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Snapshots&#39;</span><span class="p">,</span> <span class="p">())</span>
-        <span class="k">return</span> <span class="p">()</span></div>
-
-<div class="viewcode-block" id="NotEncryptedFilter.get_bad_snapshot"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.NotEncryptedFilter.get_bad_snapshot">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_bad_snapshot</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Handle various client side errors when describing snapshots&quot;&quot;&quot;</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Message&#39;</span><span class="p">]</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span>
-        <span class="n">e_snap_id</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">error</span> <span class="o">==</span> <span class="s1">&#39;InvalidSnapshot.NotFound&#39;</span><span class="p">:</span>
-            <span class="n">e_snap_id</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="n">msg</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)]</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Snapshot not found </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e_snap_id</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">error</span> <span class="o">==</span> <span class="s1">&#39;InvalidSnapshotID.Malformed&#39;</span><span class="p">:</span>
-            <span class="n">e_snap_id</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="n">msg</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)]</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Snapshot id malformed </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e_snap_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">e_snap_id</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;ebs-snapshot&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_resources</span><span class="p">(</span>
+            <span class="n">snap_ids</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="ImageAgeFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ImageAgeFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;image-age&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">ImageAgeFilter</span><span class="p">(</span><span class="n">AgeFilter</span><span class="p">,</span> <span class="n">LaunchConfigFilterBase</span><span class="p">):</span>
+<div class="viewcode-block" id="ImageAgeFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ImageAgeFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;image-age&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ImageAgeFilter</span><span class="p">(</span><span class="n">AgeFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter asg by image age (in days).</span>
 
 <span class="sd">    :example:</span>
@@ -780,26 +754,19 @@
         <span class="n">days</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">})</span>
 
 <div class="viewcode-block" id="ImageAgeFilter.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ImageAgeFilter.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span> <span class="o">=</span> <span class="n">LaunchInfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get_image_map</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">ImageAgeFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ImageAgeFilter.initialize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ImageAgeFilter.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ImageAgeFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
-        <span class="n">image_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">image_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">])</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;ami&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">resources</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">]:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">results</span><span class="p">}</span></div>
-
-<div class="viewcode-block" id="ImageAgeFilter.get_resource_date"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ImageAgeFilter.get_resource_date">[docs]</a>    <span class="k">def</span> <span class="nf">get_resource_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
-        <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">]]</span>
+<div class="viewcode-block" id="ImageAgeFilter.get_resource_date"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ImageAgeFilter.get_resource_date">[docs]</a>    <span class="k">def</span> <span class="nf">get_resource_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asg</span><span class="p">)</span>
         <span class="n">ami</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">],</span> <span class="p">{})</span>
         <span class="k">return</span> <span class="n">parse</span><span class="p">(</span><span class="n">ami</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">date_attribute</span><span class="p">,</span> <span class="s2">&quot;2000-01-01T01:01:01.000Z&quot;</span><span class="p">))</span></div></div>
 
 
-<div class="viewcode-block" id="ImageFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ImageFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">ImageFilter</span><span class="p">(</span><span class="n">ValueFilter</span><span class="p">,</span> <span class="n">LaunchConfigFilterBase</span><span class="p">):</span>
+<div class="viewcode-block" id="ImageFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ImageFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ImageFilter</span><span class="p">(</span><span class="n">ValueFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter asg by image</span>
 
 <span class="sd">    :example:</span>
@@ -822,22 +789,9 @@
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">ValueFilter</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ImageFilter.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ImageFilter.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span> <span class="o">=</span> <span class="n">LaunchInfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_info</span><span class="o">.</span><span class="n">get_image_map</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">ImageFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="ImageFilter.initialize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.ImageFilter.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ImageFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
-        <span class="n">image_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">image_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">])</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;ami&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">resources</span><span class="p">()</span>
-        <span class="n">base_image_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">]:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">results</span><span class="p">}</span>
-        <span class="n">resources</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">base_image_map</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">image_ids</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base_image_map</span><span class="p">}</span>
-        <span class="n">missing</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">image_ids</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">resources</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
-            <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;ami&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_resources</span><span class="p">(</span><span class="n">missing</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-            <span class="n">resources</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">image</span><span class="p">[</span><span class="s1">&#39;ImageId&#39;</span><span class="p">]:</span> <span class="n">image</span> <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">loaded</span><span class="p">})</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="n">resources</span></div>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
         <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">]]</span>
@@ -852,7 +806,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">image</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="VpcIdFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.VpcIdFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;vpc-id&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="VpcIdFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.VpcIdFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;vpc-id&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">VpcIdFilter</span><span class="p">(</span><span class="n">ValueFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filters ASG based on the VpcId</span>
 
@@ -905,8 +859,8 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">VpcIdFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="PropagatedTagFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.PropagatedTagFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;progagated-tags&#39;</span><span class="p">)</span>
-<span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;propagated-tags&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="PropagatedTagFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.PropagatedTagFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;progagated-tags&#39;</span><span class="p">)</span>  <span class="c1"># compatibility</span>
+<span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;propagated-tags&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">PropagatedTagFilter</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter ASG based on propagated tags</span>
 
@@ -960,7 +914,7 @@
         <span class="k">return</span> <span class="n">results</span></div></div>
 
 
-<div class="viewcode-block" id="GroupTagTrim"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.GroupTagTrim">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag-trim&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="GroupTagTrim"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.GroupTagTrim">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag-trim&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">GroupTagTrim</span><span class="p">(</span><span class="n">TagTrim</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to trim the number of tags to avoid hitting tag limits</span>
 
@@ -994,7 +948,7 @@
         <span class="n">client</span><span class="o">.</span><span class="n">delete_tags</span><span class="p">(</span><span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="CapacityDelta"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.CapacityDelta">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;capacity-delta&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="CapacityDelta"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.CapacityDelta">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;capacity-delta&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">CapacityDelta</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter returns ASG that have less instances than desired or required</span>
 
@@ -1012,13 +966,14 @@
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;capacity-delta&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CapacityDelta.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.CapacityDelta.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asgs</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;Instances&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;DesiredCapacity&#39;</span><span class="p">]</span> <span class="ow">or</span>
-                <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;Instances&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;MinSize&#39;</span><span class="p">]]</span></div></div>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asgs</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">a</span><span class="p">[</span><span class="s1">&#39;Instances&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;DesiredCapacity&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span>
+                    <span class="n">a</span><span class="p">[</span><span class="s1">&#39;Instances&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;MinSize&#39;</span><span class="p">]]</span></div></div>
 
 
-<div class="viewcode-block" id="UserDataFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.UserDataFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;user-data&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">UserDataFilter</span><span class="p">(</span><span class="n">ValueFilter</span><span class="p">,</span> <span class="n">LaunchConfigFilterBase</span><span class="p">):</span>
+<div class="viewcode-block" id="UserDataFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.UserDataFilter">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;user-data&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UserDataFilter</span><span class="p">(</span><span class="n">ValueFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter on ASG&#39;s whose launch configs have matching userdata.</span>
 <span class="sd">    Note: It is highly recommended to use regexes with the ?sm flags, since Custodian</span>
 <span class="sd">    uses re.match() and userdata spans multiple lines.</span>
@@ -1050,32 +1005,29 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;asg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_permissions</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="UserDataFilter.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.UserDataFilter.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Get list of autoscaling groups whose launch configs match the user-data filter.</span>
-<span class="sd">        Note: Since this is an autoscaling filter, this won&#39;t match unused launch configs.</span>
-<span class="sd">        :param launch_configs: List of launch configurations</span>
-<span class="sd">        :param event: Event</span>
+        <span class="sd">&#39;&#39;&#39;Get list of autoscaling groups whose launch configs match the</span>
+<span class="sd">        user-data filter.</span>
+
 <span class="sd">        :return: List of ASG&#39;s with matching launch configs</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&quot;c7n:user-data&quot;&#39;</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">UserDataFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
+        <span class="n">launch_info</span> <span class="o">=</span> <span class="n">LaunchInfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="p">)</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">asgs</span><span class="p">)</span>
 
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">asg</span> <span class="ow">in</span> <span class="n">asgs</span><span class="p">:</span>
-            <span class="n">launch_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asg</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">])</span>
+            <span class="n">launch_config</span> <span class="o">=</span> <span class="n">launch_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asg</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">launch_config</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">launch_config</span><span class="p">[</span><span class="s1">&#39;UserData&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">launch_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;UserData&#39;</span><span class="p">):</span>
                     <span class="n">asg</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">asg</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation</span><span class="p">]</span> <span class="o">=</span> <span class="n">deserialize_user_data</span><span class="p">(</span>
                         <span class="n">launch_config</span><span class="p">[</span><span class="s1">&#39;UserData&#39;</span><span class="p">])</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">asg</span><span class="p">):</span>
                 <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asg</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">results</span></div></div>
+        <span class="k">return</span> <span class="n">results</span></div></div>
 
 
-<div class="viewcode-block" id="Resize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Resize">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;resize&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Resize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Resize">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;resize&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Resize</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to resize the min/max/desired instances in an ASG</span>
 
@@ -1227,9 +1179,9 @@
                 <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;nothing to resize&#39;</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="RemoveTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.RemoveTag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
-<span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;untag&#39;</span><span class="p">)</span>
-<span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;unmark&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RemoveTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.RemoveTag">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;untag&#39;</span><span class="p">)</span>  <span class="c1"># compatibility</span>
+<span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;unmark&#39;</span><span class="p">)</span>  <span class="c1"># compatibility</span>
 <span class="k">class</span> <span class="nc">RemoveTag</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to remove tag/tags from an ASG</span>
 
@@ -1284,8 +1236,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">delete_tags</span><span class="p">,</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="Tag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Tag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
-<span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Tag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Tag">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Tag</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to add a tag to an ASG</span>
 
@@ -1360,7 +1312,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">create_or_update_tags</span><span class="p">,</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="PropagateTags"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.PropagateTags">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;propagate-tags&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="PropagateTags"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.PropagateTags">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;propagate-tags&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">PropagateTags</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Propagate tags to an asg instances.</span>
 
@@ -1474,7 +1426,7 @@
                     <span class="s1">&#39;ec2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_resources</span><span class="p">(</span><span class="n">instance_ids</span><span class="p">)}</span></div></div>
 
 
-<div class="viewcode-block" id="RenameTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.RenameTag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;rename-tag&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RenameTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.RenameTag">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;rename-tag&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">RenameTag</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Rename a tag on an AutoScaleGroup.</span>
 
@@ -1571,7 +1523,7 @@
             <span class="n">Tags</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;Key&#39;</span><span class="p">:</span> <span class="n">destination_tag</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]}])</span></div></div>
 
 
-<div class="viewcode-block" id="MarkForOp"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.MarkForOp">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="MarkForOp"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.MarkForOp">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">MarkForOp</span><span class="p">(</span><span class="n">Tag</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to create a delayed action for a later date</span>
 
@@ -1655,7 +1607,7 @@
         <span class="k">return</span> <span class="n">action_date_string</span></div>
 
 
-<div class="viewcode-block" id="Suspend"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Suspend">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;suspend&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Suspend"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Suspend">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;suspend&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Suspend</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to suspend ASG processes and instances</span>
 
@@ -1737,12 +1689,14 @@
             <span class="k">raise</span></div></div>
 
 
-<div class="viewcode-block" id="Resume"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Resume">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;resume&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Resume"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Resume">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;resume&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Resume</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Resume a suspended autoscale group and its instances</span>
 
-<span class="sd">    Parameter &#39;delay&#39; is the amount of time (in seconds) to wait between</span>
-<span class="sd">    resuming each instance within the ASG (default value: 30)</span>
+<span class="sd">    Parameter &#39;delay&#39; is the amount of time (in seconds) to wait</span>
+<span class="sd">    between resuming instances in the asg, and restarting the internal</span>
+<span class="sd">    asg processed which gives some grace period before health checks</span>
+<span class="sd">    turn on within the ASG (default value: 30)</span>
 
 <span class="sd">    :example:</span>
 
@@ -1756,6 +1710,7 @@
 <span class="sd">                actions:</span>
 <span class="sd">                  - type: resume</span>
 <span class="sd">                    delay: 300</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;resume&#39;</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">})</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;autoscaling:ResumeProcesses&quot;</span><span class="p">,</span> <span class="s2">&quot;ec2:StartInstances&quot;</span><span class="p">)</span>
@@ -1767,10 +1722,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Filtered from </span><span class="si">%d</span><span class="s2"> to </span><span class="si">%d</span><span class="s2"> suspended asgs&quot;</span><span class="p">,</span>
                        <span class="n">original_count</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">asgs</span><span class="p">))</span>
 
+        <span class="n">session</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
+        <span class="n">ec2_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ec2&#39;</span><span class="p">)</span>
+        <span class="n">asg_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;autoscaling&#39;</span><span class="p">)</span>
+
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
             <span class="n">futures</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asgs</span><span class="p">:</span>
-                <span class="n">futures</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resume_asg_instances</span><span class="p">,</span> <span class="n">a</span><span class="p">)]</span> <span class="o">=</span> <span class="n">a</span>
+                <span class="n">futures</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resume_asg_instances</span><span class="p">,</span> <span class="n">ec2_client</span><span class="p">,</span> <span class="n">a</span><span class="p">)]</span> <span class="o">=</span> <span class="n">a</span>
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
                     <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Traceback resume asg:</span><span class="si">%s</span><span class="s2"> instances error:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
@@ -1784,37 +1743,32 @@
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
             <span class="n">futures</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asgs</span><span class="p">:</span>
-                <span class="n">futures</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resume_asg</span><span class="p">,</span> <span class="n">a</span><span class="p">)]</span> <span class="o">=</span> <span class="n">a</span>
+                <span class="n">futures</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resume_asg</span><span class="p">,</span> <span class="n">asg_client</span><span class="p">,</span> <span class="n">a</span><span class="p">)]</span> <span class="o">=</span> <span class="n">a</span>
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
                     <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Traceback resume asg:</span><span class="si">%s</span><span class="s2"> error:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
                         <span class="n">futures</span><span class="p">[</span><span class="n">f</span><span class="p">][</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">],</span>
                         <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">()))</span></div>
 
-<div class="viewcode-block" id="Resume.resume_asg_instances"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Resume.resume_asg_instances">[docs]</a>    <span class="k">def</span> <span class="nf">resume_asg_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
+<div class="viewcode-block" id="Resume.resume_asg_instances"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Resume.resume_asg_instances">[docs]</a>    <span class="k">def</span> <span class="nf">resume_asg_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ec2_client</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Resume asg instances.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">session</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
-        <span class="n">ec2_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ec2&#39;</span><span class="p">)</span>
         <span class="n">instance_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;InstanceId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">asg</span><span class="p">[</span><span class="s1">&#39;Instances&#39;</span><span class="p">]]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">instance_ids</span><span class="p">:</span>
             <span class="k">return</span>
-
         <span class="n">retry</span> <span class="o">=</span> <span class="n">get_retry</span><span class="p">((</span>
             <span class="s1">&#39;RequestLimitExceeded&#39;</span><span class="p">,</span> <span class="s1">&#39;Client.RequestLimitExceeded&#39;</span><span class="p">))</span>
         <span class="n">retry</span><span class="p">(</span><span class="n">ec2_client</span><span class="o">.</span><span class="n">start_instances</span><span class="p">,</span> <span class="n">InstanceIds</span><span class="o">=</span><span class="n">instance_ids</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Resume.resume_asg"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Resume.resume_asg">[docs]</a>    <span class="k">def</span> <span class="nf">resume_asg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
+<div class="viewcode-block" id="Resume.resume_asg"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Resume.resume_asg">[docs]</a>    <span class="k">def</span> <span class="nf">resume_asg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asg_client</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Resume asg processes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">session</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
-        <span class="n">asg_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;autoscaling&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
             <span class="n">asg_client</span><span class="o">.</span><span class="n">resume_processes</span><span class="p">,</span>
             <span class="n">AutoScalingGroupName</span><span class="o">=</span><span class="n">asg</span><span class="p">[</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">])</span></div></div>
 
 
-<div class="viewcode-block" id="Delete"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Delete">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Delete"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Delete">[docs]</a><span class="nd">@ASG</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Delete</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to delete an ASG</span>
 
@@ -1840,26 +1794,20 @@
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;autoscaling:DeleteAutoScalingGroup&quot;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="Delete.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Delete.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asgs</span><span class="p">):</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="nb">list</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_asg</span><span class="p">,</span> <span class="n">asgs</span><span class="p">))</span></div>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;autoscaling&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">asg</span> <span class="ow">in</span> <span class="n">asgs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_asg</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">asg</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Delete.process_asg"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Delete.process_asg">[docs]</a>    <span class="nd">@worker</span>
-    <span class="k">def</span> <span class="nf">process_asg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
+<div class="viewcode-block" id="Delete.process_asg"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.Delete.process_asg">[docs]</a>    <span class="k">def</span> <span class="nf">process_asg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">asg</span><span class="p">):</span>
         <span class="n">force_delete</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;force&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">force_delete</span><span class="p">:</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Forcing deletion of Auto Scaling group </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-                     <span class="n">asg</span><span class="p">[</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">])</span>
-        <span class="n">session</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
-        <span class="n">asg_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;autoscaling&#39;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
-                <span class="n">asg_client</span><span class="o">.</span><span class="n">delete_auto_scaling_group</span><span class="p">,</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">delete_auto_scaling_group</span><span class="p">,</span>
                 <span class="n">AutoScalingGroupName</span><span class="o">=</span><span class="n">asg</span><span class="p">[</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">],</span>
                 <span class="n">ForceDelete</span><span class="o">=</span><span class="n">force_delete</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ValidationError&#39;</span><span class="p">:</span>
-                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Erroring deleting asg </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                            <span class="n">asg</span><span class="p">[</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">],</span> <span class="n">e</span><span class="p">)</span>
                 <span class="k">return</span>
             <span class="k">raise</span></div></div>
 
@@ -1877,22 +1825,7 @@
             <span class="s1">&#39;describe_launch_configurations&#39;</span><span class="p">,</span> <span class="s1">&#39;LaunchConfigurations&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="s1">&#39;LaunchConfigurationNames&#39;</span>
         <span class="n">filter_type</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span>
-        <span class="n">config_type</span> <span class="o">=</span> <span class="s1">&#39;AWS::AutoScaling::LaunchConfiguration&#39;</span></div>
-
-    <span class="n">retry</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">get_retry</span><span class="p">((</span><span class="s1">&#39;Throttling&#39;</span><span class="p">,)))</span>
-
-<div class="viewcode-block" id="LaunchConfig.get_source"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfig.get_source">[docs]</a>    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_type</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">source_type</span> <span class="o">==</span> <span class="s1">&#39;describe&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">DescribeLaunchConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">source_type</span> <span class="o">==</span> <span class="s1">&#39;config&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">query</span><span class="o">.</span><span class="n">ConfigSource</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid source </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">source_type</span><span class="p">)</span></div></div>
-
-
-<div class="viewcode-block" id="DescribeLaunchConfig"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.DescribeLaunchConfig">[docs]</a><span class="k">class</span> <span class="nc">DescribeLaunchConfig</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">DescribeSource</span><span class="p">):</span>
-
-<div class="viewcode-block" id="DescribeLaunchConfig.augment"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.DescribeLaunchConfig.augment">[docs]</a>    <span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">resources</span></div></div>
+        <span class="n">config_type</span> <span class="o">=</span> <span class="s1">&#39;AWS::AutoScaling::LaunchConfiguration&#39;</span></div></div>
 
 
 <div class="viewcode-block" id="LaunchConfigAge"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfigAge">[docs]</a><span class="nd">@LaunchConfig</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">)</span>
@@ -1941,13 +1874,10 @@
 
 <div class="viewcode-block" id="UnusedLaunchConfig.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.UnusedLaunchConfig.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configs</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">asgs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;asg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">resources</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
+        <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
             <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;AutoScalingGroupName&#39;</span><span class="p">])</span>
-            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asgs</span><span class="p">])</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">UnusedLaunchConfig</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span></div>
-
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">used</span></div>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asgs</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LaunchTemplate&#39;</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configs</span> <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;LaunchConfigurationName&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used</span><span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="LaunchConfigDelete"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfigDelete">[docs]</a><span class="nd">@LaunchConfig</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
@@ -1971,13 +1901,12 @@
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;autoscaling:DeleteLaunchConfiguration&quot;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="LaunchConfigDelete.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfigDelete.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configs</span><span class="p">):</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="nb">list</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_config</span><span class="p">,</span> <span class="n">configs</span><span class="p">))</span></div>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;autoscaling&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LaunchConfigDelete.process_config"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfigDelete.process_config">[docs]</a>    <span class="nd">@worker</span>
-    <span class="k">def</span> <span class="nf">process_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-        <span class="n">session</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;autoscaling&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_config</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LaunchConfigDelete.process_config"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.asg.LaunchConfigDelete.process_config">[docs]</a>    <span class="k">def</span> <span class="nf">process_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">client</span><span class="o">.</span><span class="n">delete_launch_configuration</span><span class="p">(</span>
                 <span class="n">LaunchConfigurationName</span><span class="o">=</span><span class="n">config</span><span class="p">[</span>

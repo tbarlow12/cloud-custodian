@@ -3687,7 +3687,7 @@ Target Group dimension not supported atm.</p>
 <dl class="class">
 <dt id="c7n.resources.asg.ConfigValidFilter">
 <em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">ConfigValidFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#ConfigValidFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.ConfigValidFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a>, <a class="reference internal" href="#c7n.resources.asg.LaunchConfigFilterBase" title="c7n.resources.asg.LaunchConfigFilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.asg.LaunchConfigFilterBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
 <dl class="method">
 <dt id="c7n.resources.asg.ConfigValidFilter.get_appelb_target_groups">
 <code class="descname">get_appelb_target_groups</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#ConfigValidFilter.get_appelb_target_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.ConfigValidFilter.get_appelb_target_groups" title="Permalink to this definition">¶</a></dt>
@@ -3736,8 +3736,7 @@ Target Group dimension not supported atm.</p>
 <dl class="method">
 <dt id="c7n.resources.asg.ConfigValidFilter.initialize">
 <code class="descname">initialize</code><span class="sig-paren">(</span><em>asgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#ConfigValidFilter.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.ConfigValidFilter.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get launch configs for the set of asgs</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="c7n.resources.asg.ConfigValidFilter.process">
@@ -3791,7 +3790,7 @@ attached to it.</p>
 
 <dl class="method">
 <dt id="c7n.resources.asg.Delete.process_asg">
-<code class="descname">process_asg</code><span class="sig-paren">(</span><em>asg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Delete.process_asg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Delete.process_asg" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_asg</code><span class="sig-paren">(</span><em>client</em>, <em>asg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Delete.process_asg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Delete.process_asg" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3802,17 +3801,6 @@ attached to it.</p>
 <dl class="attribute">
 <dt id="c7n.resources.asg.Delete.type">
 <code class="descname">type</code><em class="property"> = 'delete'</em><a class="headerlink" href="#c7n.resources.asg.Delete.type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="c7n.resources.asg.DescribeLaunchConfig">
-<em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">DescribeLaunchConfig</code><span class="sig-paren">(</span><em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#DescribeLaunchConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.DescribeLaunchConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.DescribeSource" title="c7n.query.DescribeSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.DescribeSource</span></code></a></p>
-<dl class="method">
-<dt id="c7n.resources.asg.DescribeLaunchConfig.augment">
-<code class="descname">augment</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#DescribeLaunchConfig.augment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.DescribeLaunchConfig.augment" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3869,7 +3857,7 @@ attached to it.</p>
 <dl class="class">
 <dt id="c7n.resources.asg.ImageAgeFilter">
 <em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">ImageAgeFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#ImageAgeFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.ImageAgeFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.AgeFilter" title="c7n.filters.core.AgeFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.AgeFilter</span></code></a>, <a class="reference internal" href="#c7n.resources.asg.LaunchConfigFilterBase" title="c7n.resources.asg.LaunchConfigFilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.asg.LaunchConfigFilterBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.AgeFilter" title="c7n.filters.core.AgeFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.AgeFilter</span></code></a></p>
 <p>Filter asg by image age (in days).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3895,14 +3883,8 @@ attached to it.</p>
 
 <dl class="method">
 <dt id="c7n.resources.asg.ImageAgeFilter.get_resource_date">
-<code class="descname">get_resource_date</code><span class="sig-paren">(</span><em>i</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#ImageAgeFilter.get_resource_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.ImageAgeFilter.get_resource_date" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_resource_date</code><span class="sig-paren">(</span><em>asg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#ImageAgeFilter.get_resource_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.ImageAgeFilter.get_resource_date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="c7n.resources.asg.ImageAgeFilter.initialize">
-<code class="descname">initialize</code><span class="sig-paren">(</span><em>asgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#ImageAgeFilter.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.ImageAgeFilter.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get launch configs for the set of asgs</p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.resources.asg.ImageAgeFilter.permissions">
@@ -3930,7 +3912,7 @@ attached to it.</p>
 <dl class="class">
 <dt id="c7n.resources.asg.ImageFilter">
 <em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">ImageFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#ImageFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.ImageFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.ValueFilter" title="c7n.filters.core.ValueFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.ValueFilter</span></code></a>, <a class="reference internal" href="#c7n.resources.asg.LaunchConfigFilterBase" title="c7n.resources.asg.LaunchConfigFilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.asg.LaunchConfigFilterBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.ValueFilter" title="c7n.filters.core.ValueFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.ValueFilter</span></code></a></p>
 <p>Filter asg by image</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3950,12 +3932,6 @@ attached to it.</p>
         <span class="l l-Scalar l-Scalar-Plain">op</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ne</span>
 </pre></div>
 </div>
-<dl class="method">
-<dt id="c7n.resources.asg.ImageFilter.initialize">
-<code class="descname">initialize</code><span class="sig-paren">(</span><em>asgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#ImageFilter.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.ImageFilter.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get launch configs for the set of asgs</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="c7n.resources.asg.ImageFilter.permissions">
 <code class="descname">permissions</code><em class="property"> = ('ec2:DescribeImages', 'autoscaling:DescribeLaunchConfigurations')</em><a class="headerlink" href="#c7n.resources.asg.ImageFilter.permissions" title="Permalink to this definition">¶</a></dt>
@@ -4030,11 +4006,6 @@ cache utilization.</p>
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.asg.LaunchConfig.filter_registry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="c7n.resources.asg.LaunchConfig.get_source">
-<code class="descname">get_source</code><span class="sig-paren">(</span><em>source_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchConfig.get_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchConfig.get_source" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="class">
 <dt id="c7n.resources.asg.LaunchConfig.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchConfig.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchConfig.resource_type" title="Permalink to this definition">¶</a></dt>
@@ -4090,11 +4061,6 @@ cache utilization.</p>
 <dd></dd></dl>
 
 </dd></dl>
-
-<dl class="staticmethod">
-<dt id="c7n.resources.asg.LaunchConfig.retry">
-<em class="property">static </em><code class="descname">retry</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#c7n.resources.asg.LaunchConfig.retry" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.resources.asg.LaunchConfig.type">
@@ -4176,7 +4142,7 @@ cache utilization.</p>
 
 <dl class="method">
 <dt id="c7n.resources.asg.LaunchConfigDelete.process_config">
-<code class="descname">process_config</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchConfigDelete.process_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchConfigDelete.process_config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_config</code><span class="sig-paren">(</span><em>client</em>, <em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchConfigDelete.process_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchConfigDelete.process_config" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -4194,8 +4160,10 @@ cache utilization.</p>
 <dl class="class">
 <dt id="c7n.resources.asg.LaunchConfigFilter">
 <em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">LaunchConfigFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchConfigFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchConfigFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.ValueFilter" title="c7n.filters.core.ValueFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.ValueFilter</span></code></a>, <a class="reference internal" href="#c7n.resources.asg.LaunchConfigFilterBase" title="c7n.resources.asg.LaunchConfigFilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.asg.LaunchConfigFilterBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.ValueFilter" title="c7n.filters.core.ValueFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.ValueFilter</span></code></a></p>
 <p>Filter asg by launch config attributes.</p>
+<p>This will also filter to launch template data in addition
+to launch configurations.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4237,24 +4205,58 @@ cache utilization.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="c7n.resources.asg.LaunchConfigFilterBase">
-<em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">LaunchConfigFilterBase</code><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchConfigFilterBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchConfigFilterBase" title="Permalink to this definition">¶</a></dt>
+<dt id="c7n.resources.asg.LaunchInfo">
+<em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">LaunchInfo</code><span class="sig-paren">(</span><em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Mixin base class for querying asg launch configs.</p>
-<dl class="attribute">
-<dt id="c7n.resources.asg.LaunchConfigFilterBase.configs">
-<code class="descname">configs</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.asg.LaunchConfigFilterBase.configs" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="c7n.resources.asg.LaunchInfo.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>asg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchInfo.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchInfo.get" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="c7n.resources.asg.LaunchConfigFilterBase.initialize">
-<code class="descname">initialize</code><span class="sig-paren">(</span><em>asgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchConfigFilterBase.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchConfigFilterBase.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get launch configs for the set of asgs</p>
+<dt id="c7n.resources.asg.LaunchInfo.get_image_ids">
+<code class="descname">get_image_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchInfo.get_image_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchInfo.get_image_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.asg.LaunchInfo.get_image_map">
+<code class="descname">get_image_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchInfo.get_image_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchInfo.get_image_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.asg.LaunchInfo.get_launch_configs">
+<code class="descname">get_launch_configs</code><span class="sig-paren">(</span><em>asgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchInfo.get_launch_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchInfo.get_launch_configs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a mapping of launch configs for the given set of asgs</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="c7n.resources.asg.LaunchInfo.get_launch_id">
+<code class="descname">get_launch_id</code><span class="sig-paren">(</span><em>asg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchInfo.get_launch_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchInfo.get_launch_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.asg.LaunchInfo.get_launch_templates">
+<code class="descname">get_launch_templates</code><span class="sig-paren">(</span><em>asgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchInfo.get_launch_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchInfo.get_launch_templates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.asg.LaunchInfo.get_security_group_ids">
+<code class="descname">get_security_group_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchInfo.get_security_group_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchInfo.get_security_group_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.asg.LaunchInfo.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>asgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchInfo.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchInfo.initialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.asg.LaunchInfo.items">
+<code class="descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#LaunchInfo.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.LaunchInfo.items" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
-<dt id="c7n.resources.asg.LaunchConfigFilterBase.permissions">
-<code class="descname">permissions</code><em class="property"> = ('autoscaling:DescribeLaunchConfigurations',)</em><a class="headerlink" href="#c7n.resources.asg.LaunchConfigFilterBase.permissions" title="Permalink to this definition">¶</a></dt>
+<dt id="c7n.resources.asg.LaunchInfo.permissions">
+<code class="descname">permissions</code><em class="property"> = ('ec2:DescribeLaunchTemplateVersions', 'autoscaling:DescribeLaunchConfigurations')</em><a class="headerlink" href="#c7n.resources.asg.LaunchInfo.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -4317,7 +4319,7 @@ cache utilization.</p>
 <dl class="class">
 <dt id="c7n.resources.asg.NotEncryptedFilter">
 <em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">NotEncryptedFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#NotEncryptedFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.NotEncryptedFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a>, <a class="reference internal" href="#c7n.resources.asg.LaunchConfigFilterBase" title="c7n.resources.asg.LaunchConfigFilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.asg.LaunchConfigFilterBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
 <p>Check if an ASG is configured to have unencrypted volumes.</p>
 <p>Checks both the ami snapshots and the launch configuration.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -4336,27 +4338,21 @@ cache utilization.</p>
         <span class="l l-Scalar l-Scalar-Plain">exclude_image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
-<dl class="staticmethod">
-<dt id="c7n.resources.asg.NotEncryptedFilter.get_bad_snapshot">
-<em class="property">static </em><code class="descname">get_bad_snapshot</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#NotEncryptedFilter.get_bad_snapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.NotEncryptedFilter.get_bad_snapshot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle various client side errors when describing snapshots</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="c7n.resources.asg.NotEncryptedFilter.get_snapshots">
-<code class="descname">get_snapshots</code><span class="sig-paren">(</span><em>ec2</em>, <em>snap_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#NotEncryptedFilter.get_snapshots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.NotEncryptedFilter.get_snapshots" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_snapshots</code><span class="sig-paren">(</span><em>snap_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#NotEncryptedFilter.get_snapshots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.NotEncryptedFilter.get_snapshots" title="Permalink to this definition">¶</a></dt>
 <dd><p>get snapshots corresponding to id, but tolerant of invalid id’s.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="c7n.resources.asg.NotEncryptedFilter.get_unencrypted_configs">
-<code class="descname">get_unencrypted_configs</code><span class="sig-paren">(</span><em>ec2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#NotEncryptedFilter.get_unencrypted_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.NotEncryptedFilter.get_unencrypted_configs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_unencrypted_configs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#NotEncryptedFilter.get_unencrypted_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.NotEncryptedFilter.get_unencrypted_configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>retrieve configs that have unencrypted ebs voluems referenced.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="c7n.resources.asg.NotEncryptedFilter.get_unencrypted_images">
-<code class="descname">get_unencrypted_images</code><span class="sig-paren">(</span><em>ec2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#NotEncryptedFilter.get_unencrypted_images"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.NotEncryptedFilter.get_unencrypted_images" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_unencrypted_images</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#NotEncryptedFilter.get_unencrypted_images"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.NotEncryptedFilter.get_unencrypted_images" title="Permalink to this definition">¶</a></dt>
 <dd><p>retrieve images which have unencrypted snapshots referenced.</p>
 </dd></dl>
 
@@ -4364,12 +4360,6 @@ cache utilization.</p>
 <dt id="c7n.resources.asg.NotEncryptedFilter.images">
 <code class="descname">images</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.asg.NotEncryptedFilter.images" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="c7n.resources.asg.NotEncryptedFilter.initialize">
-<code class="descname">initialize</code><span class="sig-paren">(</span><em>asgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#NotEncryptedFilter.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.NotEncryptedFilter.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get launch configs for the set of asgs</p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.resources.asg.NotEncryptedFilter.permissions">
@@ -4713,8 +4703,10 @@ previous values to a named tag (for restoring later):</li>
 <em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">Resume</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Resume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Resume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.actions.html#c7n.actions.core.Action" title="c7n.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.core.Action</span></code></a></p>
 <p>Resume a suspended autoscale group and its instances</p>
-<p>Parameter ‘delay’ is the amount of time (in seconds) to wait between
-resuming each instance within the ASG (default value: 30)</p>
+<p>Parameter ‘delay’ is the amount of time (in seconds) to wait
+between resuming instances in the asg, and restarting the internal
+asg processed which gives some grace period before health checks
+turn on within the ASG (default value: 30)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4745,13 +4737,13 @@ resuming each instance within the ASG (default value: 30)</p>
 
 <dl class="method">
 <dt id="c7n.resources.asg.Resume.resume_asg">
-<code class="descname">resume_asg</code><span class="sig-paren">(</span><em>asg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Resume.resume_asg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Resume.resume_asg" title="Permalink to this definition">¶</a></dt>
+<code class="descname">resume_asg</code><span class="sig-paren">(</span><em>asg_client</em>, <em>asg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Resume.resume_asg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Resume.resume_asg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resume asg processes.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="c7n.resources.asg.Resume.resume_asg_instances">
-<code class="descname">resume_asg_instances</code><span class="sig-paren">(</span><em>asg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Resume.resume_asg_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Resume.resume_asg_instances" title="Permalink to this definition">¶</a></dt>
+<code class="descname">resume_asg_instances</code><span class="sig-paren">(</span><em>ec2_client</em>, <em>asg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Resume.resume_asg_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Resume.resume_asg_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resume asg instances.</p>
 </dd></dl>
 
@@ -4770,20 +4762,20 @@ resuming each instance within the ASG (default value: 30)</p>
 <dl class="class">
 <dt id="c7n.resources.asg.SecurityGroupFilter">
 <em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">SecurityGroupFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#SecurityGroupFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.SecurityGroupFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.vpc.SecurityGroupFilter" title="c7n.filters.vpc.SecurityGroupFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.vpc.SecurityGroupFilter</span></code></a>, <a class="reference internal" href="#c7n.resources.asg.LaunchConfigFilterBase" title="c7n.resources.asg.LaunchConfigFilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.asg.LaunchConfigFilterBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.vpc.SecurityGroupFilter" title="c7n.filters.vpc.SecurityGroupFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.vpc.SecurityGroupFilter</span></code></a></p>
 <dl class="attribute">
 <dt id="c7n.resources.asg.SecurityGroupFilter.RelatedIdsExpression">
 <code class="descname">RelatedIdsExpression</code><em class="property"> = ''</em><a class="headerlink" href="#c7n.resources.asg.SecurityGroupFilter.RelatedIdsExpression" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="c7n.resources.asg.SecurityGroupFilter.get_permissions">
-<code class="descname">get_permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#SecurityGroupFilter.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.SecurityGroupFilter.get_permissions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="c7n.resources.asg.SecurityGroupFilter.get_related_ids">
 <code class="descname">get_related_ids</code><span class="sig-paren">(</span><em>asgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#SecurityGroupFilter.get_related_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.SecurityGroupFilter.get_related_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.asg.SecurityGroupFilter.permissions">
+<code class="descname">permissions</code><em class="property"> = ('ec2:DescribeSecurityGroups', 'ec2:DescribeLaunchTemplateVersions', 'autoscaling:DescribeLaunchConfigurations')</em><a class="headerlink" href="#c7n.resources.asg.SecurityGroupFilter.permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -4994,7 +4986,7 @@ to the ASG itself.</p>
 <dl class="class">
 <dt id="c7n.resources.asg.UserDataFilter">
 <em class="property">class </em><code class="descclassname">c7n.resources.asg.</code><code class="descname">UserDataFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#UserDataFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.UserDataFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.ValueFilter" title="c7n.filters.core.ValueFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.ValueFilter</span></code></a>, <a class="reference internal" href="#c7n.resources.asg.LaunchConfigFilterBase" title="c7n.resources.asg.LaunchConfigFilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.asg.LaunchConfigFilterBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.ValueFilter" title="c7n.filters.core.ValueFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.ValueFilter</span></code></a></p>
 <p>Filter on ASG’s whose launch configs have matching userdata.
 Note: It is highly recommended to use regexes with the ?sm flags, since Custodian
 uses re.match() and userdata spans multiple lines.</p>
@@ -5037,11 +5029,16 @@ uses re.match() and userdata spans multiple lines.</p>
 <dl class="method">
 <dt id="c7n.resources.asg.UserDataFilter.process">
 <code class="descname">process</code><span class="sig-paren">(</span><em>asgs</em>, <em>event=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#UserDataFilter.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.UserDataFilter.process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get list of autoscaling groups whose launch configs match the user-data filter.
-Note: Since this is an autoscaling filter, this won’t match unused launch configs.
-:param launch_configs: List of launch configurations
-:param event: Event
-:return: List of ASG’s with matching launch configs</p>
+<dd><p>Get list of autoscaling groups whose launch configs match the
+user-data filter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of ASG’s with matching launch configs</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -11416,6 +11413,18 @@ root volumes.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.ebs.ErrorHandler">
+<em class="property">class </em><code class="descclassname">c7n.resources.ebs.</code><code class="descname">ErrorHandler</code><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#ErrorHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.ErrorHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="c7n.resources.ebs.ErrorHandler.extract_bad_snapshot">
+<em class="property">static </em><code class="descname">extract_bad_snapshot</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#ErrorHandler.extract_bad_snapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.ErrorHandler.extract_bad_snapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle various client side errors when describing snapshots</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.ebs.FaultTolerantSnapshots">
 <em class="property">class </em><code class="descclassname">c7n.resources.ebs.</code><code class="descname">FaultTolerantSnapshots</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#FaultTolerantSnapshots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.FaultTolerantSnapshots" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
@@ -11683,6 +11692,12 @@ Current Generation Instances (2017-2)
 <dt id="c7n.resources.ebs.Snapshot.filter_registry">
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.ebs.Snapshot.filter_registry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.ebs.Snapshot.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><em>ids</em>, <em>cache=True</em>, <em>augment=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#Snapshot.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.Snapshot.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a set of resources by id.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="c7n.resources.ebs.Snapshot.resource_type">
@@ -12775,6 +12790,87 @@ can be taken from a specified url.</p>
 <dl class="attribute">
 <dt id="c7n.resources.ec2.InstanceOnHour.valid_origin_states">
 <code class="descname">valid_origin_states</code><em class="property"> = ('stopped',)</em><a class="headerlink" href="#c7n.resources.ec2.InstanceOnHour.valid_origin_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.ec2.LaunchTemplate">
+<em class="property">class </em><code class="descclassname">c7n.resources.ec2.</code><code class="descname">LaunchTemplate</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ec2.html#LaunchTemplate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.QueryResourceManager" title="c7n.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.ec2.LaunchTemplate.augment">
+<code class="descname">augment</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ec2.html#LaunchTemplate.augment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.augment" title="Permalink to this definition">¶</a></dt>
+<dd><p>subclasses may want to augment resources with additional information.</p>
+<p>ie. we want tags by default (rds, elb), and policy, location, acl for
+s3 buckets.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.ec2.LaunchTemplate.get_asg_templates">
+<code class="descname">get_asg_templates</code><span class="sig-paren">(</span><em>asgs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ec2.html#LaunchTemplate.get_asg_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.get_asg_templates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.ec2.LaunchTemplate.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><em>rids</em>, <em>cache=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ec2.html#LaunchTemplate.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a set of resources by id.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.ec2.LaunchTemplate.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/ec2.html#LaunchTemplate.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.resource_type.date">
+<code class="descname">date</code><em class="property"> = 'CreateTime'</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.resource_type.date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.resource_type.dimension">
+<code class="descname">dimension</code><em class="property"> = 'None'</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('describe_launch_templates', 'LaunchTemplates', None)</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.resource_type.filter_name">
+<code class="descname">filter_name</code><em class="property"> = 'LaunchTemplateIds'</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.resource_type.filter_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.resource_type.filter_type">
+<code class="descname">filter_type</code><em class="property"> = 'list'</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.resource_type.filter_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.resource_type.name">
+<code class="descname">name</code><em class="property"> = 'LaunchTemplateName'</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.resource_type.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'ec2'</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.type">
+<code class="descname">type</code><em class="property"> = 'launch-template-version'</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
