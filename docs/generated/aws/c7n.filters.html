@@ -601,6 +601,11 @@ manager - resource type manager (ec2, s3, etc)</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="c7n.filters.core.ValueFilter.required_keys">
+<code class="descname">required_keys</code><em class="property"> = {'key', 'value'}</em><a class="headerlink" href="#c7n.filters.core.ValueFilter.required_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.filters.core.ValueFilter.schema">
 <code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'default': {'type': 'object'}, 'key': {'type': 'string'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'type': {'enum': ['value']}, 'value': {'oneOf': [{'type': 'array'}, {'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}]}, 'value_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'value_type': {'enum': ['age', 'integer', 'expiration', 'normalize', 'size', 'cidr', 'cidr_size', 'swap', 'resource_count', 'expr', 'unique_size']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.filters.core.ValueFilter.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1899,6 +1904,17 @@ support aws config, automatically register the jsondiff filter.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.filters.vpc.MatchResourceValidator">
+<em class="property">class </em><code class="descclassname">c7n.filters.vpc.</code><code class="descname">MatchResourceValidator</code><a class="reference internal" href="../../_modules/c7n/filters/vpc.html#MatchResourceValidator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.vpc.MatchResourceValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="c7n.filters.vpc.MatchResourceValidator.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/filters/vpc.html#MatchResourceValidator.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.vpc.MatchResourceValidator.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.filters.vpc.NetworkLocation">
 <em class="property">class </em><code class="descclassname">c7n.filters.vpc.</code><code class="descname">NetworkLocation</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/filters/vpc.html#NetworkLocation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.vpc.NetworkLocation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
@@ -1968,7 +1984,7 @@ with a given tag value, and that tag was not present on the resource.</p>
 <dl class="class">
 <dt id="c7n.filters.vpc.SecurityGroupFilter">
 <em class="property">class </em><code class="descclassname">c7n.filters.vpc.</code><code class="descname">SecurityGroupFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/filters/vpc.html#SecurityGroupFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.vpc.SecurityGroupFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#c7n.filters.related.RelatedResourceFilter" title="c7n.filters.related.RelatedResourceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.related.RelatedResourceFilter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#c7n.filters.vpc.MatchResourceValidator" title="c7n.filters.vpc.MatchResourceValidator"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.vpc.MatchResourceValidator</span></code></a>, <a class="reference internal" href="#c7n.filters.related.RelatedResourceFilter" title="c7n.filters.related.RelatedResourceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.related.RelatedResourceFilter</span></code></a></p>
 <p>Filter a resource by its associated security groups.</p>
 <dl class="attribute">
 <dt id="c7n.filters.vpc.SecurityGroupFilter.AnnotationKey">
@@ -1995,7 +2011,7 @@ with a given tag value, and that tag was not present on the resource.</p>
 <dl class="class">
 <dt id="c7n.filters.vpc.SubnetFilter">
 <em class="property">class </em><code class="descclassname">c7n.filters.vpc.</code><code class="descname">SubnetFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/filters/vpc.html#SubnetFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.vpc.SubnetFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#c7n.filters.related.RelatedResourceFilter" title="c7n.filters.related.RelatedResourceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.related.RelatedResourceFilter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#c7n.filters.vpc.MatchResourceValidator" title="c7n.filters.vpc.MatchResourceValidator"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.vpc.MatchResourceValidator</span></code></a>, <a class="reference internal" href="#c7n.filters.related.RelatedResourceFilter" title="c7n.filters.related.RelatedResourceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.related.RelatedResourceFilter</span></code></a></p>
 <p>Filter a resource by its associated subnets.</p>
 <dl class="attribute">
 <dt id="c7n.filters.vpc.SubnetFilter.AnnotationKey">
@@ -2022,7 +2038,7 @@ with a given tag value, and that tag was not present on the resource.</p>
 <dl class="class">
 <dt id="c7n.filters.vpc.VpcFilter">
 <em class="property">class </em><code class="descclassname">c7n.filters.vpc.</code><code class="descname">VpcFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/filters/vpc.html#VpcFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.vpc.VpcFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#c7n.filters.related.RelatedResourceFilter" title="c7n.filters.related.RelatedResourceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.related.RelatedResourceFilter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#c7n.filters.vpc.MatchResourceValidator" title="c7n.filters.vpc.MatchResourceValidator"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.vpc.MatchResourceValidator</span></code></a>, <a class="reference internal" href="#c7n.filters.related.RelatedResourceFilter" title="c7n.filters.related.RelatedResourceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.related.RelatedResourceFilter</span></code></a></p>
 <p>Filter a resource by its associated vpc.</p>
 <dl class="attribute">
 <dt id="c7n.filters.vpc.VpcFilter.AnnotationKey">

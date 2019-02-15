@@ -211,7 +211,15 @@
 <span class="kn">from</span> <span class="nn">.related</span> <span class="k">import</span> <span class="n">RelatedResourceFilter</span>
 
 
-<div class="viewcode-block" id="SecurityGroupFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.SecurityGroupFilter">[docs]</a><span class="k">class</span> <span class="nc">SecurityGroupFilter</span><span class="p">(</span><span class="n">RelatedResourceFilter</span><span class="p">):</span>
+<div class="viewcode-block" id="MatchResourceValidator"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.MatchResourceValidator">[docs]</a><span class="k">class</span> <span class="nc">MatchResourceValidator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MatchResourceValidator.validate"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.MatchResourceValidator.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;match-resource&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">required_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">MatchResourceValidator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="SecurityGroupFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.SecurityGroupFilter">[docs]</a><span class="k">class</span> <span class="nc">SecurityGroupFilter</span><span class="p">(</span><span class="n">MatchResourceValidator</span><span class="p">,</span> <span class="n">RelatedResourceFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter a resource by its associated security groups.&quot;&quot;&quot;</span>
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
         <span class="s1">&#39;security-group&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">ValueFilter</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
@@ -223,7 +231,7 @@
     <span class="n">AnnotationKey</span> <span class="o">=</span> <span class="s2">&quot;matched-security-groups&quot;</span></div>
 
 
-<div class="viewcode-block" id="SubnetFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.SubnetFilter">[docs]</a><span class="k">class</span> <span class="nc">SubnetFilter</span><span class="p">(</span><span class="n">RelatedResourceFilter</span><span class="p">):</span>
+<div class="viewcode-block" id="SubnetFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.SubnetFilter">[docs]</a><span class="k">class</span> <span class="nc">SubnetFilter</span><span class="p">(</span><span class="n">MatchResourceValidator</span><span class="p">,</span> <span class="n">RelatedResourceFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter a resource by its associated subnets.&quot;&quot;&quot;</span>
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
         <span class="s1">&#39;subnet&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">ValueFilter</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
@@ -235,7 +243,7 @@
     <span class="n">AnnotationKey</span> <span class="o">=</span> <span class="s2">&quot;matched-subnets&quot;</span></div>
 
 
-<div class="viewcode-block" id="VpcFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.VpcFilter">[docs]</a><span class="k">class</span> <span class="nc">VpcFilter</span><span class="p">(</span><span class="n">RelatedResourceFilter</span><span class="p">):</span>
+<div class="viewcode-block" id="VpcFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.VpcFilter">[docs]</a><span class="k">class</span> <span class="nc">VpcFilter</span><span class="p">(</span><span class="n">MatchResourceValidator</span><span class="p">,</span> <span class="n">RelatedResourceFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter a resource by its associated vpc.&quot;&quot;&quot;</span>
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
         <span class="s1">&#39;vpc&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">ValueFilter</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
