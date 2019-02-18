@@ -211,6 +211,7 @@
 
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
+<span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">RemoveTag</span>
 
 
 <div class="viewcode-block" id="StepFunction"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.sfn.StepFunction">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;step-machine&#39;</span><span class="p">)</span>
@@ -228,6 +229,60 @@
             <span class="s2">&quot;describe_state_machine&quot;</span><span class="p">,</span> <span class="s2">&quot;stateMachineArn&quot;</span><span class="p">,</span>
             <span class="s1">&#39;stateMachineArn&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+
+
+<div class="viewcode-block" id="TagStepFunction"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.sfn.TagStepFunction">[docs]</a><span class="nd">@StepFunction</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TagStepFunction</span><span class="p">(</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Action to create tag(s) on a step function</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: tag-step-function</span>
+<span class="sd">                resource: step-machine</span>
+<span class="sd">                actions:</span>
+<span class="sd">                  - type: tag</span>
+<span class="sd">                    key: target-tag</span>
+<span class="sd">                    value: target-tag-value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;stepfunctions:TagResource&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="TagStepFunction.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.sfn.TagStepFunction.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+
+        <span class="n">tags_lower</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="n">tags_lower</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tag</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">tag_resource</span><span class="p">(</span><span class="n">resourceArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;stateMachineArn&#39;</span><span class="p">],</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags_lower</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="UnTagStepFunction"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.sfn.UnTagStepFunction">[docs]</a><span class="nd">@StepFunction</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UnTagStepFunction</span><span class="p">(</span><span class="n">RemoveTag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Action to create tag(s) on a step function</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: step-function-remove-tag</span>
+<span class="sd">                resource: step-machine</span>
+<span class="sd">                actions:</span>
+<span class="sd">                  - type: remove-tag</span>
+<span class="sd">                    tags: [&quot;test&quot;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;stepfunctions:UntagResource&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="UnTagStepFunction.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.sfn.UnTagStepFunction.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tag_keys</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">untag_resource</span><span class="p">(</span><span class="n">resourceArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;stateMachineArn&#39;</span><span class="p">],</span> <span class="n">tagKeys</span><span class="o">=</span><span class="n">tag_keys</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
