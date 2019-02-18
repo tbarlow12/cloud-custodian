@@ -264,8 +264,8 @@
         <span class="p">}</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_prepare_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>  <span class="c1"># type: azure.mgmt.web.WebSiteManagementClient</span>
+    <span class="k">def</span> <span class="nf">_prepare_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>  <span class="c1"># type azure.mgmt.web.WebSiteManagementClient</span>
 
     <span class="k">def</span> <span class="nf">_process_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">AppServicePlan</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">resource</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">])</span>

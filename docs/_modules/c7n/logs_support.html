@@ -240,7 +240,7 @@
 
 <div class="viewcode-block" id="normalized_log_entries"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.logs_support.normalized_log_entries">[docs]</a><span class="k">def</span> <span class="nf">normalized_log_entries</span><span class="p">(</span><span class="n">raw_entries</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Mimic the format returned by LambdaManager.logs()&#39;&#39;&#39;</span>
-    <span class="n">entry_start</span> <span class="o">=</span> <span class="s1">&#39;([0-9:, \-]+) - .* - (\w+) - (.*)$&#39;</span>
+    <span class="n">entry_start</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;([0-9:, \-]+) - .* - (\w+) - (.*)$&#39;</span>
     <span class="n">entry</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="c1"># process start/end here - avoid parsing log entries twice</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">raw_entries</span><span class="p">:</span>

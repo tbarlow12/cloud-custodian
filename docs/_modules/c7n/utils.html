@@ -279,7 +279,7 @@
         <span class="k">if</span> <span class="nb">vars</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">contents</span> <span class="o">=</span> <span class="n">contents</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="nb">vars</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Failed to substitute variable by positional argument.&#39;</span>
                 <span class="k">raise</span> <span class="n">VarsSubstitutionError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -718,7 +718,7 @@
 <div class="viewcode-block" id="FormatDate"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.query.FormatDate">[docs]</a><span class="k">class</span> <span class="nc">FormatDate</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;a datetime wrapper with extended pyformat syntax&quot;&quot;&quot;</span>
 
-    <span class="n">date_increment</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\+[0-9]+[Mdh]&#39;</span><span class="p">)</span>
+    <span class="n">date_increment</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\+[0-9]+[Mdh]&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_d</span> <span class="o">=</span> <span class="n">d</span>
