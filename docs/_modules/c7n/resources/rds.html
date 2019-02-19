@@ -670,12 +670,25 @@
         <span class="n">client</span><span class="o">.</span><span class="n">remove_tags_from_resource</span><span class="p">(</span><span class="n">ResourceName</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">TagKeys</span><span class="o">=</span><span class="n">candidates</span><span class="p">)</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">_eligible_start_stop</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;available&quot;</span><span class="p">):</span>
+<span class="n">START_STOP_ELIGIBLE_ENGINES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;postgres&#39;</span><span class="p">,</span> <span class="s1">&#39;sqlserver-ee&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;oracle-se2&#39;</span><span class="p">,</span> <span class="s1">&#39;mariadb&#39;</span><span class="p">,</span> <span class="s1">&#39;oracle-ee&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sqlserver-ex&#39;</span><span class="p">,</span> <span class="s1">&#39;sqlserver-se&#39;</span><span class="p">,</span> <span class="s1">&#39;oracle-se&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mysql&#39;</span><span class="p">,</span> <span class="s1">&#39;oracle-se1&#39;</span><span class="p">,</span> <span class="s1">&#39;sqlserver-web&#39;</span><span class="p">}</span>
 
+
+<span class="k">def</span> <span class="nf">_eligible_start_stop</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;available&quot;</span><span class="p">):</span>
+    <span class="c1"># See conditions noted here</span>
+    <span class="c1"># https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_StopInstance.html</span>
+    <span class="c1"># Note that this doesn&#39;t really specify what happens for all the nosql engines</span>
+    <span class="c1"># that are available as rds engines.</span>
     <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DBInstanceStatus&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">state</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MultiAZ&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MultiAZ&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;Engine&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;sqlserver-&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;Engine&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">START_STOP_ELIGIBLE_ENGINES</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ReadReplicaDBInstanceIdentifiers&#39;</span><span class="p">):</span>
