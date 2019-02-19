@@ -21950,6 +21950,195 @@ s3 buckets.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-c7n.resources.lightsail">
+<span id="c7n-resources-lightsail-module"></span><h2>c7n.resources.lightsail module<a class="headerlink" href="#module-c7n.resources.lightsail" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="c7n.resources.lightsail.Database">
+<em class="property">class </em><code class="descclassname">c7n.resources.lightsail.</code><code class="descname">Database</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/lightsail.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.lightsail.Database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.QueryResourceManager" title="c7n.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.lightsail.Database.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.lightsail.Database.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.lightsail.Database.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/lightsail.html#Database.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.resource_type.date">
+<code class="descname">date</code><em class="property"> = 'createdAt'</em><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type.date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.resource_type.dimension">
+<code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('get_relational_databases', 'relationDatabases', None)</em><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.resource_type.filter_name">
+<code class="descname">filter_name</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type.filter_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.resource_type.id">
+<code class="descname">id</code><em class="property"> = 'arn'</em><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.resource_type.name">
+<code class="descname">name</code><em class="property"> = 'name'</em><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'lightsail'</em><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.type">
+<code class="descname">type</code><em class="property"> = 'lightsail-db'</em><a class="headerlink" href="#c7n.resources.lightsail.Database.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.lightsail.Instance">
+<em class="property">class </em><code class="descclassname">c7n.resources.lightsail.</code><code class="descname">Instance</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/lightsail.html#Instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.lightsail.Instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.QueryResourceManager" title="c7n.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.lightsail.Instance.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/lightsail.html#Instance.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.resource_type.date">
+<code class="descname">date</code><em class="property"> = 'createdAt'</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type.date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.resource_type.dimension">
+<code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('get_instances', 'instances', None)</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.resource_type.filter_name">
+<code class="descname">filter_name</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type.filter_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.resource_type.id">
+<code class="descname">id</code><em class="property"> = 'arn'</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.resource_type.name">
+<code class="descname">name</code><em class="property"> = 'name'</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'lightsail'</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.type">
+<code class="descname">type</code><em class="property"> = 'lightsail-instance'</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.lightsail.LoadBalancer">
+<em class="property">class </em><code class="descclassname">c7n.resources.lightsail.</code><code class="descname">LoadBalancer</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/lightsail.html#LoadBalancer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.QueryResourceManager" title="c7n.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.lightsail.LoadBalancer.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/lightsail.html#LoadBalancer.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.resource_type.date">
+<code class="descname">date</code><em class="property"> = 'createdAt'</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type.date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.resource_type.dimension">
+<code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('get_load_balancers', 'loadBalancers', None)</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.resource_type.filter_name">
+<code class="descname">filter_name</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type.filter_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.resource_type.id">
+<code class="descname">id</code><em class="property"> = 'arn'</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.resource_type.name">
+<code class="descname">name</code><em class="property"> = 'name'</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'lightsail'</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.type">
+<code class="descname">type</code><em class="property"> = 'lightsail-elb'</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-c7n.resources.ml">
 <span id="c7n-resources-ml-module"></span><h2>c7n.resources.ml module<a class="headerlink" href="#module-c7n.resources.ml" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
