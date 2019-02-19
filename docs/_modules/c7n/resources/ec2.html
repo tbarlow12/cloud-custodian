@@ -240,6 +240,8 @@
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">filter_empty</span>
 
 
+<span class="n">RE_ERROR_INSTANCE_ID</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;&#39;(?P&lt;instance_id&gt;i-.*?)&#39;&quot;</span><span class="p">)</span>
+
 <span class="n">filters</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="p">(</span><span class="s1">&#39;ec2.filters&#39;</span><span class="p">)</span>
 <span class="n">actions</span> <span class="o">=</span> <span class="n">ActionRegistry</span><span class="p">(</span><span class="s1">&#39;ec2.actions&#39;</span><span class="p">)</span>
 
@@ -1143,8 +1145,7 @@
         <span class="k">if</span> <span class="n">failures</span><span class="p">:</span>
             <span class="n">fail_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">failures</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Could not start </span><span class="si">%d</span><span class="s2"> of </span><span class="si">%d</span><span class="s2"> instances </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                <span class="n">fail_count</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">),</span>
-                <span class="n">utils</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">failures</span><span class="p">))</span>
+                <span class="n">fail_count</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">),</span> <span class="n">utils</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">failures</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
@@ -1154,12 +1155,29 @@
                      <span class="s1">&#39;Client.RequestLimitExceeded&#39;</span><span class="p">),</span>
         <span class="n">retry</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_retry</span><span class="p">(</span><span class="n">retryable</span><span class="p">,</span> <span class="n">max_attempts</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">instance_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;InstanceId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">]</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">retry</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">start_instances</span><span class="p">,</span> <span class="n">InstanceIds</span><span class="o">=</span><span class="n">instance_ids</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">retryable</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">True</span>
-            <span class="k">raise</span></div></div>
+        <span class="k">while</span> <span class="n">instance_ids</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">retry</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">start_instances</span><span class="p">,</span> <span class="n">InstanceIds</span><span class="o">=</span><span class="n">instance_ids</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">retryable</span><span class="p">:</span>
+                    <span class="c1"># we maxed out on our retries</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;IncorrectInstanceState&#39;</span><span class="p">:</span>
+                    <span class="n">instance_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">extract_instance_id</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span></div></div>
+
+
+<div class="viewcode-block" id="extract_instance_id"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.extract_instance_id">[docs]</a><span class="k">def</span> <span class="nf">extract_instance_id</span><span class="p">(</span><span class="n">state_error</span><span class="p">):</span>
+    <span class="s2">&quot;Extract an instance id from an error&quot;</span>
+    <span class="n">instance_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">RE_ERROR_INSTANCE_ID</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">state_error</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="n">instance_id</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;instance_id&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">instance_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not extract instance id from error: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">state_error</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">instance_id</span></div>
 
 
 <div class="viewcode-block" id="Resize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.Resize">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;resize&#39;</span><span class="p">)</span>
@@ -1298,17 +1316,12 @@
         <span class="k">return</span> <span class="n">instances</span></div>
 
     <span class="k">def</span> <span class="nf">_run_instances_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">instance_ids</span><span class="p">):</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">instance_ids</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">InstanceIds</span><span class="o">=</span><span class="n">instance_ids</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;IncorrectInstanceState&#39;</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Message&#39;</span><span class="p">]</span>
-                    <span class="n">e_instance_id</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="n">msg</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)]</span>
-                    <span class="n">instance_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">e_instance_id</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">instance_ids</span><span class="p">:</span>
-                        <span class="k">return</span>
-                    <span class="k">continue</span>
+                    <span class="n">instance_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">extract_instance_id</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
                 <span class="k">raise</span></div>
 
 
