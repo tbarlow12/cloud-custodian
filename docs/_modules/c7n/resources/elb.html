@@ -229,7 +229,7 @@
 <span class="kn">from</span> <span class="nn">c7n</span> <span class="k">import</span> <span class="n">tags</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span><span class="p">,</span> <span class="n">DescribeSource</span>
-<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">get_retry</span><span class="p">,</span> <span class="n">REGION_PARTITION_MAP</span>
+<span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">get_retry</span><span class="p">,</span> <span class="n">generate_arn</span>
 
 <span class="kn">from</span> <span class="nn">c7n.resources.shield</span> <span class="k">import</span> <span class="n">IsShieldProtected</span><span class="p">,</span> <span class="n">SetShieldProtection</span>
 
@@ -279,11 +279,12 @@
                 <span class="s1">&#39;elasticloadbalancing:DescribeTags&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ELB.get_arn"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.ELB.get_arn">[docs]</a>    <span class="k">def</span> <span class="nf">get_arn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;arn:</span><span class="si">%s</span><span class="s2">:elasticloadbalancing:</span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">:loadbalancer/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
-            <span class="n">REGION_PARTITION_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="s1">&#39;aws&#39;</span><span class="p">),</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
-            <span class="n">r</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_type</span><span class="o">.</span><span class="n">id</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="n">generate_arn</span><span class="p">(</span>
+            <span class="n">account_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+            <span class="n">service</span><span class="o">=</span><span class="s1">&#39;elasticloadbalancing&#39;</span><span class="p">,</span>
+            <span class="n">resource_type</span><span class="o">=</span><span class="s1">&#39;loadbalancer&#39;</span><span class="p">,</span>
+            <span class="n">resource</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_type</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+            <span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ELB.get_arns"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.ELB.get_arns">[docs]</a>    <span class="k">def</span> <span class="nf">get_arns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_arn</span><span class="p">,</span> <span class="n">resources</span><span class="p">)</span></div>
@@ -414,14 +415,10 @@
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;elasticloadbalancing:DeleteLoadBalancer&#39;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="Delete.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.Delete.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_balancers</span><span class="p">):</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="nb">list</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_elb</span><span class="p">,</span> <span class="n">load_balancers</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="Delete.process_elb"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.Delete.process_elb">[docs]</a>    <span class="k">def</span> <span class="nf">process_elb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elb</span><span class="p">):</span>
         <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">delete_load_balancer</span><span class="p">,</span>
-            <span class="n">LoadBalancerName</span><span class="o">=</span><span class="n">elb</span><span class="p">[</span><span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">])</span></div></div>
+        <span class="k">for</span> <span class="n">elb</span> <span class="ow">in</span> <span class="n">load_balancers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">delete_load_balancer</span><span class="p">,</span> <span class="n">LoadBalancerName</span><span class="o">=</span><span class="n">elb</span><span class="p">[</span><span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">])</span></div></div>
 
 
 <div class="viewcode-block" id="SetSslListenerPolicy"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.SetSslListenerPolicy">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;set-ssl-listener-policy&#39;</span><span class="p">)</span>
@@ -455,14 +452,28 @@
         <span class="s1">&#39;elasticloadbalancing:SetLoadBalancerPoliciesOfListener&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SetSslListenerPolicy.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.SetSslListenerPolicy.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_balancers</span><span class="p">):</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="nb">list</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_elb</span><span class="p">,</span> <span class="n">load_balancers</span><span class="p">))</span></div>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
+        <span class="n">rid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">resource_type</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="SetSslListenerPolicy.process_elb"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.SetSslListenerPolicy.process_elb">[docs]</a>    <span class="k">def</span> <span class="nf">process_elb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elb</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">lb</span> <span class="ow">in</span> <span class="n">load_balancers</span><span class="p">:</span>
+                <span class="n">futures</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_elb</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">lb</span><span class="p">)]</span> <span class="o">=</span> <span class="n">lb</span>
+
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="s2">&quot;set-ssl-listener-policy error on lb:</span><span class="si">%s</span><span class="s2"> error:</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">futures</span><span class="p">[</span><span class="n">f</span><span class="p">][</span><span class="n">rid</span><span class="p">],</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span>
+                    <span class="n">error</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">error</span></div>
+
+<div class="viewcode-block" id="SetSslListenerPolicy.process_elb"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.SetSslListenerPolicy.process_elb">[docs]</a>    <span class="k">def</span> <span class="nf">process_elb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">elb</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_ssl</span><span class="p">(</span><span class="n">elb</span><span class="p">):</span>
             <span class="k">return</span>
-
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
 
         <span class="c1"># Create a custom policy with epoch timestamp.</span>
         <span class="c1"># to make it unique within the</span>
@@ -841,11 +852,12 @@
 <span class="sd">        (myelb,[&#39;Protocol-SSLv1&#39;,&#39;Protocol-SSLv2&#39;])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">active_policy_attribute_tuples</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
             <span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">elb_policy_set</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">(</span><span class="n">elb_policy_tuples</span><span class="p">,</span> <span class="mi">50</span><span class="p">):</span>
                 <span class="n">futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_elb_policy_set</span><span class="p">,</span> <span class="n">elb_policy_set</span><span class="p">))</span>
+                    <span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_elb_policy_set</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">elb_policy_set</span><span class="p">))</span>
 
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
@@ -858,9 +870,8 @@
 
         <span class="k">return</span> <span class="n">active_policy_attribute_tuples</span></div>
 
-<div class="viewcode-block" id="SSLPolicyFilter.process_elb_policy_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.SSLPolicyFilter.process_elb_policy_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_elb_policy_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elb_policy_set</span><span class="p">):</span>
+<div class="viewcode-block" id="SSLPolicyFilter.process_elb_policy_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.SSLPolicyFilter.process_elb_policy_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_elb_policy_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">elb_policy_set</span><span class="p">):</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="p">(</span><span class="n">elb</span><span class="p">,</span> <span class="n">policy_names</span><span class="p">)</span> <span class="ow">in</span> <span class="n">elb_policy_set</span><span class="p">:</span>
             <span class="n">elb_name</span> <span class="o">=</span> <span class="n">elb</span><span class="p">[</span><span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">]</span>
@@ -954,10 +965,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ELBAttributeFilterBase.initialize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.ELBAttributeFilterBase.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elbs</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
+
         <span class="k">def</span> <span class="nf">_process_attributes</span><span class="p">(</span><span class="n">elb</span><span class="p">):</span>
             <span class="k">if</span> <span class="s1">&#39;Attributes&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elb</span><span class="p">:</span>
-                <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elb&#39;</span><span class="p">)</span>
                 <span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">describe_load_balancer_attributes</span><span class="p">(</span>
                     <span class="n">LoadBalancerName</span><span class="o">=</span><span class="n">elb</span><span class="p">[</span><span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">])</span>
                 <span class="n">elb</span><span class="p">[</span><span class="s1">&#39;Attributes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;LoadBalancerAttributes&#39;</span><span class="p">]</span>

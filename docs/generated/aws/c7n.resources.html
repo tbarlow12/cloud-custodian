@@ -2809,11 +2809,6 @@ does not match the load balancer health check protocol</p>
 <code class="descname">process</code><span class="sig-paren">(</span><em>load_balancers</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/appelb.html#AppELBModifyListenerPolicy.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.appelb.AppELBModifyListenerPolicy.process" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="c7n.resources.appelb.AppELBModifyListenerPolicy.process_alb">
-<code class="descname">process_alb</code><span class="sig-paren">(</span><em>alb</em>, <em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/appelb.html#AppELBModifyListenerPolicy.process_alb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.appelb.AppELBModifyListenerPolicy.process_alb" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="c7n.resources.appelb.AppELBModifyListenerPolicy.schema">
 <code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'certificate': {'type': 'string'}, 'port': {'type': 'integer'}, 'protocol': {'enum': ['HTTP', 'HTTPS']}, 'sslpolicy': {'type': 'string'}, 'type': {'enum': ['modify-listener']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.appelb.AppELBModifyListenerPolicy.schema" title="Permalink to this definition">¶</a></dt>
@@ -16428,11 +16423,6 @@ deletion of any load balancers.</p>
 <code class="descname">process</code><span class="sig-paren">(</span><em>load_balancers</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/elb.html#Delete.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.elb.Delete.process" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="c7n.resources.elb.Delete.process_elb">
-<code class="descname">process_elb</code><span class="sig-paren">(</span><em>elb</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/elb.html#Delete.process_elb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.elb.Delete.process_elb" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="c7n.resources.elb.Delete.schema">
 <code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['delete']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.elb.Delete.schema" title="Permalink to this definition">¶</a></dt>
@@ -17046,7 +17036,7 @@ for all custom policies on the ELB</p>
 
 <dl class="method">
 <dt id="c7n.resources.elb.SSLPolicyFilter.process_elb_policy_set">
-<code class="descname">process_elb_policy_set</code><span class="sig-paren">(</span><em>elb_policy_set</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/elb.html#SSLPolicyFilter.process_elb_policy_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.elb.SSLPolicyFilter.process_elb_policy_set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_elb_policy_set</code><span class="sig-paren">(</span><em>client</em>, <em>elb_policy_set</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/elb.html#SSLPolicyFilter.process_elb_policy_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.elb.SSLPolicyFilter.process_elb_policy_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -17137,7 +17127,7 @@ for all custom policies on the ELB</p>
 
 <dl class="method">
 <dt id="c7n.resources.elb.SetSslListenerPolicy.process_elb">
-<code class="descname">process_elb</code><span class="sig-paren">(</span><em>elb</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/elb.html#SetSslListenerPolicy.process_elb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.elb.SetSslListenerPolicy.process_elb" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_elb</code><span class="sig-paren">(</span><em>client</em>, <em>elb</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/elb.html#SetSslListenerPolicy.process_elb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.elb.SetSslListenerPolicy.process_elb" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
