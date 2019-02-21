@@ -1025,13 +1025,21 @@
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">actions</span><span class="p">:</span>
             <span class="n">a</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Policy.get_variables"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.policy.Policy.get_variables">[docs]</a>    <span class="k">def</span> <span class="nf">get_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Policy.get_variables"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.policy.Policy.get_variables">[docs]</a>    <span class="k">def</span> <span class="nf">get_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get runtime variables for policy interpolation.</span>
+
+<span class="sd">        Runtime variables are merged with the passed in variables</span>
+<span class="sd">        if any.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Global policy variable expansion, we have to carry forward on</span>
         <span class="c1"># various filter/action local vocabularies. Where possible defer</span>
         <span class="c1"># by using a format string.</span>
         <span class="c1">#</span>
         <span class="c1"># See https://github.com/capitalone/cloud-custodian/issues/2330</span>
-        <span class="k">return</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">variables</span><span class="p">:</span>
+            <span class="n">variables</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">variables</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
             <span class="c1"># standard runtime variables for interpolation</span>
             <span class="s1">&#39;account&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{account}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="s1">&#39;account_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
@@ -1055,7 +1063,8 @@
             <span class="s1">&#39;target_bucket_name&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{target_bucket_name}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="s1">&#39;target_prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{target_prefix}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{LoadBalancerName}</span><span class="s1">&#39;</span>
-        <span class="p">}</span></div>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">variables</span></div>
 
 <div class="viewcode-block" id="Policy.expand_variables"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.policy.Policy.expand_variables">[docs]</a>    <span class="k">def</span> <span class="nf">expand_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Expand variables in policy data.</span>
