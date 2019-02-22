@@ -212,11 +212,10 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 
-<span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="k">import</span> <span class="n">ClientError</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">as_completed</span>
 
-<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">ActionRegistry</span><span class="p">,</span> <span class="n">BaseAction</span>
-<span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">FilterRegistry</span><span class="p">,</span> <span class="n">AgeFilter</span><span class="p">,</span> <span class="n">OPERATORS</span>
+<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">BaseAction</span>
+<span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">AgeFilter</span><span class="p">,</span> <span class="n">OPERATORS</span>
 <span class="kn">import</span> <span class="nn">c7n.filters.vpc</span> <span class="k">as</span> <span class="nn">net_filters</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span>
@@ -226,12 +225,6 @@
     <span class="n">get_retry</span><span class="p">,</span> <span class="n">generate_arn</span><span class="p">)</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;custodian.rds-cluster&#39;</span><span class="p">)</span>
-
-<span class="n">filters</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="p">(</span><span class="s1">&#39;rds-cluster.filters&#39;</span><span class="p">)</span>
-<span class="n">actions</span> <span class="o">=</span> <span class="n">ActionRegistry</span><span class="p">(</span><span class="s1">&#39;rds-cluster.actions&#39;</span><span class="p">)</span>
-
-<span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag-count&#39;</span><span class="p">,</span> <span class="n">tags</span><span class="o">.</span><span class="n">TagCountFilter</span><span class="p">)</span>
-<span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">tags</span><span class="o">.</span><span class="n">TagActionFilter</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="RDSCluster"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RDSCluster">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;rds-cluster&#39;</span><span class="p">)</span>
@@ -250,8 +243,6 @@
         <span class="n">dimension</span> <span class="o">=</span> <span class="s1">&#39;DBClusterIdentifier&#39;</span>
         <span class="n">date</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-    <span class="n">filter_registry</span> <span class="o">=</span> <span class="n">filters</span>
-    <span class="n">action_registry</span> <span class="o">=</span> <span class="n">actions</span>
     <span class="n">retry</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">get_retry</span><span class="p">((</span><span class="s1">&#39;Throttled&#39;</span><span class="p">,)))</span>
 
     <span class="nd">@property</span>
@@ -268,6 +259,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">get_model</span><span class="p">(),</span>
             <span class="n">dbs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_factory</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">generate_arn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">retry</span><span class="p">)))</span></div></div>
+
+
+<span class="n">RDSCluster</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag-count&#39;</span><span class="p">,</span> <span class="n">tags</span><span class="o">.</span><span class="n">TagCountFilter</span><span class="p">)</span>
+<span class="n">RDSCluster</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">tags</span><span class="o">.</span><span class="n">TagActionFilter</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_rds_cluster_tags</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dbs</span><span class="p">,</span> <span class="n">session_factory</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">retry</span><span class="p">):</span>
@@ -287,7 +282,7 @@
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">process_tags</span><span class="p">,</span> <span class="n">dbs</span><span class="p">)))</span>
 
 
-<div class="viewcode-block" id="TagDelayedAction"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.TagDelayedAction">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="TagDelayedAction"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.TagDelayedAction">[docs]</a><span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">TagDelayedAction</span><span class="p">(</span><span class="n">tags</span><span class="o">.</span><span class="n">TagDelayedAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mark a RDS cluster for specific custodian action</span>
 
@@ -307,8 +302,8 @@
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="Tag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Tag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
-<span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Tag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Tag">[docs]</a><span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Tag</span><span class="p">(</span><span class="n">tags</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mark/tag a RDS cluster with a key/value</span>
 
@@ -337,8 +332,8 @@
             <span class="n">client</span><span class="o">.</span><span class="n">add_tags_to_resource</span><span class="p">(</span><span class="n">ResourceName</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">Tags</span><span class="o">=</span><span class="n">ts</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="RemoveTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RemoveTag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
-<span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;unmark&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RemoveTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RemoveTag">[docs]</a><span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;unmark&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">RemoveTag</span><span class="p">(</span><span class="n">tags</span><span class="o">.</span><span class="n">RemoveTag</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Removes a tag or set of tags from RDS clusters</span>
 
@@ -367,13 +362,13 @@
                 <span class="n">TagKeys</span><span class="o">=</span><span class="n">tag_keys</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="SecurityGroupFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.SecurityGroupFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;security-group&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="SecurityGroupFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.SecurityGroupFilter">[docs]</a><span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;security-group&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">SecurityGroupFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">SecurityGroupFilter</span><span class="p">):</span>
 
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;VpcSecurityGroups[].VpcSecurityGroupId&quot;</span></div>
 
 
-<div class="viewcode-block" id="SubnetFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.SubnetFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;subnet&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="SubnetFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.SubnetFilter">[docs]</a><span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;subnet&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">SubnetFilter</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">SubnetFilter</span><span class="p">):</span>
 
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -397,10 +392,10 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">SubnetFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div></div>
 
 
-<span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;network-location&#39;</span><span class="p">,</span> <span class="n">net_filters</span><span class="o">.</span><span class="n">NetworkLocation</span><span class="p">)</span>
+<span class="n">RDSCluster</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;network-location&#39;</span><span class="p">,</span> <span class="n">net_filters</span><span class="o">.</span><span class="n">NetworkLocation</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Delete"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Delete">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Delete"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Delete">[docs]</a><span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Delete</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to delete a RDS cluster</span>
 
@@ -453,22 +448,14 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">params</span><span class="p">[</span><span class="s1">&#39;FinalDBSnapshotIdentifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snapshot_identifier</span><span class="p">(</span>
                     <span class="s1">&#39;Final&#39;</span><span class="p">,</span> <span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">])</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">client</span><span class="o">.</span><span class="n">delete_db_cluster</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">][</span><span class="s1">&#39;Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;InvalidDBClusterStateFault&#39;</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                        <span class="s1">&#39;RDS cluster in invalid state: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-                        <span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">])</span>
-                    <span class="k">continue</span>
-                <span class="k">raise</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s1">&#39;Deleted RDS cluster: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">])</span></div></div>
+            <span class="n">_run_cluster_method</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">delete_db_cluster</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DBClusterNotFoundFault</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ResourceNotFoundFault</span><span class="p">),</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidDBClusterStateFault</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="RetentionWindow"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RetentionWindow">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;retention&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RetentionWindow"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RetentionWindow">[docs]</a><span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;retention&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">RetentionWindow</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Action to set the retention period on rds cluster snapshots,</span>
@@ -502,49 +489,82 @@
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;rds:ModifyDBCluster&#39;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="RetentionWindow.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RetentionWindow.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
-                <span class="n">futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">process_snapshot_retention</span><span class="p">,</span>
-                    <span class="n">cluster</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                        <span class="s2">&quot;Exception setting RDS cluster retention  </span><span class="se">\n</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span></div>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;rds&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="RetentionWindow.process_snapshot_retention"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RetentionWindow.process_snapshot_retention">[docs]</a>    <span class="k">def</span> <span class="nf">process_snapshot_retention</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_snapshot_retention</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">cluster</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RetentionWindow.process_snapshot_retention"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RetentionWindow.process_snapshot_retention">[docs]</a>    <span class="k">def</span> <span class="nf">process_snapshot_retention</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">cluster</span><span class="p">):</span>
         <span class="n">current_retention</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;BackupRetentionPeriod&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="n">new_retention</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;days&#39;</span><span class="p">]</span>
         <span class="n">retention_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;enforce&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">retention_type</span> <span class="o">==</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_retention_window</span><span class="p">(</span>
-                <span class="n">cluster</span><span class="p">,</span>
-                <span class="nb">max</span><span class="p">(</span><span class="n">current_retention</span><span class="p">,</span> <span class="n">new_retention</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">cluster</span>
-
-        <span class="k">if</span> <span class="n">retention_type</span> <span class="o">==</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span>
+                <span class="n">client</span><span class="p">,</span> <span class="n">cluster</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">current_retention</span><span class="p">,</span> <span class="n">new_retention</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">retention_type</span> <span class="o">==</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_retention_window</span><span class="p">(</span>
-                <span class="n">cluster</span><span class="p">,</span>
-                <span class="nb">min</span><span class="p">(</span><span class="n">current_retention</span><span class="p">,</span> <span class="n">new_retention</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">cluster</span>
+                <span class="n">client</span><span class="p">,</span> <span class="n">cluster</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">current_retention</span><span class="p">,</span> <span class="n">new_retention</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">retention_type</span> <span class="o">==</span> <span class="s1">&#39;exact&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_retention_window</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">new_retention</span><span class="p">)</span></div>
 
-        <span class="k">if</span> <span class="n">retention_type</span> <span class="o">==</span> <span class="s1">&#39;exact&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_retention_window</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">new_retention</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">cluster</span></div>
-
-<div class="viewcode-block" id="RetentionWindow.set_retention_window"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RetentionWindow.set_retention_window">[docs]</a>    <span class="k">def</span> <span class="nf">set_retention_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">retention</span><span class="p">):</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;rds&#39;</span><span class="p">)</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">modify_db_cluster</span><span class="p">(</span>
-            <span class="n">DBClusterIdentifier</span><span class="o">=</span><span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">],</span>
-            <span class="n">BackupRetentionPeriod</span><span class="o">=</span><span class="n">retention</span><span class="p">,</span>
-            <span class="n">PreferredBackupWindow</span><span class="o">=</span><span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;PreferredBackupWindow&#39;</span><span class="p">],</span>
-            <span class="n">PreferredMaintenanceWindow</span><span class="o">=</span><span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;PreferredMaintenanceWindow&#39;</span><span class="p">])</span></div></div>
+<div class="viewcode-block" id="RetentionWindow.set_retention_window"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RetentionWindow.set_retention_window">[docs]</a>    <span class="k">def</span> <span class="nf">set_retention_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">retention</span><span class="p">):</span>
+        <span class="n">_run_cluster_method</span><span class="p">(</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">modify_db_cluster</span><span class="p">,</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">DBClusterIdentifier</span><span class="o">=</span><span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">],</span>
+                 <span class="n">BackupRetentionPeriod</span><span class="o">=</span><span class="n">retention</span><span class="p">,</span>
+                 <span class="n">PreferredBackupWindow</span><span class="o">=</span><span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;PreferredBackupWindow&#39;</span><span class="p">],</span>
+                 <span class="n">PreferredMaintenanceWindow</span><span class="o">=</span><span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;PreferredMaintenanceWindow&#39;</span><span class="p">]),</span>
+            <span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DBClusterNotFoundFault</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ResourceNotFoundFault</span><span class="p">),</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidDBClusterStateFault</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="Snapshot"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Snapshot">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;snapshot&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="Stop"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Stop">[docs]</a><span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;stop&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Stop</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stop a running db cluster</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;stop&#39;</span><span class="p">)</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;rds:StopDBCluster&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="Stop.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Stop.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;rds&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
+            <span class="n">_run_cluster_method</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">stop_db_cluster</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">DBClusterIdentifier</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">]),</span>
+                <span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DBClusterNotFoundFault</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ResourceNotFoundFault</span><span class="p">),</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidDBClusterStateFault</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Start"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Start">[docs]</a><span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Start</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Start a stopped db cluster</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;rds:StartDBCluster&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="Start.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Start.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;rds&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
+            <span class="n">_run_cluster_method</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">start_db_cluster</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">DBClusterIdentifier</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">]),</span>
+                <span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DBClusterNotFoundFault</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ResourceNotFoundFault</span><span class="p">),</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidDBClusterStateFault</span><span class="p">)</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_run_cluster_method</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="p">(),</span> <span class="n">warn</span><span class="o">=</span><span class="p">(),</span> <span class="n">method_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">method</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ignore</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">except</span> <span class="n">warn</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;error </span><span class="si">%s</span><span class="s2"> on cluster </span><span class="si">%s</span><span class="s2"> error </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">method_name</span> <span class="ow">or</span> <span class="n">method</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">],</span> <span class="n">e</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Snapshot"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Snapshot">[docs]</a><span class="nd">@RDSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;snapshot&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Snapshot</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Action to create a snapshot of a rds cluster</span>
 
@@ -563,26 +583,16 @@
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;rds:CreateDBClusterSnapshot&#39;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="Snapshot.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Snapshot.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
-            <span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
-                <span class="n">futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">process_cluster_snapshot</span><span class="p">,</span>
-                    <span class="n">cluster</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                        <span class="s2">&quot;Exception creating RDS cluster snapshot  </span><span class="se">\n</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">clusters</span></div>
-
-<div class="viewcode-block" id="Snapshot.process_cluster_snapshot"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.Snapshot.process_cluster_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">process_cluster_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster</span><span class="p">):</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;rds&#39;</span><span class="p">)</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">create_db_cluster_snapshot</span><span class="p">(</span>
-            <span class="n">DBClusterSnapshotIdentifier</span><span class="o">=</span><span class="n">snapshot_identifier</span><span class="p">(</span>
-                <span class="s1">&#39;Backup&#39;</span><span class="p">,</span>
-                <span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">]),</span>
-            <span class="n">DBClusterIdentifier</span><span class="o">=</span><span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">])</span></div></div>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;rds&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
+            <span class="n">_run_cluster_method</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">create_db_cluster_snapshot</span><span class="p">,</span>
+                <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">DBClusterSnapshotIdentifier</span><span class="o">=</span><span class="n">snapshot_identifier</span><span class="p">(</span>
+                        <span class="s1">&#39;Backup&#39;</span><span class="p">,</span> <span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">]),</span>
+                    <span class="n">DBClusterIdentifier</span><span class="o">=</span><span class="n">cluster</span><span class="p">[</span><span class="s1">&#39;DBClusterIdentifier&#39;</span><span class="p">]),</span>
+                <span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DBClusterNotFoundFault</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ResourceNotFoundFault</span><span class="p">),</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidDBClusterStateFault</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="RDSClusterSnapshot"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RDSClusterSnapshot">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;rds-cluster-snapshot&#39;</span><span class="p">)</span>
@@ -600,10 +610,7 @@
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">filter_type</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;SnapshotCreateTime&#39;</span></div>
-
-    <span class="n">filter_registry</span> <span class="o">=</span> <span class="n">FilterRegistry</span><span class="p">(</span><span class="s1">&#39;rdscluster-snapshot.filters&#39;</span><span class="p">)</span>
-    <span class="n">action_registry</span> <span class="o">=</span> <span class="n">ActionRegistry</span><span class="p">(</span><span class="s1">&#39;rdscluster-snapshot.actions&#39;</span><span class="p">)</span></div>
+        <span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;SnapshotCreateTime&#39;</span></div></div>
 
 
 <div class="viewcode-block" id="RDSSnapshotAge"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RDSSnapshotAge">[docs]</a><span class="nd">@RDSClusterSnapshot</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">)</span>
@@ -657,23 +664,31 @@
 
 <div class="viewcode-block" id="RDSClusterSnapshotDelete.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RDSClusterSnapshotDelete.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">):</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Deleting </span><span class="si">%d</span><span class="s2"> RDS cluster snapshots&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">snapshots</span><span class="p">))</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;rds&#39;</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor_factory</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
             <span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">snapshot_set</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">snapshots</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
                 <span class="n">futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_snapshot_set</span><span class="p">,</span> <span class="n">snapshot_set</span><span class="p">))</span>
+                    <span class="n">w</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_snapshot_set</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">snapshot_set</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
+                    <span class="n">error</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                         <span class="s2">&quot;Exception deleting snapshot set </span><span class="se">\n</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="n">f</span><span class="o">.</span><span class="n">exception</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">error</span>
         <span class="k">return</span> <span class="n">snapshots</span></div>
 
-<div class="viewcode-block" id="RDSClusterSnapshotDelete.process_snapshot_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RDSClusterSnapshotDelete.process_snapshot_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_snapshot_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">snapshots_set</span><span class="p">):</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;rds&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="RDSClusterSnapshotDelete.process_snapshot_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.rdscluster.RDSClusterSnapshotDelete.process_snapshot_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_snapshot_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">snapshots_set</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">snapshots_set</span><span class="p">:</span>
-            <span class="n">c</span><span class="o">.</span><span class="n">delete_db_cluster_snapshot</span><span class="p">(</span>
-                <span class="n">DBClusterSnapshotIdentifier</span><span class="o">=</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;DBClusterSnapshotIdentifier&#39;</span><span class="p">])</span></div></div>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">delete_db_cluster_snapshot</span><span class="p">(</span>
+                    <span class="n">DBClusterSnapshotIdentifier</span><span class="o">=</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;DBClusterSnapshotIdentifier&#39;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DBSnapshotNotFoundFault</span><span class="p">,</span>
+                    <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidDBSnapshotStateFault</span><span class="p">):</span>
+                <span class="k">continue</span></div></div>
 </pre></div>
 
            </div>
