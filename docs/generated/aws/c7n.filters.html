@@ -1184,6 +1184,44 @@ average cpu utilization.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-c7n.filters.multiattr">
+<span id="c7n-filters-multiattr-module"></span><h2>c7n.filters.multiattr module<a class="headerlink" href="#module-c7n.filters.multiattr" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="c7n.filters.multiattr.MultiAttrFilter">
+<em class="property">class </em><code class="descclassname">c7n.filters.multiattr.</code><code class="descname">MultiAttrFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/filters/multiattr.html#MultiAttrFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.multiattr.MultiAttrFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
+<dl class="method">
+<dt id="c7n.filters.multiattr.MultiAttrFilter.get_attr_filters">
+<code class="descname">get_attr_filters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/filters/multiattr.html#MultiAttrFilter.get_attr_filters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.multiattr.MultiAttrFilter.get_attr_filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an iterator resource attribute filters configured.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="c7n.filters.multiattr.MultiAttrFilter.get_target">
+<code class="descname">get_target</code><span class="sig-paren">(</span><em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/filters/multiattr.html#MultiAttrFilter.get_target"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.multiattr.MultiAttrFilter.get_target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the resource, or related resource that should be attribute matched.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.filters.multiattr.MultiAttrFilter.multi_attrs">
+<code class="descname">multi_attrs</code><em class="property"> = {}</em><a class="headerlink" href="#c7n.filters.multiattr.MultiAttrFilter.multi_attrs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.filters.multiattr.MultiAttrFilter.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>resources</em>, <em>event=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/filters/multiattr.html#MultiAttrFilter.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.multiattr.MultiAttrFilter.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bulk process resources and return filtered set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="c7n.filters.multiattr.MultiAttrFilter.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/filters/multiattr.html#MultiAttrFilter.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.filters.multiattr.MultiAttrFilter.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>validate filter config, return validation error or self</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-c7n.filters.offhours">
 <span id="c7n-filters-offhours-module"></span><h2>c7n.filters.offhours module<a class="headerlink" href="#module-c7n.filters.offhours" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="resource-scheduling-offhours">

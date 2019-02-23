@@ -787,9 +787,11 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.UserAccessKey.annotate">(c7n.resources.iam.UserAccessKey attribute)</a>
 </li>
       </ul></li>
-      <li><a href="generated/aws/c7n.resources.html#c7n.resources.asg.UserDataFilter.annotation">annotation (c7n.resources.asg.UserDataFilter attribute)</a>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.GuardDutyEnabled.annotation">annotation (c7n.resources.account.GuardDutyEnabled attribute)</a>
 
       <ul>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.asg.UserDataFilter.annotation">(c7n.resources.asg.UserDataFilter attribute)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ec2.SsmStatus.annotation">(c7n.resources.ec2.SsmStatus attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ec2.UserData.annotation">(c7n.resources.ec2.UserData attribute)</a>
@@ -1378,6 +1380,8 @@
       <li><a href="generated/aws/c7n.filters.html#module-c7n.filters.metrics">c7n.filters.metrics (module)</a>
 </li>
       <li><a href="generated/aws/c7n.filters.html#module-c7n.filters.missing">c7n.filters.missing (module)</a>
+</li>
+      <li><a href="generated/aws/c7n.filters.html#module-c7n.filters.multiattr">c7n.filters.multiattr (module)</a>
 </li>
       <li><a href="generated/aws/c7n.filters.html#module-c7n.filters.offhours">c7n.filters.offhours (module)</a>, <a href="quickstart/offhours.html#module-c7n.filters.offhours">[1]</a>
 </li>
@@ -5523,6 +5527,8 @@
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.ec2.LaunchTemplate.get_asg_templates">get_asg_templates() (c7n.resources.ec2.LaunchTemplate method)</a>
 </li>
+      <li><a href="generated/aws/c7n.filters.html#c7n.filters.multiattr.MultiAttrFilter.get_attr_filters">get_attr_filters() (c7n.filters.multiattr.MultiAttrFilter method)</a>
+</li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.ec2.InstanceImageBase.get_base_image_mapping">get_base_image_mapping() (c7n.resources.ec2.InstanceImageBase method)</a>
 </li>
       <li><a href="generated/azure/c7n_azure.html#c7n_azure.session.Session.get_bearer_token">get_bearer_token() (c7n_azure.session.Session method)</a>
@@ -6353,8 +6359,14 @@
         <li><a href="generated/gcp/c7n_gcp.resources.html#c7n_gcp.resources.compute.InstanceOnHour.get_tag_value">(c7n_gcp.resources.compute.InstanceOnHour method)</a>
 </li>
       </ul></li>
-      <li><a href="generated/gcp/c7n_gcp.html#c7n_gcp.mu.PeriodicEvent.get_target">get_target() (c7n_gcp.mu.PeriodicEvent method)</a>
+      <li><a href="generated/aws/c7n.filters.html#c7n.filters.multiattr.MultiAttrFilter.get_target">get_target() (c7n.filters.multiattr.MultiAttrFilter method)</a>
+
+      <ul>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.GuardDutyEnabled.get_target">(c7n.resources.account.GuardDutyEnabled method)</a>
 </li>
+        <li><a href="generated/gcp/c7n_gcp.html#c7n_gcp.mu.PeriodicEvent.get_target">(c7n_gcp.mu.PeriodicEvent method)</a>
+</li>
+      </ul></li>
       <li><a href="generated/aws/c7n.html#c7n.testing.TestUtils.get_temp_dir">get_temp_dir() (c7n.testing.TestUtils method)</a>
 </li>
       <li><a href="generated/azure/c7n_azure.html#c7n_azure.session.Session.get_tenant_id">get_tenant_id() (c7n_azure.session.Session method)</a>
@@ -6464,6 +6476,8 @@
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.GroupMembership">GroupMembership (class in c7n.resources.iam)</a>
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.asg.GroupTagTrim">GroupTagTrim (class in c7n.resources.asg)</a>
+</li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.GuardDutyEnabled">GuardDutyEnabled (class in c7n.resources.account)</a>
 </li>
       <li><a href="generated/aws/c7n.html#c7n.policy.GuardDutyMode">GuardDutyMode (class in c7n.policy)</a>
 </li>
@@ -7771,12 +7785,16 @@
 </li>
       <li><a href="generated/aws/c7n.html#c7n.sqsexec.MessageIterator.msg_attributes">msg_attributes (c7n.sqsexec.MessageIterator attribute)</a>
 </li>
+      <li><a href="generated/aws/c7n.filters.html#c7n.filters.multiattr.MultiAttrFilter.multi_attrs">multi_attrs (c7n.filters.multiattr.MultiAttrFilter attribute)</a>
+</li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.PolicyQueryParser.multi_value">multi_value (c7n.resources.iam.PolicyQueryParser attribute)</a>
 
       <ul>
         <li><a href="generated/aws/c7n.html#c7n.utils.QueryParser.multi_value">(c7n.utils.QueryParser attribute)</a>
 </li>
       </ul></li>
+      <li><a href="generated/aws/c7n.filters.html#c7n.filters.multiattr.MultiAttrFilter">MultiAttrFilter (class in c7n.filters.multiattr)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -8433,6 +8451,8 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.ConfigEnabled.permissions">(c7n.resources.account.ConfigEnabled attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.EnableTrail.permissions">(c7n.resources.account.EnableTrail attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.GuardDutyEnabled.permissions">(c7n.resources.account.GuardDutyEnabled attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.HasVirtualMFA.permissions">(c7n.resources.account.HasVirtualMFA attribute)</a>
 </li>
@@ -9369,6 +9389,8 @@
         <li><a href="generated/aws/c7n.filters.html#c7n.filters.metrics.ShieldMetrics.process">(c7n.filters.metrics.ShieldMetrics method)</a>
 </li>
         <li><a href="generated/aws/c7n.filters.html#c7n.filters.missing.Missing.process">(c7n.filters.missing.Missing method)</a>
+</li>
+        <li><a href="generated/aws/c7n.filters.html#c7n.filters.multiattr.MultiAttrFilter.process">(c7n.filters.multiattr.MultiAttrFilter method)</a>
 </li>
         <li><a href="generated/aws/c7n.filters.html#c7n.filters.offhours.Time.process">(c7n.filters.offhours.Time method)</a>
 </li>
@@ -11696,6 +11718,8 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.EnableTrail.schema">(c7n.resources.account.EnableTrail attribute)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.GuardDutyEnabled.schema">(c7n.resources.account.GuardDutyEnabled attribute)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.HasVirtualMFA.schema">(c7n.resources.account.HasVirtualMFA attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.IAMSummary.schema">(c7n.resources.account.IAMSummary attribute)</a>
@@ -13862,6 +13886,8 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.EnableTrail.type">(c7n.resources.account.EnableTrail attribute)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.GuardDutyEnabled.type">(c7n.resources.account.GuardDutyEnabled attribute)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.HasVirtualMFA.type">(c7n.resources.account.HasVirtualMFA attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.IAMSummary.type">(c7n.resources.account.IAMSummary attribute)</a>
@@ -15878,6 +15904,8 @@
 </li>
         <li><a href="generated/aws/c7n.filters.html#c7n.filters.missing.Missing.validate">(c7n.filters.missing.Missing method)</a>
 </li>
+        <li><a href="generated/aws/c7n.filters.html#c7n.filters.multiattr.MultiAttrFilter.validate">(c7n.filters.multiattr.MultiAttrFilter method)</a>
+</li>
         <li><a href="generated/aws/c7n.filters.html#c7n.filters.offhours.Time.validate">(c7n.filters.offhours.Time method)</a>
 </li>
         <li><a href="generated/aws/c7n.filters.html#c7n.filters.related.RelatedResourceFilter.validate">(c7n.filters.related.RelatedResourceFilter method)</a>
@@ -15903,6 +15931,8 @@
         <li><a href="generated/aws/c7n.html#c7n.policy.PolicyExecutionMode.validate">(c7n.policy.PolicyExecutionMode method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.EnableDataEvents.validate">(c7n.resources.account.EnableDataEvents method)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.GuardDutyEnabled.validate">(c7n.resources.account.GuardDutyEnabled method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.account.ServiceLimit.validate">(c7n.resources.account.ServiceLimit method)</a>
 </li>

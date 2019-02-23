@@ -589,6 +589,65 @@ a trail this will do so without management events.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.account.GuardDutyEnabled">
+<em class="property">class </em><code class="descclassname">c7n.resources.account.</code><code class="descname">GuardDutyEnabled</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/account.html#GuardDutyEnabled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.account.GuardDutyEnabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.multiattr.MultiAttrFilter" title="c7n.filters.multiattr.MultiAttrFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.multiattr.MultiAttrFilter</span></code></a></p>
+<p>Check if the guard duty service is enabled.</p>
+<p>This allows looking at account’s detector and its associated
+master if any.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body">Check to ensure guard duty is active on account and associated to a master.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">guardduty-enabled</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">account</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">guard-duty</span>
+        <span class="l l-Scalar l-Scalar-Plain">Detector.Status</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ENABLED</span>
+        <span class="l l-Scalar l-Scalar-Plain">Master.AccountId</span><span class="p p-Indicator">:</span> <span class="s">&quot;00011001&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">Master.RelationshipStatus</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ENABLED</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="c7n.resources.account.GuardDutyEnabled.annotation">
+<code class="descname">annotation</code><em class="property"> = 'c7n:guard-duty'</em><a class="headerlink" href="#c7n.resources.account.GuardDutyEnabled.annotation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.account.GuardDutyEnabled.get_target">
+<code class="descname">get_target</code><span class="sig-paren">(</span><em>resource</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/account.html#GuardDutyEnabled.get_target"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.account.GuardDutyEnabled.get_target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the resource, or related resource that should be attribute matched.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.account.GuardDutyEnabled.permissions">
+<code class="descname">permissions</code><em class="property"> = ('guardduty:GetMasterAccount', 'guardduty:ListDetectors', 'guardduty:GetDetector')</em><a class="headerlink" href="#c7n.resources.account.GuardDutyEnabled.permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.account.GuardDutyEnabled.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'patternProperties': {'^Detector': {'oneOf': [{'type': 'object'}, {'type': 'string'}]}, '^Master': {'oneOf': [{'type': 'object'}, {'type': 'string'}]}}, 'properties': {'match-operator': {'enum': ['or', 'and']}, 'type': {'enum': ['guard-duty']}}, 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.account.GuardDutyEnabled.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.account.GuardDutyEnabled.type">
+<code class="descname">type</code><em class="property"> = 'guard-duty'</em><a class="headerlink" href="#c7n.resources.account.GuardDutyEnabled.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.account.GuardDutyEnabled.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/account.html#GuardDutyEnabled.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.account.GuardDutyEnabled.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>validate filter config, return validation error or self</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.account.HasVirtualMFA">
 <em class="property">class </em><code class="descclassname">c7n.resources.account.</code><code class="descname">HasVirtualMFA</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/account.html#HasVirtualMFA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.account.HasVirtualMFA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>

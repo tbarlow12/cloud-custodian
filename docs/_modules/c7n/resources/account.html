@@ -222,6 +222,7 @@
 <span class="kn">from</span> <span class="nn">c7n.actions.securityhub</span> <span class="k">import</span> <span class="n">OtherResourcePostFinding</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
 <span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">FilterRegistry</span><span class="p">,</span> <span class="n">ValueFilter</span>
+<span class="kn">from</span> <span class="nn">c7n.filters.multiattr</span> <span class="k">import</span> <span class="n">MultiAttrFilter</span>
 <span class="kn">from</span> <span class="nn">c7n.filters.missing</span> <span class="k">import</span> <span class="n">Missing</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">ResourceManager</span><span class="p">,</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">generate_arn</span>
@@ -362,6 +363,74 @@
         <span class="k">if</span> <span class="n">trails</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="n">resources</span></div></div>
+
+
+<div class="viewcode-block" id="GuardDutyEnabled"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.account.GuardDutyEnabled">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;guard-duty&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GuardDutyEnabled</span><span class="p">(</span><span class="n">MultiAttrFilter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if the guard duty service is enabled.</span>
+
+<span class="sd">    This allows looking at account&#39;s detector and its associated</span>
+<span class="sd">    master if any.</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">     Check to ensure guard duty is active on account and associated to a master.</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: guardduty-enabled</span>
+<span class="sd">                resource: account</span>
+<span class="sd">                filters:</span>
+<span class="sd">                  - type: guard-duty</span>
+<span class="sd">                    Detector.Status: ENABLED</span>
+<span class="sd">                    Master.AccountId: &quot;00011001&quot;</span>
+<span class="sd">                    Master.RelationshipStatus: ENABLED</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;guard-duty&#39;</span><span class="p">]},</span>
+            <span class="s1">&#39;match-operator&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;or&#39;</span><span class="p">,</span> <span class="s1">&#39;and&#39;</span><span class="p">]}},</span>
+        <span class="s1">&#39;patternProperties&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;^Detector&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;oneOf&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}]},</span>
+            <span class="s1">&#39;^Master&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;oneOf&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}]}},</span>
+    <span class="p">}</span>
+
+    <span class="n">annotation</span> <span class="o">=</span> <span class="s2">&quot;c7n:guard-duty&quot;</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;guardduty:GetMasterAccount&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;guardduty:ListDetectors&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;guardduty:GetDetector&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GuardDutyEnabled.validate"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.account.GuardDutyEnabled.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Detector&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Master&#39;</span><span class="p">):</span>
+                <span class="n">attrs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multi_attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">GuardDutyEnabled</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GuardDutyEnabled.get_target"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.account.GuardDutyEnabled.get_target">[docs]</a>    <span class="k">def</span> <span class="nf">get_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">in</span> <span class="n">resource</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resource</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation</span><span class="p">]</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;guardduty&#39;</span><span class="p">)</span>
+        <span class="c1"># detectors are singletons too.</span>
+        <span class="n">detector_ids</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">list_detectors</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DetectorIds&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">detector_ids</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">detector_id</span> <span class="o">=</span> <span class="n">detector_ids</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+        <span class="n">detector</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_detector</span><span class="p">(</span><span class="n">DetectorId</span><span class="o">=</span><span class="n">detector_id</span><span class="p">)</span>
+        <span class="n">detector</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ResponseMetadata&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">master</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_master_account</span><span class="p">(</span><span class="n">DetectorId</span><span class="o">=</span><span class="n">detector_id</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;master&#39;</span><span class="p">)</span>
+        <span class="n">resource</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Detector&#39;</span><span class="p">:</span> <span class="n">detector</span><span class="p">,</span> <span class="s1">&#39;Master&#39;</span><span class="p">:</span> <span class="n">master</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">r</span></div></div>
 
 
 <div class="viewcode-block" id="ConfigEnabled"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.account.ConfigEnabled">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;check-config&#39;</span><span class="p">)</span>
