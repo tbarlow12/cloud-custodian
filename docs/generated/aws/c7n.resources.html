@@ -14847,6 +14847,54 @@ and stop them.</td>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="c7n.resources.ecs.UpdateService">
+<em class="property">class </em><code class="descclassname">c7n.resources.ecs.</code><code class="descname">UpdateService</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#UpdateService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.UpdateService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.actions.html#c7n.actions.core.Action" title="c7n.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.core.Action</span></code></a></p>
+<p>Action to update service</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no-public-ips-services</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ecs-service</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&#39;networkConfiguration.awsvpcConfiguration.assignPublicIp&#39;</span><span class="p p-Indicator">:</span> <span class="s">&#39;ENABLED&#39;</span>
+    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">modify</span>
+        <span class="l l-Scalar l-Scalar-Plain">update</span><span class="p p-Indicator">:</span>
+          <span class="l l-Scalar l-Scalar-Plain">networkConfiguration</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">awsvpcConfiguration</span><span class="p p-Indicator">:</span>
+              <span class="l l-Scalar l-Scalar-Plain">assignPublicIp</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">DISABLED</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="c7n.resources.ecs.UpdateService.permissions">
+<code class="descname">permissions</code><em class="property"> = ('ecs:UpdateService',)</em><a class="headerlink" href="#c7n.resources.ecs.UpdateService.permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.ecs.UpdateService.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#UpdateService.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.UpdateService.process" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ecs.UpdateService.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['modify']}, 'update': {'deploymentConfiguration': {'properties': {'maximumPercent': {'type': 'integer'}, 'minimumHealthyPercent': {'type': 'integer'}}, 'type': 'object'}, 'desiredCount': {'type': 'integer'}, 'forceNewDeployment': {'default': False, 'type': 'boolean'}, 'healthCheckGracePeriodSeconds': {'type': 'integer'}, 'networkConfiguration': {'properties': {'awsvpcConfiguration': {'properties': {'assignPublicIp': {'enum': ['ENABLED', 'DISABLED'], 'type': 'string'}, 'securityGroups': {'items': {'type': 'string'}}, 'subnets': {'items': {'type': 'string'}, 'type': 'array'}}, 'type': 'object'}}, 'type': 'object'}, 'platformVersion': {'type': 'string'}, 'taskDefinition': {'type': 'string'}}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.ecs.UpdateService.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ecs.UpdateService.type">
+<code class="descname">type</code><em class="property"> = 'modify'</em><a class="headerlink" href="#c7n.resources.ecs.UpdateService.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="c7n.resources.ecs.ecs_tag_normalize">
 <code class="descclassname">c7n.resources.ecs.</code><code class="descname">ecs_tag_normalize</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#ecs_tag_normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.ecs_tag_normalize" title="Permalink to this definition">¶</a></dt>
