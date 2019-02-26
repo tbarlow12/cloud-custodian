@@ -728,7 +728,7 @@
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">vtype</span> <span class="o">==</span> <span class="s1">&#39;integer&#39;</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">vtype</span> <span class="o">==</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span>
