@@ -322,7 +322,7 @@
 
         <span class="n">lid</span> <span class="o">=</span> <span class="n">asg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LaunchTemplate&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">lid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">lid</span><span class="p">[</span><span class="s1">&#39;LaunchTemplateId&#39;</span><span class="p">],</span> <span class="n">lid</span><span class="p">[</span><span class="s1">&#39;LaunchTemplateVersion&#39;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">lid</span><span class="p">[</span><span class="s1">&#39;LaunchTemplateId&#39;</span><span class="p">],</span> <span class="n">lid</span><span class="p">[</span><span class="s1">&#39;Version&#39;</span><span class="p">])</span>
 
         <span class="c1"># we&#39;ve noticed some corner cases where the asg name is the lc name, but not</span>
         <span class="c1"># explicitly specified as launchconfiguration attribute.</span>
