@@ -213,10 +213,12 @@
 
 <span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">BaseAction</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyExecutionError</span>
-<span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">MetricsFilter</span><span class="p">,</span> <span class="n">ValueFilter</span>
+<span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">MetricsFilter</span><span class="p">,</span> <span class="n">ValueFilter</span><span class="p">,</span> <span class="n">Filter</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">get_retry</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">group_by</span>
 <span class="kn">from</span> <span class="nn">c7n</span> <span class="k">import</span> <span class="n">query</span>
+<span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">TagDelayedAction</span><span class="p">,</span> <span class="n">RemoveTag</span><span class="p">,</span> <span class="n">TagActionFilter</span>
+<span class="kn">from</span> <span class="nn">c7n.actions</span> <span class="k">import</span> <span class="n">AutoTagUser</span>
 
 
 <div class="viewcode-block" id="ecs_tag_normalize"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.ecs_tag_normalize">[docs]</a><span class="k">def</span> <span class="nf">ecs_tag_normalize</span><span class="p">(</span><span class="n">resources</span><span class="p">):</span>
@@ -651,9 +653,6 @@
         <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;ecs&#39;</span>
         <span class="nb">id</span> <span class="o">=</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;taskDefinitionArn&#39;</span>
         <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;list_task_definitions&#39;</span><span class="p">,</span> <span class="s1">&#39;taskDefinitionArns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">detail_spec</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s1">&#39;describe_task_definition&#39;</span><span class="p">,</span> <span class="s1">&#39;taskDefinition&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s1">&#39;taskDefinition&#39;</span><span class="p">)</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">filter_type</span> <span class="o">=</span> <span class="kc">None</span></div>
@@ -668,7 +667,20 @@
             <span class="k">return</span> <span class="n">resources</span>
         <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;event ids not resolved: </span><span class="si">%s</span><span class="s2"> error:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
-            <span class="k">return</span> <span class="p">[]</span></div></div>
+            <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="TaskDefinition.augment"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.TaskDefinition.augment">[docs]</a>    <span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;ecs&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">task_def_set</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">describe_task_definition</span><span class="p">(</span>
+                <span class="n">taskDefinition</span><span class="o">=</span><span class="n">task_def_set</span><span class="p">,</span>
+                <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;TAGS&#39;</span><span class="p">])</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;taskDefinition&#39;</span><span class="p">]</span>
+            <span class="n">r</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">ecs_tag_normalize</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span></div></div>
 
 
 <div class="viewcode-block" id="DeleteTaskDefinition"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.DeleteTaskDefinition">[docs]</a><span class="nd">@TaskDefinition</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
@@ -733,6 +745,7 @@
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
                 <span class="n">i</span><span class="p">[</span><span class="s1">&#39;c7n:cluster&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_id</span>
             <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">ecs_tag_normalize</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">results</span></div></div>
 
 
@@ -803,6 +816,162 @@
         <span class="k">except</span> <span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoUpdateAvailableException</span><span class="p">,</span>
                 <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">UpdateInProgressException</span><span class="p">):</span>
             <span class="k">return</span></div></div>
+
+
+<div class="viewcode-block" id="TagEcsResource"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.TagEcsResource">[docs]</a><span class="nd">@ECSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="nd">@TaskDefinition</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="nd">@Service</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="nd">@Task</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="nd">@ContainerInstance</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TagEcsResource</span><span class="p">(</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Action to create tag(s) on an ECS resource</span>
+<span class="sd">    (ecs, ecs-task-definition, ecs-service, ecs-task, ecs-container-instance)</span>
+
+<span class="sd">    Requires arns in new format for tasks, services, and container-instances.</span>
+<span class="sd">    https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-resource-ids.html</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: tag-ecs-service</span>
+<span class="sd">                resource: ecs-service</span>
+<span class="sd">                filters:</span>
+<span class="sd">                  - &quot;tag:target-tag&quot;: absent</span>
+<span class="sd">                  - type: taggable</span>
+<span class="sd">                    state: true</span>
+<span class="sd">                actions:</span>
+<span class="sd">                  - type: tag</span>
+<span class="sd">                    key: target-tag</span>
+<span class="sd">                    value: target-value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ecs:TagResource&#39;</span><span class="p">,)</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="TagEcsResource.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.TagEcsResource.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">resource_type</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">],</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]}</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">]</span>
+        <span class="n">old_arns</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ecs_taggable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">resource_type</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+                <span class="n">old_arns</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">tag_resource</span><span class="p">(</span><span class="n">resourceArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="n">mid</span><span class="p">],</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">old_arns</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t tag </span><span class="si">%d</span><span class="s2"> resource(s). Needs new ARN format&quot;</span><span class="p">,</span> <span class="n">old_arns</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RemoveTagEcsResource"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.RemoveTagEcsResource">[docs]</a><span class="nd">@ECSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="nd">@TaskDefinition</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="nd">@Service</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="nd">@Task</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="nd">@ContainerInstance</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RemoveTagEcsResource</span><span class="p">(</span><span class="n">RemoveTag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove tag(s) from ECS resources</span>
+<span class="sd">    (ecs, ecs-task-definition, ecs-service, ecs-task, ecs-container-instance)</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: ecs-cluster-remove-tag</span>
+<span class="sd">                resource: ecs</span>
+<span class="sd">                filters:</span>
+<span class="sd">                  - &quot;tag:BadTag&quot;: present</span>
+<span class="sd">                  - type: taggable</span>
+<span class="sd">                    value: true</span>
+<span class="sd">                actions:</span>
+<span class="sd">                  - type: remove-tag</span>
+<span class="sd">                    tags: [&quot;BadTag&quot;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ecs:UntagResource&#39;</span><span class="p">,)</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="RemoveTagEcsResource.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.RemoveTagEcsResource.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+        <span class="n">old_arns</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ecs_taggable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">resource_type</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+                <span class="n">old_arns</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">untag_resource</span><span class="p">(</span><span class="n">resourceArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_key</span><span class="p">],</span> <span class="n">tagKeys</span><span class="o">=</span><span class="n">keys</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">old_arns</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t untag </span><span class="si">%d</span><span class="s2"> resource(s). Needs new ARN format&quot;</span><span class="p">,</span> <span class="n">old_arns</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="MarkEcsResourceForOp"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.MarkEcsResourceForOp">[docs]</a><span class="nd">@ECSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<span class="nd">@TaskDefinition</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<span class="nd">@Service</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<span class="nd">@Task</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<span class="nd">@ContainerInstance</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;mark-for-op&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MarkEcsResourceForOp</span><span class="p">(</span><span class="n">TagDelayedAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Mark ECS resources for deferred action</span>
+<span class="sd">    (ecs, ecs-task-definition, ecs-service, ecs-task, ecs-container-instance)</span>
+
+<span class="sd">    Requires arns in new format for tasks, services, and container-instances.</span>
+<span class="sd">    https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-resource-ids.html</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">          - name: ecs-service-invalid-tag-stop</span>
+<span class="sd">            resource: ecs-service</span>
+<span class="sd">            filters:</span>
+<span class="sd">              - &quot;tag:InvalidTag&quot;: present</span>
+<span class="sd">              - type: taggable</span>
+<span class="sd">                state: true</span>
+<span class="sd">            actions:</span>
+<span class="sd">              - type: mark-for-op</span>
+<span class="sd">                op: delete</span>
+<span class="sd">                days: 1</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="ECSTaggable"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.ECSTaggable">[docs]</a><span class="nd">@Service</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;taggable&#39;</span><span class="p">)</span>
+<span class="nd">@Task</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;taggable&#39;</span><span class="p">)</span>
+<span class="nd">@ContainerInstance</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;taggable&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ECSTaggable</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter ECS resources on arn-format</span>
+<span class="sd">    https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-resource-ids.html</span>
+<span class="sd">    :example:</span>
+
+<span class="sd">        .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">                - name:</span>
+<span class="sd">                  resource: ecs-service</span>
+<span class="sd">                  filters:</span>
+<span class="sd">                    - type: taggable</span>
+<span class="sd">                      state: true</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span><span class="s1">&#39;taggable&#39;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">})</span>
+
+<div class="viewcode-block" id="ECSTaggable.get_permissions"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.ECSTaggable.get_permissions">[docs]</a>    <span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_permissions</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ECSTaggable.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ecs.ECSTaggable.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">ecs_taggable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">resource_type</span><span class="p">,</span> <span class="n">r</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span> <span class="k">if</span> <span class="n">ecs_taggable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">resource_type</span><span class="p">,</span> <span class="n">r</span><span class="p">)]</span></div></div>
+
+
+<span class="n">ECSCluster</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">)</span>
+<span class="n">TaskDefinition</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">)</span>
+<span class="n">Service</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">)</span>
+<span class="n">Task</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">)</span>
+<span class="n">ContainerInstance</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;marked-for-op&#39;</span><span class="p">,</span> <span class="n">TagActionFilter</span><span class="p">)</span>
+
+<span class="n">ECSCluster</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;auto-tag-user&#39;</span><span class="p">,</span> <span class="n">AutoTagUser</span><span class="p">)</span>
+<span class="n">TaskDefinition</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;auto-tag-user&#39;</span><span class="p">,</span> <span class="n">AutoTagUser</span><span class="p">)</span>
+<span class="n">Service</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;auto-tag-user&#39;</span><span class="p">,</span> <span class="n">AutoTagUser</span><span class="p">)</span>
+<span class="n">Task</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;auto-tag-user&#39;</span><span class="p">,</span> <span class="n">AutoTagUser</span><span class="p">)</span>
+<span class="n">ContainerInstance</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;auto-tag-user&#39;</span><span class="p">,</span> <span class="n">AutoTagUser</span><span class="p">)</span>
 </pre></div>
 
            </div>

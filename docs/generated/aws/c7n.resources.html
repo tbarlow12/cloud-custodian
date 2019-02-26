@@ -14368,6 +14368,46 @@ s3 buckets.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.ecs.ECSTaggable">
+<em class="property">class </em><code class="descclassname">c7n.resources.ecs.</code><code class="descname">ECSTaggable</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#ECSTaggable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.ECSTaggable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
+<p>Filter ECS resources on arn-format
+<a class="reference external" href="https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-resource-ids.html">https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-resource-ids.html</a>
+:example:</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ecs-service</span>
+      <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">taggable</span>
+          <span class="l l-Scalar l-Scalar-Plain">state</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</div></blockquote>
+<dl class="method">
+<dt id="c7n.resources.ecs.ECSTaggable.get_permissions">
+<code class="descname">get_permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#ECSTaggable.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.ECSTaggable.get_permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.ecs.ECSTaggable.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>resources</em>, <em>event=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#ECSTaggable.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.ECSTaggable.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bulk process resources and return filtered set.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ecs.ECSTaggable.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'state': {'type': 'boolean'}, 'type': {'enum': ['taggable']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.ecs.ECSTaggable.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ecs.ECSTaggable.type">
+<code class="descname">type</code><em class="property"> = 'taggable'</em><a class="headerlink" href="#c7n.resources.ecs.ECSTaggable.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.ecs.ECSTaskDescribeSource">
 <em class="property">class </em><code class="descclassname">c7n.resources.ecs.</code><code class="descname">ECSTaskDescribeSource</code><span class="sig-paren">(</span><em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#ECSTaskDescribeSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.ECSTaskDescribeSource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#c7n.resources.ecs.ECSClusterResourceDescribeSource" title="c7n.resources.ecs.ECSClusterResourceDescribeSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.ecs.ECSClusterResourceDescribeSource</span></code></a></p>
@@ -14379,6 +14419,42 @@ s3 buckets.</p>
 <dl class="attribute">
 <dt id="c7n.resources.ecs.ECSTaskDescribeSource.type">
 <code class="descname">type</code><em class="property"> = 'describe-ecs-task'</em><a class="headerlink" href="#c7n.resources.ecs.ECSTaskDescribeSource.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.ecs.MarkEcsResourceForOp">
+<em class="property">class </em><code class="descclassname">c7n.resources.ecs.</code><code class="descname">MarkEcsResourceForOp</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#MarkEcsResourceForOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.MarkEcsResourceForOp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.tags.TagDelayedAction" title="c7n.tags.TagDelayedAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.tags.TagDelayedAction</span></code></a></p>
+<p>Mark ECS resources for deferred action
+(ecs, ecs-task-definition, ecs-service, ecs-task, ecs-container-instance)</p>
+<p>Requires arns in new format for tasks, services, and container-instances.
+<a class="reference external" href="https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-resource-ids.html">https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-resource-ids.html</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ecs-service-invalid-tag-stop</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ecs-service</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;tag:InvalidTag&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">taggable</span>
+        <span class="l l-Scalar l-Scalar-Plain">state</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">mark-for-op</span>
+        <span class="l l-Scalar l-Scalar-Plain">op</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delete</span>
+        <span class="l l-Scalar l-Scalar-Plain">days</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="c7n.resources.ecs.MarkEcsResourceForOp.type">
+<code class="descname">type</code><em class="property"> = 'mark-for-op'</em><a class="headerlink" href="#c7n.resources.ecs.MarkEcsResourceForOp.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -14406,6 +14482,54 @@ s3 buckets.</p>
 <dl class="attribute">
 <dt id="c7n.resources.ecs.RelatedTaskDefinitionFilter.schema">
 <code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'default': {'type': 'object'}, 'key': {'type': 'string'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'type': {'enum': ['task-definition']}, 'value': {'oneOf': [{'type': 'array'}, {'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}]}, 'value_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'value_type': {'enum': ['age', 'integer', 'expiration', 'normalize', 'size', 'cidr', 'cidr_size', 'swap', 'resource_count', 'expr', 'unique_size']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.ecs.RelatedTaskDefinitionFilter.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.ecs.RemoveTagEcsResource">
+<em class="property">class </em><code class="descclassname">c7n.resources.ecs.</code><code class="descname">RemoveTagEcsResource</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#RemoveTagEcsResource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.RemoveTagEcsResource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.tags.RemoveTag" title="c7n.tags.RemoveTag"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.tags.RemoveTag</span></code></a></p>
+<p>Remove tag(s) from ECS resources
+(ecs, ecs-task-definition, ecs-service, ecs-task, ecs-container-instance)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ecs-cluster-remove-tag</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ecs</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;tag:BadTag&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">present</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">taggable</span>
+        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">remove-tag</span>
+        <span class="l l-Scalar l-Scalar-Plain">tags</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;BadTag&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="c7n.resources.ecs.RemoveTagEcsResource.batch_size">
+<code class="descname">batch_size</code><em class="property"> = 1</em><a class="headerlink" href="#c7n.resources.ecs.RemoveTagEcsResource.batch_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ecs.RemoveTagEcsResource.permissions">
+<code class="descname">permissions</code><em class="property"> = ('ecs:UntagResource',)</em><a class="headerlink" href="#c7n.resources.ecs.RemoveTagEcsResource.permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.ecs.RemoveTagEcsResource.process_resource_set">
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>resources</em>, <em>keys</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#RemoveTagEcsResource.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.RemoveTagEcsResource.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ecs.RemoveTagEcsResource.type">
+<code class="descname">type</code><em class="property"> = 'remove-tag'</em><a class="headerlink" href="#c7n.resources.ecs.RemoveTagEcsResource.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -14620,6 +14744,57 @@ image in the task and delete them.</td>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.ecs.TagEcsResource">
+<em class="property">class </em><code class="descclassname">c7n.resources.ecs.</code><code class="descname">TagEcsResource</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#TagEcsResource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.TagEcsResource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.tags.Tag" title="c7n.tags.Tag"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.tags.Tag</span></code></a></p>
+<p>Action to create tag(s) on an ECS resource
+(ecs, ecs-task-definition, ecs-service, ecs-task, ecs-container-instance)</p>
+<p>Requires arns in new format for tasks, services, and container-instances.
+<a class="reference external" href="https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-resource-ids.html">https://docs.aws.amazon.com/AmazonECS/latest/userguide/ecs-resource-ids.html</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag-ecs-service</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ecs-service</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;tag:target-tag&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">absent</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">taggable</span>
+        <span class="l l-Scalar l-Scalar-Plain">state</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+        <span class="l l-Scalar l-Scalar-Plain">key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">target-tag</span>
+        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">target-value</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="c7n.resources.ecs.TagEcsResource.batch_size">
+<code class="descname">batch_size</code><em class="property"> = 1</em><a class="headerlink" href="#c7n.resources.ecs.TagEcsResource.batch_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ecs.TagEcsResource.permissions">
+<code class="descname">permissions</code><em class="property"> = ('ecs:TagResource',)</em><a class="headerlink" href="#c7n.resources.ecs.TagEcsResource.permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.ecs.TagEcsResource.process_resource_set">
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>resources</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#TagEcsResource.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.TagEcsResource.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ecs.TagEcsResource.type">
+<code class="descname">type</code><em class="property"> = 'tag'</em><a class="headerlink" href="#c7n.resources.ecs.TagEcsResource.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.ecs.Task">
 <em class="property">class </em><code class="descclassname">c7n.resources.ecs.</code><code class="descname">Task</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#Task"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.Task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.ChildResourceManager" title="c7n.query.ChildResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.ChildResourceManager</span></code></a></p>
@@ -14711,6 +14886,14 @@ image in the task and delete them.</td>
 <code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.ecs.TaskDefinition.action_registry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.resources.ecs.TaskDefinition.augment">
+<code class="descname">augment</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#TaskDefinition.augment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.TaskDefinition.augment" title="Permalink to this definition">¶</a></dt>
+<dd><p>subclasses may want to augment resources with additional information.</p>
+<p>ie. we want tags by default (rds, elb), and policy, location, acl for
+s3 buckets.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.ecs.TaskDefinition.filter_registry">
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.ecs.TaskDefinition.filter_registry" title="Permalink to this definition">¶</a></dt>
@@ -14726,11 +14909,6 @@ image in the task and delete them.</td>
 <dt id="c7n.resources.ecs.TaskDefinition.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#TaskDefinition.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.TaskDefinition.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="attribute">
-<dt id="c7n.resources.ecs.TaskDefinition.resource_type.detail_spec">
-<code class="descname">detail_spec</code><em class="property"> = ('describe_task_definition', 'taskDefinition', None, 'taskDefinition')</em><a class="headerlink" href="#c7n.resources.ecs.TaskDefinition.resource_type.detail_spec" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="c7n.resources.ecs.TaskDefinition.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.ecs.TaskDefinition.resource_type.dimension" title="Permalink to this definition">¶</a></dt>

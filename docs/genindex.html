@@ -1030,6 +1030,8 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSClusterResourceDescribeSource.augment">(c7n.resources.ecs.ECSClusterResourceDescribeSource method)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.TaskDefinition.augment">(c7n.resources.ecs.TaskDefinition method)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.efs.ElasticFileSystem.augment">(c7n.resources.efs.ElasticFileSystem method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.elasticache.ElastiCacheCluster.augment">(c7n.resources.elasticache.ElastiCacheCluster method)</a>
@@ -1221,6 +1223,10 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ec2.Start.batch_size">(c7n.resources.ec2.Start attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ec2.UserData.batch_size">(c7n.resources.ec2.UserData attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.RemoveTagEcsResource.batch_size">(c7n.resources.ecs.RemoveTagEcsResource attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.TagEcsResource.batch_size">(c7n.resources.ecs.TagEcsResource attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.elasticbeanstalk.RemoveTag.batch_size">(c7n.resources.elasticbeanstalk.RemoveTag attribute)</a>
 </li>
@@ -3102,8 +3108,6 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ec2.EC2.resource_type.detail_spec">(c7n.resources.ec2.EC2.resource_type attribute)</a>
 </li>
-        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.TaskDefinition.resource_type.detail_spec">(c7n.resources.ecs.TaskDefinition.resource_type attribute)</a>
-</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.efs.ElasticFileSystem.resource_type.detail_spec">(c7n.resources.efs.ElasticFileSystem.resource_type attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.eks.EKS.resource_type.detail_spec">(c7n.resources.eks.EKS.resource_type attribute)</a>
@@ -3654,6 +3658,8 @@
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSMetrics">ECSMetrics (class in c7n.resources.ecs)</a>
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSServiceDescribeSource">ECSServiceDescribeSource (class in c7n.resources.ecs)</a>
+</li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSTaggable">ECSTaggable (class in c7n.resources.ecs)</a>
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSTaskDescribeSource">ECSTaskDescribeSource (class in c7n.resources.ecs)</a>
 </li>
@@ -5972,6 +5978,8 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ec2.Terminate.get_permissions">(c7n.resources.ec2.Terminate method)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSTaggable.get_permissions">(c7n.resources.ecs.ECSTaggable method)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.elasticache.CopyClusterTags.get_permissions">(c7n.resources.elasticache.CopyClusterTags method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.elb.ELB.get_permissions">(c7n.resources.elb.ELB class method)</a>
@@ -7571,6 +7579,8 @@
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.s3.MarkBucketForOp">MarkBucketForOp (class in c7n.resources.s3)</a>
 </li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.MarkEcsResourceForOp">MarkEcsResourceForOp (class in c7n.resources.ecs)</a>
+</li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.mq.MarkedForOp">MarkedForOp (class in c7n.resources.mq)</a>
 </li>
       <li><a href="generated/aws/c7n.html#c7n.sqsexec.SQSFuture.marker">marker (c7n.sqsexec.SQSFuture attribute)</a>
@@ -8780,9 +8790,13 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.RelatedTaskDefinitionFilter.permissions">(c7n.resources.ecs.RelatedTaskDefinitionFilter attribute)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.RemoveTagEcsResource.permissions">(c7n.resources.ecs.RemoveTagEcsResource attribute)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.SetState.permissions">(c7n.resources.ecs.SetState attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.StopTask.permissions">(c7n.resources.ecs.StopTask attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.TagEcsResource.permissions">(c7n.resources.ecs.TagEcsResource attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.UpdateAgent.permissions">(c7n.resources.ecs.UpdateAgent attribute)</a>
 </li>
@@ -9732,6 +9746,8 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.DeleteTaskDefinition.process">(c7n.resources.ecs.DeleteTaskDefinition method)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSTaggable.process">(c7n.resources.ecs.ECSTaggable method)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.RelatedTaskDefinitionFilter.process">(c7n.resources.ecs.RelatedTaskDefinitionFilter method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.SetState.process">(c7n.resources.ecs.SetState method)</a>
@@ -10403,6 +10419,10 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecr.ECRRemoveTags.process_resource_set">(c7n.resources.ecr.ECRRemoveTags method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecr.ECRTag.process_resource_set">(c7n.resources.ecr.ECRTag method)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.RemoveTagEcsResource.process_resource_set">(c7n.resources.ecs.RemoveTagEcsResource method)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.TagEcsResource.process_resource_set">(c7n.resources.ecs.TagEcsResource method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.elasticbeanstalk.RemoveTag.process_resource_set">(c7n.resources.elasticbeanstalk.RemoveTag method)</a>
 </li>
@@ -11161,6 +11181,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.RemoveTagEcsResource">RemoveTagEcsResource (class in c7n.resources.ecs)</a>
+</li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.sagemaker.RemoveTagNotebookInstance">RemoveTagNotebookInstance (class in c7n.resources.sagemaker)</a>
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.secretsmanager.RemoveTagSecretsManagerResource">RemoveTagSecretsManagerResource (class in c7n.resources.secretsmanager)</a>
@@ -12043,6 +12065,8 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.DeleteService.schema">(c7n.resources.ecs.DeleteService attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.DeleteTaskDefinition.schema">(c7n.resources.ecs.DeleteTaskDefinition attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSTaggable.schema">(c7n.resources.ecs.ECSTaggable attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.RelatedTaskDefinitionFilter.schema">(c7n.resources.ecs.RelatedTaskDefinitionFilter attribute)</a>
 </li>
@@ -13731,6 +13755,8 @@
         <li><a href="generated/azure/c7n_azure.html#c7n_azure.actions.TagDelayedAction">(class in c7n_azure.actions)</a>
 </li>
       </ul></li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.TagEcsResource">TagEcsResource (class in c7n.resources.ecs)</a>
+</li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.fsx.TagFileSystem">TagFileSystem (class in c7n.resources.fsx)</a>
 </li>
       <li><a href="generated/azure/c7n_azure.html#c7n_azure.tags.TagHelper">TagHelper (class in c7n_azure.tags)</a>
@@ -14520,7 +14546,13 @@
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSServiceDescribeSource.type">(c7n.resources.ecs.ECSServiceDescribeSource attribute)</a>
 </li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSTaggable.type">(c7n.resources.ecs.ECSTaggable attribute)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.ECSTaskDescribeSource.type">(c7n.resources.ecs.ECSTaskDescribeSource attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.MarkEcsResourceForOp.type">(c7n.resources.ecs.MarkEcsResourceForOp attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.RemoveTagEcsResource.type">(c7n.resources.ecs.RemoveTagEcsResource attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.Service.type">(c7n.resources.ecs.Service attribute)</a>
 </li>
@@ -14531,6 +14563,8 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.SetState.type">(c7n.resources.ecs.SetState attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.StopTask.type">(c7n.resources.ecs.StopTask attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.TagEcsResource.type">(c7n.resources.ecs.TagEcsResource attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecs.Task.type">(c7n.resources.ecs.Task attribute)</a>
 </li>
