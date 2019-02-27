@@ -1063,15 +1063,19 @@
 <div class="viewcode-block" id="InstanceFinding"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.InstanceFinding">[docs]</a><span class="nd">@EC2</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;post-finding&quot;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">InstanceFinding</span><span class="p">(</span><span class="n">PostFinding</span><span class="p">):</span>
 <div class="viewcode-block" id="InstanceFinding.format_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.InstanceFinding.format_resource">[docs]</a>    <span class="k">def</span> <span class="nf">format_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="n">ip_addresses</span> <span class="o">=</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="s2">&quot;NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+
+        <span class="c1"># limit to max 10 ip addresses, per security hub service limits</span>
+        <span class="n">ip_addresses</span> <span class="o">=</span> <span class="n">ip_addresses</span> <span class="ow">and</span> <span class="n">ip_addresses</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span> <span class="ow">or</span> <span class="n">ip_addresses</span>
         <span class="n">details</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;InstanceType&quot;</span><span class="p">],</span>
             <span class="s2">&quot;ImageId&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;ImageId&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;IpV4Addresses&quot;</span><span class="p">:</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
-                <span class="s2">&quot;NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress&quot;</span><span class="p">,</span> <span class="n">r</span>
-            <span class="p">),</span>
+            <span class="s2">&quot;IpV4Addresses&quot;</span><span class="p">:</span> <span class="n">ip_addresses</span><span class="p">,</span>
             <span class="s2">&quot;KeyName&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;KeyName&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;LaunchedAt&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;LaunchTime&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s2">&quot;LaunchedAt&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;LaunchTime&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
         <span class="p">}</span>
+
         <span class="k">if</span> <span class="s2">&quot;VpcId&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
             <span class="n">details</span><span class="p">[</span><span class="s2">&quot;VpcId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;VpcId&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;SubnetId&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
