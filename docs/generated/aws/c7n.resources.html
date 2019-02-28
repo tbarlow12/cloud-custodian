@@ -19575,17 +19575,6 @@ into boolean values.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="c7n.resources.iam.DescribeUser">
-<em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">DescribeUser</code><span class="sig-paren">(</span><em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#DescribeUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.DescribeUser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.DescribeSource" title="c7n.query.DescribeSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.DescribeSource</span></code></a></p>
-<dl class="method">
-<dt id="c7n.resources.iam.DescribeUser.get_resources">
-<code class="descname">get_resources</code><span class="sig-paren">(</span><em>resource_ids</em>, <em>cache=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#DescribeUser.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.DescribeUser.get_resources" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="c7n.resources.iam.Group">
 <em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">Group</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#Group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.Group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.QueryResourceManager" title="c7n.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.QueryResourceManager</span></code></a></p>
@@ -20233,12 +20222,6 @@ False: Filter users that do not have an inline-policy</p>
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.iam.Role.filter_registry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="c7n.resources.iam.Role.get_resources">
-<code class="descname">get_resources</code><span class="sig-paren">(</span><em>resource_ids</em>, <em>cache=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#Role.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.Role.get_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>For IAM Roles on events, resource ids are role names.</p>
-</dd></dl>
-
 <dl class="class">
 <dt id="c7n.resources.iam.Role.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/iam.html#Role.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.Role.resource_type" title="Permalink to this definition">¶</a></dt>
@@ -20260,7 +20243,7 @@ False: Filter users that do not have an inline-policy</p>
 
 <dl class="attribute">
 <dt id="c7n.resources.iam.Role.resource_type.detail_spec">
-<code class="descname">detail_spec</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.iam.Role.resource_type.detail_spec" title="Permalink to this definition">¶</a></dt>
+<code class="descname">detail_spec</code><em class="property"> = ('get_role', 'RoleName', 'RoleName', 'Role')</em><a class="headerlink" href="#c7n.resources.iam.Role.resource_type.detail_spec" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -20760,11 +20743,6 @@ with the ‘state’ attribute to get unused iam roles</p>
 <dl class="attribute">
 <dt id="c7n.resources.iam.User.filter_registry">
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.iam.User.filter_registry" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="c7n.resources.iam.User.get_source">
-<code class="descname">get_source</code><span class="sig-paren">(</span><em>source_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#User.get_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.User.get_source" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
@@ -21321,17 +21299,6 @@ delete them after 180 days of nonuse:</p>
 <dl class="attribute">
 <dt id="c7n.resources.iam.UserTag.type">
 <code class="descname">type</code><em class="property"> = 'tag'</em><a class="headerlink" href="#c7n.resources.iam.UserTag.type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="c7n.resources.iam.UserTagDelayedAction">
-<em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">UserTagDelayedAction</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#UserTagDelayedAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.UserTagDelayedAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.tags.TagDelayedAction" title="c7n.tags.TagDelayedAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.tags.TagDelayedAction</span></code></a></p>
-<dl class="attribute">
-<dt id="c7n.resources.iam.UserTagDelayedAction.type">
-<code class="descname">type</code><em class="property"> = 'mark-for-op'</em><a class="headerlink" href="#c7n.resources.iam.UserTagDelayedAction.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
