@@ -931,8 +931,6 @@
       </ul></li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.aws.Arn">Arn (class in c7n.resources.aws)</a>
 </li>
-      <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.Policy.arn_path_prefix">arn_path_prefix (c7n.resources.iam.Policy attribute)</a>
-</li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.asg.ASG">ASG (class in c7n.resources.asg)</a>
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.asg.ASG.resource_type">ASG.resource_type (class in c7n.resources.asg)</a>
@@ -1817,6 +1815,8 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.sns.SNSCrossAccount.checker_factory">(c7n.resources.sns.SNSCrossAccount attribute)</a>
 </li>
       </ul></li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions">CheckPermissions (class in c7n.resources.iam)</a>
+</li>
       <li><a href="generated/aws/c7n.html#c7n.mu.checksum">checksum() (in module c7n.mu)</a>
 </li>
       <li><a href="generated/aws/c7n.html#c7n.query.ChildResourceManager.child_source">child_source (c7n.query.ChildResourceManager attribute)</a>
@@ -4215,6 +4215,8 @@
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.ebs.ErrorHandler">ErrorHandler (class in c7n.resources.ebs)</a>
 </li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.eval_annotation">eval_annotation (c7n.resources.iam.CheckPermissions attribute)</a>
+</li>
       <li><a href="generated/aws/c7n.html#c7n.registry.PluginRegistry.EVENT_FINAL">EVENT_FINAL (c7n.registry.PluginRegistry attribute)</a>
 </li>
       <li><a href="generated/azure/c7n_azure.html#c7n_azure.constants.EVENT_GRID_PRINCIPAL_ROLE_JMES_PATH">EVENT_GRID_PRINCIPAL_ROLE_JMES_PATH (in module c7n_azure.constants)</a>
@@ -5691,6 +5693,10 @@
 </li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.vpc.SGUsage.get_eni_sgs">get_eni_sgs() (c7n.resources.vpc.SGUsage method)</a>
 </li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.get_eval_matcher">get_eval_matcher() (c7n.resources.iam.CheckPermissions method)</a>
+</li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.get_evaluations">get_evaluations() (c7n.resources.iam.CheckPermissions method)</a>
+</li>
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.s3.DataEvents.get_event_buckets">get_event_buckets() (c7n.resources.s3.DataEvents method)</a>
 </li>
       <li><a href="generated/azure/c7n_azure.html#c7n_azure.azure_events.AzureEvents.get_event_operations">get_event_operations() (c7n_azure.azure_events.AzureEvents class method)</a>
@@ -5754,6 +5760,8 @@
 </li>
       </ul></li>
       <li><a href="generated/gcp/c7n_gcp.html#c7n_gcp.client.ServiceClient.get_http">get_http() (c7n_gcp.client.ServiceClient method)</a>
+</li>
+      <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.get_iam_arns">get_iam_arns() (c7n.resources.iam.CheckPermissions method)</a>
 </li>
       <li><a href="generated/aws/c7n.html#c7n.cwe.CloudWatchEvents.get_ids">get_ids() (c7n.cwe.CloudWatchEvents class method)</a>
 </li>
@@ -5985,6 +5993,8 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.elb.Instance.get_permissions">(c7n.resources.elb.Instance method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.emr.EMRCluster.get_permissions">(c7n.resources.emr.EMRCluster class method)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.get_permissions">(c7n.resources.iam.CheckPermissions method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.IamRoleUsage.get_permissions">(c7n.resources.iam.IamRoleUsage method)</a>
 </li>
@@ -9280,6 +9290,8 @@
       <li><a href="generated/aws/c7n.resources.html#c7n.resources.ecr.LifecycleRule.policy_annotation">policy_annotation (c7n.resources.ecr.LifecycleRule attribute)</a>
 
       <ul>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.policy_annotation">(c7n.resources.iam.CheckPermissions attribute)</a>
+</li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.secretsmanager.CrossAccountAccessFilter.policy_annotation">(c7n.resources.secretsmanager.CrossAccountAccessFilter attribute)</a>
 </li>
       </ul></li>
@@ -9811,6 +9823,8 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.glue.DeleteDevEndpoint.process">(c7n.resources.glue.DeleteDevEndpoint method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.AllowAllIamPolicies.process">(c7n.resources.iam.AllowAllIamPolicies method)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.process">(c7n.resources.iam.CheckPermissions method)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CredentialReport.process">(c7n.resources.iam.CredentialReport method)</a>
 </li>
@@ -12125,6 +12139,8 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.glue.DeleteDevEndpoint.schema">(c7n.resources.glue.DeleteDevEndpoint attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.AllowAllIamPolicies.schema">(c7n.resources.iam.AllowAllIamPolicies attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.schema">(c7n.resources.iam.CheckPermissions attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CredentialReport.schema">(c7n.resources.iam.CredentialReport attribute)</a>
 </li>
@@ -14771,6 +14787,8 @@
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.hsm.Tag.type">(c7n.resources.hsm.Tag attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.AllowAllIamPolicies.type">(c7n.resources.iam.AllowAllIamPolicies attribute)</a>
+</li>
+        <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.type">(c7n.resources.iam.CheckPermissions attribute)</a>
 </li>
         <li><a href="generated/aws/c7n.resources.html#c7n.resources.iam.Group.type">(c7n.resources.iam.Group attribute)</a>
 </li>

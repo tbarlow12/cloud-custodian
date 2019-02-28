@@ -19469,6 +19469,78 @@ above.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.iam.CheckPermissions">
+<em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">CheckPermissions</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#CheckPermissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.CheckPermissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
+<p>Check IAM permissions associated with a resource.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Find users that can create other users</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">super-users</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">iam-user</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">check-permissions</span>
+        <span class="l l-Scalar l-Scalar-Plain">match</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">allowed</span>
+        <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+         <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">iam:CreateUser</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="c7n.resources.iam.CheckPermissions.eval_annotation">
+<code class="descname">eval_annotation</code><em class="property"> = 'c7n:perm-matches'</em><a class="headerlink" href="#c7n.resources.iam.CheckPermissions.eval_annotation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.iam.CheckPermissions.get_eval_matcher">
+<code class="descname">get_eval_matcher</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#CheckPermissions.get_eval_matcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.CheckPermissions.get_eval_matcher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.iam.CheckPermissions.get_evaluations">
+<code class="descname">get_evaluations</code><span class="sig-paren">(</span><em>client</em>, <em>arn</em>, <em>r</em>, <em>actions</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#CheckPermissions.get_evaluations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.CheckPermissions.get_evaluations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.iam.CheckPermissions.get_iam_arns">
+<code class="descname">get_iam_arns</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#CheckPermissions.get_iam_arns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.CheckPermissions.get_iam_arns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.iam.CheckPermissions.get_permissions">
+<code class="descname">get_permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#CheckPermissions.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.CheckPermissions.get_permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.CheckPermissions.policy_annotation">
+<code class="descname">policy_annotation</code><em class="property"> = 'c7n:policy'</em><a class="headerlink" href="#c7n.resources.iam.CheckPermissions.policy_annotation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.iam.CheckPermissions.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>resources</em>, <em>event=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#CheckPermissions.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.CheckPermissions.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bulk process resources and return filtered set.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.CheckPermissions.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'actions': {'items': {'type': 'string'}, 'type': 'array'}, 'match': {'oneOf': [{'enum': ['allowed', 'denied']}, {'$ref': '#/definitions/filters/valuekv'}, {'$ref': '#/definitions/filters/value'}]}, 'match-operator': {'enum': ['and', 'or']}, 'type': {'enum': ['check-permissions']}}, 'required': ('actions', 'match'), 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.iam.CheckPermissions.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.CheckPermissions.type">
+<code class="descname">type</code><em class="property"> = 'check-permissions'</em><a class="headerlink" href="#c7n.resources.iam.CheckPermissions.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.iam.CredentialReport">
 <em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">CredentialReport</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#CredentialReport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.CredentialReport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
@@ -20058,11 +20130,6 @@ False: Filter users that do not have an inline-policy</p>
 <dl class="attribute">
 <dt id="c7n.resources.iam.Policy.action_registry">
 <code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.iam.Policy.action_registry" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="c7n.resources.iam.Policy.arn_path_prefix">
-<code class="descname">arn_path_prefix</code><em class="property"> = 'aws:policy/'</em><a class="headerlink" href="#c7n.resources.iam.Policy.arn_path_prefix" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">

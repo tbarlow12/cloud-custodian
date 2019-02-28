@@ -213,6 +213,7 @@
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
@@ -356,8 +357,6 @@
         <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;Arn&#39;</span></div>
 
-    <span class="n">arn_path_prefix</span> <span class="o">=</span> <span class="s2">&quot;aws:policy/&quot;</span>
-
 <div class="viewcode-block" id="Policy.get_source"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.Policy.get_source">[docs]</a>    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_type</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">source_type</span> <span class="o">==</span> <span class="s1">&#39;describe&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">DescribePolicy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -431,6 +430,112 @@
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Denotes this resource type exists across regions</span>
         <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="CheckPermissions"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions">[docs]</a><span class="nd">@User</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;check-permissions&#39;</span><span class="p">)</span>
+<span class="nd">@Group</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;check-permissions&#39;</span><span class="p">)</span>
+<span class="nd">@Role</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;check-permissions&#39;</span><span class="p">)</span>
+<span class="nd">@Policy</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;check-permissions&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CheckPermissions</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check IAM permissions associated with a resource.</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    Find users that can create other users</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">        policies:</span>
+<span class="sd">          - name: super-users</span>
+<span class="sd">            resource: iam-user</span>
+<span class="sd">            filters:</span>
+<span class="sd">              - type: check-permissions</span>
+<span class="sd">                match: allowed</span>
+<span class="sd">                actions:</span>
+<span class="sd">                 - iam:CreateUser</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;check-permissions&#39;</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span>
+            <span class="s1">&#39;match&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;oneOf&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;allowed&#39;</span><span class="p">,</span> <span class="s1">&#39;denied&#39;</span><span class="p">]},</span>
+                <span class="p">{</span><span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/filters/valuekv&#39;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/filters/value&#39;</span><span class="p">}]},</span>
+            <span class="s1">&#39;match-operator&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;and&#39;</span><span class="p">,</span> <span class="s1">&#39;or&#39;</span><span class="p">]},</span>
+            <span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}},</span>
+            <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;actions&#39;</span><span class="p">,</span> <span class="s1">&#39;match&#39;</span><span class="p">)})</span>
+
+    <span class="n">policy_annotation</span> <span class="o">=</span> <span class="s1">&#39;c7n:policy&#39;</span>
+    <span class="n">eval_annotation</span> <span class="o">=</span> <span class="s1">&#39;c7n:perm-matches&#39;</span>
+
+<div class="viewcode-block" id="CheckPermissions.get_permissions"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.get_permissions">[docs]</a>    <span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;iam-policy&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;iam:SimulateCustomPolicy&#39;</span><span class="p">,)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;iam:SimulatePrincipalPolicy&#39;</span><span class="p">,)</span></div>
+
+<div class="viewcode-block" id="CheckPermissions.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;iam&#39;</span><span class="p">)</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">]</span>
+        <span class="n">matcher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_eval_matcher</span><span class="p">()</span>
+        <span class="n">operator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;match-operator&#39;</span><span class="p">,</span> <span class="s1">&#39;and&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;and&#39;</span> <span class="ow">and</span> <span class="nb">all</span> <span class="ow">or</span> <span class="nb">any</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">eval_cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">arn</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_iam_arns</span><span class="p">(</span><span class="n">resources</span><span class="p">),</span> <span class="n">resources</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">arn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">arn</span> <span class="ow">in</span> <span class="n">eval_cache</span><span class="p">:</span>
+                <span class="n">evaluations</span> <span class="o">=</span> <span class="n">eval_cache</span><span class="p">[</span><span class="n">arn</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">evaluations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_evaluations</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">arn</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">actions</span><span class="p">)</span>
+                <span class="n">eval_cache</span><span class="p">[</span><span class="n">arn</span><span class="p">]</span> <span class="o">=</span> <span class="n">evaluations</span>
+
+            <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">matched</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">evaluations</span><span class="p">:</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">matcher</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                    <span class="n">matched</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">match</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">operator</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span>
+                <span class="n">r</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_annotation</span><span class="p">]</span> <span class="o">=</span> <span class="n">matched</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span></div>
+
+<div class="viewcode-block" id="CheckPermissions.get_iam_arns"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.get_iam_arns">[docs]</a>    <span class="k">def</span> <span class="nf">get_iam_arns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_arns</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CheckPermissions.get_evaluations"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.get_evaluations">[docs]</a>    <span class="k">def</span> <span class="nf">get_evaluations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">arn</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;iam-policy&#39;</span><span class="p">:</span>
+            <span class="n">policy</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy_annotation</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">policy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">r</span><span class="p">[</span><span class="s1">&#39;c7n:policy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">policy</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_policy_version</span><span class="p">(</span>
+                    <span class="n">PolicyArn</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;Arn&#39;</span><span class="p">],</span>
+                    <span class="n">VersionId</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;DefaultVersionId&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PolicyVersion&#39;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">evaluations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">simulate_custom_policy</span><span class="p">,</span>
+                <span class="n">PolicyInputList</span><span class="o">=</span><span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">policy</span><span class="p">[</span><span class="s1">&#39;Document&#39;</span><span class="p">])],</span>
+                <span class="n">ActionNames</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EvaluationResults&#39;</span><span class="p">,</span> <span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">evaluations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">simulate_principal_policy</span><span class="p">,</span>
+                <span class="n">PolicySourceArn</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span>
+                <span class="n">ActionNames</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EvaluationResults&#39;</span><span class="p">,</span> <span class="p">())</span>
+        <span class="k">return</span> <span class="n">evaluations</span></div>
+
+<div class="viewcode-block" id="CheckPermissions.get_eval_matcher"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions.get_eval_matcher">[docs]</a>    <span class="k">def</span> <span class="nf">get_eval_matcher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">],</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;denied&#39;</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;explicitDeny&#39;</span><span class="p">,</span> <span class="s1">&#39;implicitDeny&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;allowed&#39;</span><span class="p">]</span>
+            <span class="n">vf</span> <span class="o">=</span> <span class="n">ValueFilter</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span>
+                              <span class="s1">&#39;EvalDecision&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">values</span><span class="p">,</span>
+                              <span class="s1">&#39;op&#39;</span><span class="p">:</span> <span class="s1">&#39;in&#39;</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">vf</span> <span class="o">=</span> <span class="n">ValueFilter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">])</span>
+        <span class="n">vf</span><span class="o">.</span><span class="n">annotate</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">vf</span></div></div>
 
 
 <div class="viewcode-block" id="IamRoleUsage"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.IamRoleUsage">[docs]</a><span class="k">class</span> <span class="nc">IamRoleUsage</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
