@@ -367,7 +367,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">missing_ok</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;missing-ok&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
             <span class="n">resource_sgs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_ignored</span><span class="p">(</span>
                 <span class="p">[</span><span class="n">related_sg</span><span class="p">[</span><span class="n">sid</span><span class="p">]</span> <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg</span><span class="o">.</span><span class="n">get_related_ids</span><span class="p">([</span><span class="n">r</span><span class="p">])])</span>
@@ -398,6 +397,9 @@
 
 <div class="viewcode-block" id="NetworkLocation.process_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.filters.html#c7n.filters.vpc.NetworkLocation.process_resource">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">resource_sgs</span><span class="p">,</span> <span class="n">resource_subnets</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="n">evaluation</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sg_space</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">subnet_space</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="s1">&#39;subnet&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compare</span> <span class="ow">and</span> <span class="n">resource_subnets</span><span class="p">:</span>
             <span class="n">subnet_values</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">rsub</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">subnet_model</span><span class="o">.</span><span class="n">id</span><span class="p">]:</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnet</span><span class="o">.</span><span class="n">get_resource_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">rsub</span><span class="p">)</span>
@@ -424,6 +426,7 @@
                     <span class="s1">&#39;security-groups&#39;</span><span class="p">:</span> <span class="n">sg_values</span><span class="p">})</span>
 
             <span class="n">sg_space</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">sg_values</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sg_space</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cardinality</span><span class="p">:</span>
                 <span class="n">evaluation</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
                     <span class="s1">&#39;reason&#39;</span><span class="p">:</span> <span class="s1">&#39;SecurityGroupLocationCardinality&#39;</span><span class="p">,</span>

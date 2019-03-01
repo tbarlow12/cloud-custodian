@@ -385,9 +385,6 @@
     <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s2">&quot;VpcId&quot;</span></div>
 
 
-<span class="n">filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;network-location&#39;</span><span class="p">,</span> <span class="n">net_filters</span><span class="o">.</span><span class="n">NetworkLocation</span><span class="p">)</span>
-
-
 <div class="viewcode-block" id="StateTransitionAge"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.StateTransitionAge">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;state-age&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">StateTransitionAge</span><span class="p">(</span><span class="n">AgeFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Age an instance has been in the given state.</span>
@@ -706,6 +703,19 @@
 <div class="viewcode-block" id="InstanceOffHour.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.InstanceOffHour.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">InstanceOffHour</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">filter_instance_state</span><span class="p">(</span><span class="n">resources</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="EC2NetworkLocation"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.EC2NetworkLocation">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;network-location&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">EC2NetworkLocation</span><span class="p">(</span><span class="n">net_filters</span><span class="o">.</span><span class="n">NetworkLocation</span><span class="p">,</span> <span class="n">StateTransitionFilter</span><span class="p">):</span>
+
+    <span class="n">valid_origin_states</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;pending&#39;</span><span class="p">,</span> <span class="s1">&#39;running&#39;</span><span class="p">,</span> <span class="s1">&#39;shutting-down&#39;</span><span class="p">,</span> <span class="s1">&#39;stopping&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;stopped&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EC2NetworkLocation.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.EC2NetworkLocation.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">resources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_instance_state</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">EC2NetworkLocation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="InstanceOnHour"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.ec2.InstanceOnHour">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;onhour&#39;</span><span class="p">)</span>

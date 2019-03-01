@@ -12442,6 +12442,28 @@ always get tags from describe_x calls.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.ec2.EC2NetworkLocation">
+<em class="property">class </em><code class="descclassname">c7n.resources.ec2.</code><code class="descname">EC2NetworkLocation</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ec2.html#EC2NetworkLocation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ec2.EC2NetworkLocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.vpc.NetworkLocation" title="c7n.filters.vpc.NetworkLocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.vpc.NetworkLocation</span></code></a>, <a class="reference internal" href="#c7n.resources.ec2.StateTransitionFilter" title="c7n.resources.ec2.StateTransitionFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.ec2.StateTransitionFilter</span></code></a></p>
+<dl class="method">
+<dt id="c7n.resources.ec2.EC2NetworkLocation.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>resources</em>, <em>event=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ec2.html#EC2NetworkLocation.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ec2.EC2NetworkLocation.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bulk process resources and return filtered set.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.EC2NetworkLocation.type">
+<code class="descname">type</code><em class="property"> = 'network-location'</em><a class="headerlink" href="#c7n.resources.ec2.EC2NetworkLocation.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.EC2NetworkLocation.valid_origin_states">
+<code class="descname">valid_origin_states</code><em class="property"> = ('pending', 'running', 'shutting-down', 'stopping', 'stopped')</em><a class="headerlink" href="#c7n.resources.ec2.EC2NetworkLocation.valid_origin_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.ec2.EphemeralInstanceFilter">
 <em class="property">class </em><code class="descclassname">c7n.resources.ec2.</code><code class="descname">EphemeralInstanceFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ec2.html#EphemeralInstanceFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ec2.EphemeralInstanceFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
