@@ -681,6 +681,8 @@
 
 <div class="viewcode-block" id="metrics_cmd"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.commands.metrics_cmd">[docs]</a><span class="nd">@policy_command</span>
 <span class="k">def</span> <span class="nf">metrics_cmd</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">policies</span><span class="p">):</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;metrics command is deprecated, and will be removed in future&quot;</span><span class="p">)</span>
+    <span class="n">policies</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">policies</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">provider_name</span> <span class="o">==</span> <span class="s1">&#39;aws&#39;</span><span class="p">]</span>
     <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">_metrics_get_endpoints</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">policies</span><span class="p">:</span>
