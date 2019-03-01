@@ -693,8 +693,11 @@
         <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;elbv2&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">listener_map</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">alb</span> <span class="ow">in</span> <span class="n">albs</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">describe_listeners</span><span class="p">(</span>
-                <span class="n">LoadBalancerArn</span><span class="o">=</span><span class="n">alb</span><span class="p">[</span><span class="s1">&#39;LoadBalancerArn&#39;</span><span class="p">])</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">describe_listeners</span><span class="p">(</span>
+                    <span class="n">LoadBalancerArn</span><span class="o">=</span><span class="n">alb</span><span class="p">[</span><span class="s1">&#39;LoadBalancerArn&#39;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">LoadBalancerNotFoundException</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">listener_map</span><span class="p">[</span><span class="n">alb</span><span class="p">[</span><span class="s1">&#39;LoadBalancerArn&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;Listeners&#39;</span><span class="p">]</span></div></div>
 
 
