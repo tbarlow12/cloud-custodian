@@ -1440,6 +1440,7 @@ with the extant configuration.</p>
 <p>Action to copy AMIs with optional encryption</p>
 <p>This action can copy AMIs while optionally encrypting or decrypting
 the target AMI. It is advised to use in conjunction with a filter.</p>
+<p>Note there is a max in flight of 5 per account/region.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1519,7 +1520,12 @@ a filter (such as image-age)</p>
 
 <dl class="attribute">
 <dt id="c7n.resources.ami.Deregister.schema">
-<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['deregister']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.ami.Deregister.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'delete-snapshots': {'type': 'boolean'}, 'type': {'enum': ['deregister']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.ami.Deregister.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ami.Deregister.snap_expr">
+<code class="descname">snap_expr</code><em class="property"> = {'type': 'projection', 'children': [{'type': 'flatten', 'children': [{'type': 'field', 'children': [], 'value': 'BlockDeviceMappings'}]}, {'type': 'subexpression', 'children': [{'type': 'field', 'children': [], 'value': 'Ebs'}, {'type': 'field', 'children': [], 'value': 'SnapshotId'}]}]}</em><a class="headerlink" href="#c7n.resources.ami.Deregister.snap_expr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
