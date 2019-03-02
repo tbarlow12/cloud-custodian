@@ -223,6 +223,7 @@
 <span class="kn">import</span> <span class="nn">c7n.filters.vpc</span> <span class="k">as</span> <span class="nn">net_filters</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n</span> <span class="k">import</span> <span class="n">query</span>
+<span class="kn">from</span> <span class="nn">c7n.resources.iam</span> <span class="k">import</span> <span class="n">CheckPermissions</span>
 <span class="kn">from</span> <span class="nn">c7n.tags</span> <span class="k">import</span> <span class="n">universal_augment</span>
 <span class="kn">from</span> <span class="nn">c7n.utils</span> <span class="k">import</span> <span class="n">local_session</span><span class="p">,</span> <span class="n">type_schema</span><span class="p">,</span> <span class="n">generate_arn</span>
 
@@ -303,6 +304,13 @@
 
 
 <span class="n">AWSLambda</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;network-location&#39;</span><span class="p">,</span> <span class="n">net_filters</span><span class="o">.</span><span class="n">NetworkLocation</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LambdaPermissions"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LambdaPermissions">[docs]</a><span class="nd">@AWSLambda</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;check-permissions&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LambdaPermissions</span><span class="p">(</span><span class="n">CheckPermissions</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LambdaPermissions.get_iam_arns"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.LambdaPermissions.get_iam_arns">[docs]</a>    <span class="k">def</span> <span class="nf">get_iam_arns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;Role&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="ReservedConcurrency"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.awslambda.ReservedConcurrency">[docs]</a><span class="nd">@AWSLambda</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;reserved-concurrency&#39;</span><span class="p">)</span>
