@@ -282,6 +282,11 @@
 <dd><p>Retrieve a set of resources by id.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="c7n.resources.account.Account.has_arn">
+<em class="property">classmethod </em><code class="descname">has_arn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/account.html#Account.has_arn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.account.Account.has_arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="class">
 <dt id="c7n.resources.account.Account.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/account.html#Account.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.account.Account.resource_type" title="Permalink to this definition">¶</a></dt>
@@ -1918,10 +1923,20 @@ launching it</p>
 <dd><p>Retrieve a set of resources by id.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="c7n.resources.apigw.RestAccount.has_arn">
+<em class="property">classmethod </em><code class="descname">has_arn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/apigw.html#RestAccount.has_arn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.apigw.RestAccount.has_arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="class">
 <dt id="c7n.resources.apigw.RestAccount.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/apigw.html#RestAccount.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.apigw.RestAccount.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.apigw.RestAccount.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.apigw.RestAccount.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.apigw.RestAccount.resource_type.dimensions">
 <code class="descname">dimensions</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.apigw.RestAccount.resource_type.dimensions" title="Permalink to this definition">¶</a></dt>
@@ -6086,11 +6101,6 @@ s3 buckets.</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="c7n.resources.backup.BackupPlan.get_arns">
-<code class="descname">get_arns</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/backup.html#BackupPlan.get_arns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.backup.BackupPlan.get_arns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="c7n.resources.backup.BackupPlan.get_resources">
 <code class="descname">get_resources</code><span class="sig-paren">(</span><em>resource_ids</em>, <em>cache=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/backup.html#BackupPlan.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.backup.BackupPlan.get_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a set of resources by id.</p>
@@ -6100,6 +6110,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.backup.BackupPlan.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/backup.html#BackupPlan.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.backup.BackupPlan.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.backup.BackupPlan.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'BackupPlanArn'</em><a class="headerlink" href="#c7n.resources.backup.BackupPlan.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.backup.BackupPlan.resource_type.detail_spec">
 <code class="descname">detail_spec</code><em class="property"> = ('get_backup_plan', 'BackupPlanId', 'BackupPlanId', 'BackupPlan')</em><a class="headerlink" href="#c7n.resources.backup.BackupPlan.resource_type.detail_spec" title="Permalink to this definition">¶</a></dt>
@@ -6170,6 +6185,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.batch.ComputeEnvironment.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/batch.html#ComputeEnvironment.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.batch.ComputeEnvironment.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.batch.ComputeEnvironment.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'computeEnvironmentArn'</em><a class="headerlink" href="#c7n.resources.batch.ComputeEnvironment.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.batch.ComputeEnvironment.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.batch.ComputeEnvironment.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
@@ -6359,6 +6379,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.batch.JobDefinition.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/batch.html#JobDefinition.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.batch.JobDefinition.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.batch.JobDefinition.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'jobDefinitionArn'</em><a class="headerlink" href="#c7n.resources.batch.JobDefinition.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.batch.JobDefinition.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.batch.JobDefinition.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
@@ -7287,6 +7312,11 @@ they are valid for.</p>
 <code class="descname">service</code><em class="property"> = 'cloudsearch'</em><a class="headerlink" href="#c7n.resources.cloudsearch.CloudSearch.resource_type.service" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="c7n.resources.cloudsearch.CloudSearch.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'domain'</em><a class="headerlink" href="#c7n.resources.cloudsearch.CloudSearch.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="attribute">
@@ -7343,6 +7373,11 @@ they are valid for.</p>
 <dt id="c7n.resources.cloudtrail.CloudTrail.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/cloudtrail.html#CloudTrail.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.cloudtrail.CloudTrail.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.cloudtrail.CloudTrail.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'TrailARN'</em><a class="headerlink" href="#c7n.resources.cloudtrail.CloudTrail.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.cloudtrail.CloudTrail.resource_type.config_type">
 <code class="descname">config_type</code><em class="property"> = 'AWS::CloudTrail::Trail'</em><a class="headerlink" href="#c7n.resources.cloudtrail.CloudTrail.resource_type.config_type" title="Permalink to this definition">¶</a></dt>
@@ -7790,6 +7825,11 @@ organizational trails.</p>
 <code class="descname">service</code><em class="property"> = 'codepipeline'</em><a class="headerlink" href="#c7n.resources.code.CodeDeployPipeline.resource_type.service" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="c7n.resources.code.CodeDeployPipeline.resource_type.type">
+<code class="descname">type</code><em class="property"> = ''</em><a class="headerlink" href="#c7n.resources.code.CodeDeployPipeline.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="staticmethod">
@@ -7822,6 +7862,11 @@ organizational trails.</p>
 <dt id="c7n.resources.code.CodeRepository.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/code.html#CodeRepository.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.code.CodeRepository.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.code.CodeRepository.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'Arn'</em><a class="headerlink" href="#c7n.resources.code.CodeRepository.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.code.CodeRepository.resource_type.batch_detail_spec">
 <code class="descname">batch_detail_spec</code><em class="property"> = ('batch_get_repositories', 'repositoryNames', 'repositoryName', 'repositories', None)</em><a class="headerlink" href="#c7n.resources.code.CodeRepository.resource_type.batch_detail_spec" title="Permalink to this definition">¶</a></dt>
@@ -8039,6 +8084,11 @@ organizational trails.</p>
 <code class="descname">service</code><em class="property"> = 'cognito-identity'</em><a class="headerlink" href="#c7n.resources.cognito.CognitoIdentityPool.resource_type.service" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="c7n.resources.cognito.CognitoIdentityPool.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'identitypool'</em><a class="headerlink" href="#c7n.resources.cognito.CognitoIdentityPool.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="attribute">
@@ -8099,6 +8149,11 @@ organizational trails.</p>
 <dl class="attribute">
 <dt id="c7n.resources.cognito.CognitoUserPool.resource_type.service">
 <code class="descname">service</code><em class="property"> = 'cognito-idp'</em><a class="headerlink" href="#c7n.resources.cognito.CognitoUserPool.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.cognito.CognitoUserPool.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'userpool'</em><a class="headerlink" href="#c7n.resources.cognito.CognitoUserPool.resource_type.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -8227,6 +8282,11 @@ organizational trails.</p>
 <dt id="c7n.resources.config.ConfigRule.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/config.html#ConfigRule.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.config.ConfigRule.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.config.ConfigRule.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ConfigRuleArn'</em><a class="headerlink" href="#c7n.resources.config.ConfigRule.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.config.ConfigRule.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.config.ConfigRule.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
@@ -9257,6 +9317,11 @@ s3 buckets.</p>
 <code class="descname">service</code><em class="property"> = 'directconnect'</em><a class="headerlink" href="#c7n.resources.directconnect.DirectConnect.resource_type.service" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="c7n.resources.directconnect.DirectConnect.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'dxcon'</em><a class="headerlink" href="#c7n.resources.directconnect.DirectConnect.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="attribute">
@@ -9412,6 +9477,11 @@ s3 buckets.</p>
 <code class="descname">service</code><em class="property"> = 'ds'</em><a class="headerlink" href="#c7n.resources.directory.Directory.resource_type.service" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="c7n.resources.directory.Directory.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'directory'</em><a class="headerlink" href="#c7n.resources.directory.Directory.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="attribute">
@@ -9551,6 +9621,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/dlm.html#DLMPolicy.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dlm.DLMPolicy.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.dlm.DLMPolicy.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.dlm.DLMPolicy.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.dlm.DLMPolicy.resource_type.detail_spec">
 <code class="descname">detail_spec</code><em class="property"> = ('get_lifecycle_policy', 'PolicyId', 'PolicyId', 'Policy')</em><a class="headerlink" href="#c7n.resources.dlm.DLMPolicy.resource_type.detail_spec" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -9655,6 +9730,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.dms.DmsEndpoints.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/dms.html#DmsEndpoints.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dms.DmsEndpoints.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.dms.DmsEndpoints.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'EndpointArn'</em><a class="headerlink" href="#c7n.resources.dms.DmsEndpoints.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.dms.DmsEndpoints.resource_type.date">
 <code class="descname">date</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.dms.DmsEndpoints.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -9976,11 +10056,6 @@ s3 buckets.</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="c7n.resources.dms.ReplicationInstance.get_arns">
-<code class="descname">get_arns</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dms.html#ReplicationInstance.get_arns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dms.ReplicationInstance.get_arns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="c7n.resources.dms.ReplicationInstance.get_source">
 <code class="descname">get_source</code><span class="sig-paren">(</span><em>source_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dms.html#ReplicationInstance.get_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dms.ReplicationInstance.get_source" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -9989,6 +10064,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.dms.ReplicationInstance.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/dms.html#ReplicationInstance.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dms.ReplicationInstance.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.dms.ReplicationInstance.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ReplicationInstanceArn'</em><a class="headerlink" href="#c7n.resources.dms.ReplicationInstance.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.dms.ReplicationInstance.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'InstanceCreateTime'</em><a class="headerlink" href="#c7n.resources.dms.ReplicationInstance.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -10865,6 +10945,11 @@ of the kms key by using ‘c7n:AliasName’</p>
 <dt id="c7n.resources.dynamodb.Stream.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#Stream.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.Stream.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.dynamodb.Stream.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'StreamArn'</em><a class="headerlink" href="#c7n.resources.dynamodb.Stream.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.dynamodb.Stream.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationDateTime'</em><a class="headerlink" href="#c7n.resources.dynamodb.Stream.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -12993,6 +13078,11 @@ s3 buckets.</p>
 <code class="descname">service</code><em class="property"> = 'ec2'</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.resource_type.service" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="c7n.resources.ec2.LaunchTemplate.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'launch-template'</em><a class="headerlink" href="#c7n.resources.ec2.LaunchTemplate.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="attribute">
@@ -13189,6 +13279,11 @@ s3 buckets.</p>
 <dl class="attribute">
 <dt id="c7n.resources.ec2.ReservedInstance.resource_type.service">
 <code class="descname">service</code><em class="property"> = 'ec2'</em><a class="headerlink" href="#c7n.resources.ec2.ReservedInstance.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ec2.ReservedInstance.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'reserved-instances'</em><a class="headerlink" href="#c7n.resources.ec2.ReservedInstance.resource_type.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -13898,6 +13993,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/ecr.html#ECR.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecr.ECR.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.ecr.ECR.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'repositoryArn'</em><a class="headerlink" href="#c7n.resources.ecr.ECR.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.ecr.ECR.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.ecr.ECR.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -14190,6 +14290,11 @@ lifecycle policies, not merge.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#ContainerInstance.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.ContainerInstance.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.ecs.ContainerInstance.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'containerInstanceArn'</em><a class="headerlink" href="#c7n.resources.ecs.ContainerInstance.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.ecs.ContainerInstance.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.ecs.ContainerInstance.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -14316,6 +14421,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.ecs.ECSCluster.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#ECSCluster.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.ECSCluster.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.ecs.ECSCluster.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'clusterArn'</em><a class="headerlink" href="#c7n.resources.ecs.ECSCluster.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.ecs.ECSCluster.resource_type.batch_detail_spec">
 <code class="descname">batch_detail_spec</code><em class="property"> = ('describe_clusters', 'clusters', None, 'clusters', {'include': ['TAGS']})</em><a class="headerlink" href="#c7n.resources.ecs.ECSCluster.resource_type.batch_detail_spec" title="Permalink to this definition">¶</a></dt>
@@ -14624,6 +14734,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#Service.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.Service.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.ecs.Service.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'serviceArn'</em><a class="headerlink" href="#c7n.resources.ecs.Service.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.ecs.Service.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.ecs.Service.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -14884,6 +14999,11 @@ image in the task and delete them.</td>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#Task.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.Task.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.ecs.Task.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'taskArn'</em><a class="headerlink" href="#c7n.resources.ecs.Task.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.ecs.Task.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.ecs.Task.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -14969,6 +15089,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.ecs.TaskDefinition.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/ecs.html#TaskDefinition.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ecs.TaskDefinition.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.ecs.TaskDefinition.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'taskDefinitionArn'</em><a class="headerlink" href="#c7n.resources.ecs.TaskDefinition.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.ecs.TaskDefinition.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.ecs.TaskDefinition.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
@@ -15222,7 +15347,7 @@ s3 buckets.</p>
 
 <dl class="attribute">
 <dt id="c7n.resources.efs.ElasticFileSystem.resource_type.dimension">
-<code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.efs.ElasticFileSystem.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dimension</code><em class="property"> = 'FileSystemId'</em><a class="headerlink" href="#c7n.resources.efs.ElasticFileSystem.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -15292,6 +15417,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.efs.ElasticFileSystemMountTarget.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/efs.html#ElasticFileSystemMountTarget.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.efs.ElasticFileSystemMountTarget.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.efs.ElasticFileSystemMountTarget.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.efs.ElasticFileSystemMountTarget.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.efs.ElasticFileSystemMountTarget.resource_type.date">
 <code class="descname">date</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.efs.ElasticFileSystemMountTarget.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -15435,6 +15565,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.eks.EKS.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/eks.html#EKS.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.eks.EKS.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.eks.EKS.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'arn'</em><a class="headerlink" href="#c7n.resources.eks.EKS.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.eks.EKS.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'createdAt'</em><a class="headerlink" href="#c7n.resources.eks.EKS.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -16155,6 +16290,11 @@ affected equally</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/elasticbeanstalk.html#ElasticBeanstalk.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.elasticbeanstalk.ElasticBeanstalk.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.elasticbeanstalk.ElasticBeanstalk.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ApplicationArn'</em><a class="headerlink" href="#c7n.resources.elasticbeanstalk.ElasticBeanstalk.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.elasticbeanstalk.ElasticBeanstalk.resource_type.default_report_fields">
 <code class="descname">default_report_fields</code><em class="property"> = ('ApplicationName', 'DateCreated', 'DateUpdated')</em><a class="headerlink" href="#c7n.resources.elasticbeanstalk.ElasticBeanstalk.resource_type.default_report_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -16235,6 +16375,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.elasticbeanstalk.ElasticBeanstalkEnvironment.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/elasticbeanstalk.html#ElasticBeanstalkEnvironment.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.elasticbeanstalk.ElasticBeanstalkEnvironment.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.elasticbeanstalk.ElasticBeanstalkEnvironment.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'EnvironmentArn'</em><a class="headerlink" href="#c7n.resources.elasticbeanstalk.ElasticBeanstalkEnvironment.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.elasticbeanstalk.ElasticBeanstalkEnvironment.resource_type.default_report_fields">
 <code class="descname">default_report_fields</code><em class="property"> = ('EnvironmentName', 'DateCreated', 'DateUpdated')</em><a class="headerlink" href="#c7n.resources.elasticbeanstalk.ElasticBeanstalkEnvironment.resource_type.default_report_fields" title="Permalink to this definition">¶</a></dt>
@@ -18143,6 +18288,11 @@ termination of all EMR clusters</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/fsx.html#FSx.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.fsx.FSx.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.fsx.FSx.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ResourceARN'</em><a class="headerlink" href="#c7n.resources.fsx.FSx.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.fsx.FSx.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.fsx.FSx.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -18204,6 +18354,11 @@ termination of all EMR clusters</p>
 <dt id="c7n.resources.fsx.FSxBackup.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/fsx.html#FSxBackup.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.fsx.FSxBackup.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.fsx.FSxBackup.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ResourceARN'</em><a class="headerlink" href="#c7n.resources.fsx.FSxBackup.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.fsx.FSxBackup.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.fsx.FSxBackup.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -18456,6 +18611,11 @@ of the kms key by using ‘c7n:AliasName’</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/gamelift.html#GameLiftBuild.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.gamelift.GameLiftBuild.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.gamelift.GameLiftBuild.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.gamelift.GameLiftBuild.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.gamelift.GameLiftBuild.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.gamelift.GameLiftBuild.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -18517,6 +18677,11 @@ of the kms key by using ‘c7n:AliasName’</p>
 <dt id="c7n.resources.gamelift.GameLiftFleet.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/gamelift.html#GameLiftFleet.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.gamelift.GameLiftFleet.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.gamelift.GameLiftFleet.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'FleetArn'</em><a class="headerlink" href="#c7n.resources.gamelift.GameLiftFleet.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.gamelift.GameLiftFleet.resource_type.batch_detail_spec">
 <code class="descname">batch_detail_spec</code><em class="property"> = ('describe_fleet_attributes', 'FleetIds', None, 'FleetAttributes', None)</em><a class="headerlink" href="#c7n.resources.gamelift.GameLiftFleet.resource_type.batch_detail_spec" title="Permalink to this definition">¶</a></dt>
@@ -18600,6 +18765,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.glacier.Glacier.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/glacier.html#Glacier.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.glacier.Glacier.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.glacier.Glacier.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'VaultARN'</em><a class="headerlink" href="#c7n.resources.glacier.Glacier.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.glacier.Glacier.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.glacier.Glacier.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
@@ -18865,6 +19035,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/glue.html#GlueConnection.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.glue.GlueConnection.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.glue.GlueConnection.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.glue.GlueConnection.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.glue.GlueConnection.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.glue.GlueConnection.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -18936,6 +19111,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.glue.GlueDevEndpoint.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/glue.html#GlueDevEndpoint.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.glue.GlueDevEndpoint.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.glue.GlueDevEndpoint.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.glue.GlueDevEndpoint.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.glue.GlueDevEndpoint.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreatedTimestamp'</em><a class="headerlink" href="#c7n.resources.glue.GlueDevEndpoint.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -19127,6 +19307,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/hsm.html#CloudHSM.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.hsm.CloudHSM.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.hsm.CloudHSM.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'HsmArn'</em><a class="headerlink" href="#c7n.resources.hsm.CloudHSM.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.hsm.CloudHSM.resource_type.date">
 <code class="descname">date</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.hsm.CloudHSM.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -19277,6 +19462,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/hsm.html#HSMClient.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.hsm.HSMClient.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.hsm.HSMClient.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ClientArn'</em><a class="headerlink" href="#c7n.resources.hsm.HSMClient.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.hsm.HSMClient.resource_type.date">
 <code class="descname">date</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.hsm.HSMClient.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -19343,6 +19533,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.hsm.PartitionGroup.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/hsm.html#PartitionGroup.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.hsm.PartitionGroup.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.hsm.PartitionGroup.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'HapgArn'</em><a class="headerlink" href="#c7n.resources.hsm.PartitionGroup.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.hsm.PartitionGroup.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'LastModifiedTimestamp'</em><a class="headerlink" href="#c7n.resources.hsm.PartitionGroup.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -21457,6 +21652,11 @@ delete them after 180 days of nonuse:</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/iot.html#IoT.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iot.IoT.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.iot.IoT.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'thingArn'</em><a class="headerlink" href="#c7n.resources.iot.IoT.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.iot.IoT.resource_type.default_report_fields">
 <code class="descname">default_report_fields</code><em class="property"> = ('thingName', 'thingTypeName')</em><a class="headerlink" href="#c7n.resources.iot.IoT.resource_type.default_report_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -21542,6 +21742,11 @@ delete them after 180 days of nonuse:</p>
 <dt id="c7n.resources.kafka.Kafka.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/kafka.html#Kafka.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.kafka.Kafka.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.kafka.Kafka.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ClusterArn'</em><a class="headerlink" href="#c7n.resources.kafka.Kafka.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.kafka.Kafka.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.kafka.Kafka.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -21644,6 +21849,11 @@ delete them after 180 days of nonuse:</p>
 <dt id="c7n.resources.kinesis.AnalyticsApp.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/kinesis.html#AnalyticsApp.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.kinesis.AnalyticsApp.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.kinesis.AnalyticsApp.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ApplicationARN'</em><a class="headerlink" href="#c7n.resources.kinesis.AnalyticsApp.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.kinesis.AnalyticsApp.resource_type.detail_spec">
 <code class="descname">detail_spec</code><em class="property"> = ('describe_application', 'ApplicationName', 'ApplicationName', 'ApplicationDetail')</em><a class="headerlink" href="#c7n.resources.kinesis.AnalyticsApp.resource_type.detail_spec" title="Permalink to this definition">¶</a></dt>
@@ -22423,6 +22633,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/lightsail.html#Database.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.lightsail.Database.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'arn'</em><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.lightsail.Database.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'createdAt'</em><a class="headerlink" href="#c7n.resources.lightsail.Database.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -22485,6 +22700,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/lightsail.html#Instance.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.lightsail.Instance.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'arn'</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.lightsail.Instance.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'createdAt'</em><a class="headerlink" href="#c7n.resources.lightsail.Instance.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -22546,6 +22766,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.lightsail.LoadBalancer.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/lightsail.html#LoadBalancer.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.lightsail.LoadBalancer.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'arn'</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.lightsail.LoadBalancer.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'createdAt'</em><a class="headerlink" href="#c7n.resources.lightsail.LoadBalancer.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -22687,6 +22912,11 @@ s3 buckets.</p>
 <dl class="attribute">
 <dt id="c7n.resources.ml.MLModel.resource_type.service">
 <code class="descname">service</code><em class="property"> = 'machinelearning'</em><a class="headerlink" href="#c7n.resources.ml.MLModel.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ml.MLModel.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'mlmodel'</em><a class="headerlink" href="#c7n.resources.ml.MLModel.resource_type.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -22851,6 +23081,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.mq.MessageBroker.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/mq.html#MessageBroker.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.mq.MessageBroker.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.mq.MessageBroker.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'BrokerArn'</em><a class="headerlink" href="#c7n.resources.mq.MessageBroker.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.mq.MessageBroker.resource_type.date">
 <code class="descname">date</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.mq.MessageBroker.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -23109,6 +23344,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/opsworks.html#OpsworkStack.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.opsworks.OpsworkStack.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.opsworks.OpsworkStack.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'Arn'</em><a class="headerlink" href="#c7n.resources.opsworks.OpsworkStack.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.opsworks.OpsworkStack.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreatedAt'</em><a class="headerlink" href="#c7n.resources.opsworks.OpsworkStack.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -23175,6 +23415,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.opsworks.OpsworksCM.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/opsworks.html#OpsworksCM.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.opsworks.OpsworksCM.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.opsworks.OpsworksCM.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ServerArn'</em><a class="headerlink" href="#c7n.resources.opsworks.OpsworksCM.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.opsworks.OpsworksCM.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreatedAt'</em><a class="headerlink" href="#c7n.resources.opsworks.OpsworksCM.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -29676,6 +29921,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/sagemaker.html#Model.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.sagemaker.Model.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.sagemaker.Model.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ModelArn'</em><a class="headerlink" href="#c7n.resources.sagemaker.Model.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.sagemaker.Model.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.sagemaker.Model.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -29755,6 +30005,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.sagemaker.NotebookInstance.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/sagemaker.html#NotebookInstance.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.sagemaker.NotebookInstance.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.sagemaker.NotebookInstance.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'NotebookInstanceArn'</em><a class="headerlink" href="#c7n.resources.sagemaker.NotebookInstance.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.sagemaker.NotebookInstance.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.sagemaker.NotebookInstance.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -29959,6 +30214,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/sagemaker.html#SagemakerEndpoint.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerEndpoint.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.sagemaker.SagemakerEndpoint.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'EndpointArn'</em><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerEndpoint.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.sagemaker.SagemakerEndpoint.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerEndpoint.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -30038,6 +30298,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.sagemaker.SagemakerEndpointConfig.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/sagemaker.html#SagemakerEndpointConfig.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerEndpointConfig.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.sagemaker.SagemakerEndpointConfig.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'EndpointConfigArn'</em><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerEndpointConfig.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.sagemaker.SagemakerEndpointConfig.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerEndpointConfig.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -30189,6 +30454,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/sagemaker.html#SagemakerJob.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerJob.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.sagemaker.SagemakerJob.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'TrainingJobArn'</em><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerJob.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.sagemaker.SagemakerJob.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerJob.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -30317,6 +30587,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.sagemaker.SagemakerTransformJob.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/sagemaker.html#SagemakerTransformJob.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerTransformJob.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.sagemaker.SagemakerTransformJob.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'TransformJobArn'</em><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerTransformJob.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.sagemaker.SagemakerTransformJob.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationTime'</em><a class="headerlink" href="#c7n.resources.sagemaker.SagemakerTransformJob.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -30707,6 +30982,11 @@ they are valid for.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/secretsmanager.html#SecretsManager.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.secretsmanager.SecretsManager.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.secretsmanager.SecretsManager.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'ARN'</em><a class="headerlink" href="#c7n.resources.secretsmanager.SecretsManager.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.secretsmanager.SecretsManager.resource_type.detail_spec">
 <code class="descname">detail_spec</code><em class="property"> = ('describe_secret', 'SecretId', 'ARN', None)</em><a class="headerlink" href="#c7n.resources.secretsmanager.SecretsManager.resource_type.detail_spec" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -30811,6 +31091,11 @@ they are valid for.</p>
 <dt id="c7n.resources.sfn.StepFunction.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/sfn.html#StepFunction.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.sfn.StepFunction.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.sfn.StepFunction.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'stateMachineArn'</em><a class="headerlink" href="#c7n.resources.sfn.StepFunction.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.sfn.StepFunction.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'creationDate'</em><a class="headerlink" href="#c7n.resources.sfn.StepFunction.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -31020,6 +31305,11 @@ for resources that no longer exist.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/shield.html#ShieldAttack.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.shield.ShieldAttack.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.shield.ShieldAttack.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.shield.ShieldAttack.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.shield.ShieldAttack.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'StartTime'</em><a class="headerlink" href="#c7n.resources.shield.ShieldAttack.resource_type.date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -31091,6 +31381,11 @@ for resources that no longer exist.</p>
 <dt id="c7n.resources.shield.ShieldProtection.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/shield.html#ShieldProtection.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.shield.ShieldProtection.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.shield.ShieldProtection.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.shield.ShieldProtection.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.shield.ShieldProtection.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.shield.ShieldProtection.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
@@ -31230,6 +31525,11 @@ s3 buckets.</p>
 <code class="descname">service</code><em class="property"> = 'sdb'</em><a class="headerlink" href="#c7n.resources.simpledb.SimpleDB.resource_type.service" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="c7n.resources.simpledb.SimpleDB.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'domain'</em><a class="headerlink" href="#c7n.resources.simpledb.SimpleDB.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="attribute">
@@ -31260,6 +31560,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.snowball.Snowball.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/snowball.html#Snowball.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.snowball.Snowball.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.snowball.Snowball.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.snowball.Snowball.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.snowball.Snowball.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationDate'</em><a class="headerlink" href="#c7n.resources.snowball.Snowball.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -31327,6 +31632,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.snowball.SnowballCluster.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/snowball.html#SnowballCluster.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.snowball.SnowballCluster.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.snowball.SnowballCluster.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.snowball.SnowballCluster.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.snowball.SnowballCluster.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreationDate'</em><a class="headerlink" href="#c7n.resources.snowball.SnowballCluster.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -31845,11 +32155,6 @@ s3 buckets.</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="c7n.resources.sqs.SQS.get_arns">
-<code class="descname">get_arns</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/sqs.html#SQS.get_arns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.sqs.SQS.get_arns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="c7n.resources.sqs.SQS.get_permissions">
 <code class="descname">get_permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/sqs.html#SQS.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.sqs.SQS.get_permissions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -31864,6 +32169,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.sqs.SQS.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/sqs.html#SQS.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.sqs.SQS.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.sqs.SQS.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'QueueArn'</em><a class="headerlink" href="#c7n.resources.sqs.SQS.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.sqs.SQS.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreatedTimestamp'</em><a class="headerlink" href="#c7n.resources.sqs.SQS.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -32146,6 +32456,11 @@ s3 buckets.</p>
 <code class="descname">service</code><em class="property"> = 'ssm'</em><a class="headerlink" href="#c7n.resources.ssm.ManagedInstance.resource_type.service" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="c7n.resources.ssm.ManagedInstance.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'managed-instance'</em><a class="headerlink" href="#c7n.resources.ssm.ManagedInstance.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="attribute">
@@ -32178,6 +32493,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.ssm.SSMActivation.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/ssm.html#SSMActivation.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ssm.SSMActivation.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.ssm.SSMActivation.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.ssm.SSMActivation.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.ssm.SSMActivation.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'CreatedDate'</em><a class="headerlink" href="#c7n.resources.ssm.SSMActivation.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -32273,6 +32593,11 @@ s3 buckets.</p>
 <dl class="attribute">
 <dt id="c7n.resources.ssm.SSMParameter.resource_type.service">
 <code class="descname">service</code><em class="property"> = 'ssm'</em><a class="headerlink" href="#c7n.resources.ssm.SSMParameter.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ssm.SSMParameter.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'parameter'</em><a class="headerlink" href="#c7n.resources.ssm.SSMParameter.resource_type.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -32395,6 +32720,11 @@ s3 buckets.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/storagegw.html#StorageGateway.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.storagegw.StorageGateway.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.storagegw.StorageGateway.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'GatewayARN'</em><a class="headerlink" href="#c7n.resources.storagegw.StorageGateway.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.storagegw.StorageGateway.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.storagegw.StorageGateway.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -32454,6 +32784,11 @@ s3 buckets.</p>
 <dt id="c7n.resources.support.SupportCase.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/support.html#SupportCase.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.support.SupportCase.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.support.SupportCase.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.support.SupportCase.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.support.SupportCase.resource_type.date">
 <code class="descname">date</code><em class="property"> = 'timeCreated'</em><a class="headerlink" href="#c7n.resources.support.SupportCase.resource_type.date" title="Permalink to this definition">¶</a></dt>
@@ -33672,22 +34007,6 @@ route table is checked.</p>
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.vpc.NetworkAddress.filter_registry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="c7n.resources.vpc.NetworkAddress.generate_arn">
-<code class="descname">generate_arn</code><a class="headerlink" href="#c7n.resources.vpc.NetworkAddress.generate_arn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates generic arn if ID is not already arn format.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="c7n.resources.vpc.NetworkAddress.get_arn">
-<code class="descname">get_arn</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#NetworkAddress.get_arn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.NetworkAddress.get_arn" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="c7n.resources.vpc.NetworkAddress.get_arns">
-<code class="descname">get_arns</code><span class="sig-paren">(</span><em>resource_set</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#NetworkAddress.get_arns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.NetworkAddress.get_arns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="class">
 <dt id="c7n.resources.vpc.NetworkAddress.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#NetworkAddress.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.NetworkAddress.resource_type" title="Permalink to this definition">¶</a></dt>
@@ -34685,6 +35004,11 @@ Security groups only and will implicitly filter security groups.</p>
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#TransitGateway.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.TransitGateway.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
+<dt id="c7n.resources.vpc.TransitGateway.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = 'TransitGatewayArn'</em><a class="headerlink" href="#c7n.resources.vpc.TransitGateway.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="c7n.resources.vpc.TransitGateway.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.vpc.TransitGateway.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -34751,6 +35075,11 @@ Security groups only and will implicitly filter security groups.</p>
 <dt id="c7n.resources.vpc.TransitGatewayAttachment.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#TransitGatewayAttachment.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.TransitGatewayAttachment.resource_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="c7n.resources.vpc.TransitGatewayAttachment.resource_type.arn">
+<code class="descname">arn</code><em class="property"> = False</em><a class="headerlink" href="#c7n.resources.vpc.TransitGatewayAttachment.resource_type.arn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.vpc.TransitGatewayAttachment.resource_type.dimension">
 <code class="descname">dimension</code><em class="property"> = None</em><a class="headerlink" href="#c7n.resources.vpc.TransitGatewayAttachment.resource_type.dimension" title="Permalink to this definition">¶</a></dt>
@@ -35334,6 +35663,11 @@ workflows.</p>
 <code class="descname">service</code><em class="property"> = 'waf-regional'</em><a class="headerlink" href="#c7n.resources.waf.RegionalWAF.resource_type.service" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="c7n.resources.waf.RegionalWAF.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'webacl'</em><a class="headerlink" href="#c7n.resources.waf.RegionalWAF.resource_type.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="attribute">
@@ -35399,6 +35733,11 @@ workflows.</p>
 <dl class="attribute">
 <dt id="c7n.resources.waf.WAF.resource_type.service">
 <code class="descname">service</code><em class="property"> = 'waf'</em><a class="headerlink" href="#c7n.resources.waf.WAF.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.waf.WAF.resource_type.type">
+<code class="descname">type</code><em class="property"> = 'webacl'</em><a class="headerlink" href="#c7n.resources.waf.WAF.resource_type.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

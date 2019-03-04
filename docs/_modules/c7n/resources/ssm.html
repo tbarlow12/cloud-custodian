@@ -229,7 +229,8 @@
         <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;Name&quot;</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">universal_taggable</span> <span class="o">=</span> <span class="kc">True</span></div>
+        <span class="n">universal_taggable</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;parameter&quot;</span></div>
 
     <span class="n">retry</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">get_retry</span><span class="p">((</span><span class="s1">&#39;Throttled&#39;</span><span class="p">,)))</span>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ssm:GetParameters&#39;</span><span class="p">,</span>
@@ -245,7 +246,9 @@
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Name&#39;</span>
         <span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;RegistrationDate&#39;</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;managed-instance&quot;</span></div>
+
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ssm:DescribeInstanceInformation&#39;</span><span class="p">,)</span></div>
 
 
@@ -332,7 +335,8 @@
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Description&#39;</span>
         <span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;CreatedDate&#39;</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">arn</span> <span class="o">=</span> <span class="kc">False</span></div>
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ssm:DescribeActivations&#39;</span><span class="p">,)</span></div>
 
 

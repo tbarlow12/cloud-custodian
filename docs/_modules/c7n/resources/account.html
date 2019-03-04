@@ -262,6 +262,10 @@
     <span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;iam:ListAccountAliases&#39;</span><span class="p">,)</span></div>
 
+<div class="viewcode-block" id="Account.has_arn"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.account.Account.has_arn">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">has_arn</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
 <div class="viewcode-block" id="Account.get_arns"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.account.Account.get_arns">[docs]</a>    <span class="k">def</span> <span class="nf">get_arns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;arn:::</span><span class="si">{account_id}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">]</span></div>
 

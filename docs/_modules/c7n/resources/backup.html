@@ -223,12 +223,10 @@
         <span class="n">detail_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;get_backup_plan&#39;</span><span class="p">,</span> <span class="s1">&#39;BackupPlanId&#39;</span><span class="p">,</span> <span class="s1">&#39;BackupPlanId&#39;</span><span class="p">,</span> <span class="s1">&#39;BackupPlan&#39;</span><span class="p">)</span>
         <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;BackupPlanName&#39;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;BackupPlanId&#39;</span>
+        <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;BackupPlanArn&#39;</span>
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">filter_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">filter_type</span> <span class="o">=</span> <span class="kc">None</span></div>
-
-<div class="viewcode-block" id="BackupPlan.get_arns"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.backup.BackupPlan.get_arns">[docs]</a>    <span class="k">def</span> <span class="nf">get_arns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;BackupPlanArn&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="BackupPlan.augment"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.backup.BackupPlan.augment">[docs]</a>    <span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BackupPlan</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">augment</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span>

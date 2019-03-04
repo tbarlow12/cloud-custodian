@@ -234,11 +234,16 @@
 <div class="viewcode-block" id="RestAccount.resource_type"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestAccount.resource_type">[docs]</a>    <span class="k">class</span> <span class="nc">resource_type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
         <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;apigateway&#39;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;account_id&#39;</span>
-        <span class="n">dimensions</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="n">dimensions</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">arn</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="RestAccount.get_permissions"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestAccount.get_permissions">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;apigateway:GET&#39;</span><span class="p">,)</span></div>
+
+<div class="viewcode-block" id="RestAccount.has_arn"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestAccount.has_arn">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">has_arn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="RestAccount.get_model"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.apigw.RestAccount.get_model">[docs]</a>    <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_type</span></div>
