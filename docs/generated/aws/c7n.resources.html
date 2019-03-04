@@ -10707,6 +10707,12 @@ the backup prefix will default to ‘Backup’.</dd>
 <code class="descname">augment</code><span class="sig-paren">(</span><em>clusters</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#DescribeDaxCluster.augment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.DescribeDaxCluster.augment" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.resources.dynamodb.DescribeDaxCluster.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><em>ids</em>, <em>cache=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#DescribeDaxCluster.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.DescribeDaxCluster.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve dax resources for serverless policies or related resources</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -10743,6 +10749,13 @@ the backup prefix will default to ‘Backup’.</dd>
 <dt id="c7n.resources.dynamodb.DynamoDbAccelerator.filter_registry">
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.dynamodb.DynamoDbAccelerator.filter_registry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.dynamodb.DynamoDbAccelerator.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><em>ids</em>, <em>cache=True</em>, <em>augment=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/dynamodb.html#DynamoDbAccelerator.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.dynamodb.DynamoDbAccelerator.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override in order to disable the augment for serverless policies.
+list_tags on dax resources always fail until the cluster is finished creating.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="c7n.resources.dynamodb.DynamoDbAccelerator.get_source">
