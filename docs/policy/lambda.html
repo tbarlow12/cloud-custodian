@@ -317,7 +317,9 @@ removed the <code class="docutils literal notranslate"><span class="pre">Custodi
 quickstart.</p>
 <p>First, modify <code class="docutils literal notranslate"><span class="pre">custodian.yml</span></code> to specify a mode type of <code class="docutils literal notranslate"><span class="pre">config-rule</span></code>.
 You’ll also need the ARN of an IAM role to assume when running the Lambda that
-Custodian is going to install for you.</p>
+Custodian is going to install for you. Sensible policies to add to that role would be
+<code class="docutils literal notranslate"><span class="pre">AWSLambdaBasicExecutionRole</span></code> and <code class="docutils literal notranslate"><span class="pre">AWSConfigRulesExecutionRole</span></code>, on top of any permissions
+your lambda is going to need to perform the actions you want it to perform.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">my-first-policy</span>
     <span class="l l-Scalar l-Scalar-Plain">mode</span><span class="p p-Indicator">:</span>
@@ -330,6 +332,8 @@ Custodian is going to install for you.</p>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">stop</span>
 </pre></div>
 </div>
+<p>Then make sure that you’ve set up AWS Config. If you <a class="reference external" href="https://eu-west-1.console.aws.amazon.com/config/home">go to the AWS Config console</a>
+and see the welcome screen instead of the dashboard, go through <a class="reference external" href="https://docs.aws.amazon.com/config/latest/developerguide/gs-console.html">the setup procedure first</a>.</p>
 <p>Now deploy the policy:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>custodian run -s . custodian.yml
 </pre></div>
