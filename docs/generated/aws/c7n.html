@@ -837,6 +837,27 @@ an event.</p>
 <code class="descclassname">c7n.handler.</code><code class="descname">dispatch_event</code><span class="sig-paren">(</span><em>event</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/handler.html#dispatch_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.handler.dispatch_event" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="function">
+<dt id="c7n.handler.get_local_output_dir">
+<code class="descclassname">c7n.handler.</code><code class="descname">get_local_output_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/handler.html#get_local_output_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.handler.get_local_output_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a local output directory per execution.</p>
+<p>We’ve seen occassional (1/100000) perm issues with lambda on temp
+directory and changing unix execution users (2015-2018), so use a
+per execution temp space. With firecracker lambdas this may be outdated.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c7n.handler.init_config">
+<code class="descclassname">c7n.handler.</code><code class="descname">init_config</code><span class="sig-paren">(</span><em>policy_config</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/handler.html#init_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.handler.init_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get policy lambda execution configuration.</p>
+<p>cli parameters are serialized into the policy lambda config,
+we merge those with any policy specific execution options.</p>
+<p>–assume role and -s output directory get special handling, as
+to disambiguate any cli context.</p>
+<p>account id is sourced from the config options or from api call
+and cached as a global</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-c7n.log">
 <span id="c7n-log-module"></span><h2>c7n.log module<a class="headerlink" href="#module-c7n.log" title="Permalink to this headline">¶</a></h2>

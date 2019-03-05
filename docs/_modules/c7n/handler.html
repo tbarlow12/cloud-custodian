@@ -230,74 +230,138 @@
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;urllib3&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;custodian.lambda&#39;</span><span class="p">)</span>
 
+<span class="c1">#</span>
+<span class="c1"># Env serverless specific configuration options, these are part of &quot;public&quot; interface</span>
+<span class="c1">#</span>
+<span class="c1"># We default to skipping events which denote they have errors</span>
+<span class="n">C7N_SKIP_EVTERR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;C7N_SKIP_ERR_EVENT&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">or</span> <span class="kc">False</span>
+
+<span class="c1"># We default to logging the full event that triggered lambda execution</span>
+<span class="n">C7N_DEBUG_EVENT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;C7N_DEBUG_EVENT&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">or</span> <span class="kc">False</span>
+
+<span class="c1"># We default to not catching policy errors in lambda, which will lead to retry behavior</span>
+<span class="n">C7N_CATCH_ERR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;C7N_CATCH_ERR&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">or</span> <span class="kc">False</span>
+
+<span class="c1">#</span>
+<span class="c1"># Internal global variables</span>
+<span class="c1">#</span>
+<span class="c1"># Default global cache of execution account id for initial configuration setup.</span>
 <span class="n">account_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># config.json policy data dict</span>
+<span class="n">policy_config</span> <span class="o">=</span> <span class="kc">None</span>
 
 <span class="c1"># On cold start load all resources, requires a pythonpath directory scan</span>
 <span class="k">if</span> <span class="s1">&#39;AWS_EXECUTION_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
     <span class="n">load_resources</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="dispatch_event"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.handler.dispatch_event">[docs]</a><span class="k">def</span> <span class="nf">dispatch_event</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<div class="viewcode-block" id="get_local_output_dir"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.handler.get_local_output_dir">[docs]</a><span class="k">def</span> <span class="nf">get_local_output_dir</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Create a local output directory per execution.</span>
 
-    <span class="k">global</span> <span class="n">account_id</span>
-
-    <span class="n">error</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;detail&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;errorCode&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipping failed operation: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">error</span><span class="p">)</span>
-        <span class="k">return</span>
-
-    <span class="n">event</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]:</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Processing event</span><span class="se">\n</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">format_event</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
-
-    <span class="c1"># Policies file should always be valid in lambda so do loading naively</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;config.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">policy_config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">policy_config</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">policy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;policies&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
-    <span class="c1"># Initialize output directory, we&#39;ve seen occassional perm issues with</span>
-    <span class="c1"># lambda on temp directory and changing unix execution users, so</span>
-    <span class="c1"># use a per execution temp space.</span>
-    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-        <span class="s1">&#39;C7N_OUTPUT_DIR&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;/tmp/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()))</span>
+<span class="sd">    We&#39;ve seen occassional (1/100000) perm issues with lambda on temp</span>
+<span class="sd">    directory and changing unix execution users (2015-2018), so use a</span>
+<span class="sd">    per execution temp space. With firecracker lambdas this may be outdated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;C7N_OUTPUT_DIR&#39;</span><span class="p">,</span> <span class="s1">&#39;/tmp/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Unable to make output directory: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">output_dir</span></div>
 
-    <span class="c1"># TODO. This enshrines an assumption of a single policy per lambda.</span>
-    <span class="n">options_overrides</span> <span class="o">=</span> <span class="n">policy_config</span><span class="p">[</span>
-        <span class="s1">&#39;policies&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;execution-options&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+<div class="viewcode-block" id="init_config"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.handler.init_config">[docs]</a><span class="k">def</span> <span class="nf">init_config</span><span class="p">(</span><span class="n">policy_config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get policy lambda execution configuration.</span>
+
+<span class="sd">    cli parameters are serialized into the policy lambda config,</span>
+<span class="sd">    we merge those with any policy specific execution options.</span>
+
+<span class="sd">    --assume role and -s output directory get special handling, as</span>
+<span class="sd">    to disambiguate any cli context.</span>
+
+<span class="sd">    account id is sourced from the config options or from api call</span>
+<span class="sd">    and cached as a global</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">account_id</span>
+
+    <span class="n">exec_options</span> <span class="o">=</span> <span class="n">policy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;execution-options&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="c1"># Remove some configuration options that don&#39;t make sense to translate from</span>
+    <span class="c1"># cli to lambda automatically.</span>
+    <span class="c1">#  - assume role on cli doesn&#39;t translate, it is the default lambda role and</span>
+    <span class="c1">#    used to provision the lambda.</span>
+    <span class="c1">#  - profile doesnt translate to lambda its `home` dir setup dependent</span>
+    <span class="c1">#  - dryrun doesn&#39;t translate (and shouldn&#39;t be present)</span>
+    <span class="c1">#  - region doesn&#39;t translate from cli (the lambda is bound to a region), and</span>
+    <span class="c1">#    on the cli represents the region the lambda is provisioned in.</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;assume_role&#39;</span><span class="p">,</span> <span class="s1">&#39;profile&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="s1">&#39;dryrun&#39;</span><span class="p">,</span> <span class="s1">&#39;cache&#39;</span><span class="p">):</span>
+        <span class="n">exec_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># a cli local directory doesn&#39;t translate to lambda</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">exec_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">):</span>
+        <span class="n">exec_options</span><span class="p">[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_local_output_dir</span><span class="p">()</span>
+
+    <span class="c1"># we can source account id from the cli parameters to avoid the sts call</span>
+    <span class="k">if</span> <span class="n">exec_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;account_id&#39;</span><span class="p">):</span>
+        <span class="n">account_id</span> <span class="o">=</span> <span class="n">exec_options</span><span class="p">[</span><span class="s1">&#39;account_id&#39;</span><span class="p">]</span>
+
+    <span class="c1"># merge with policy specific configuration</span>
+    <span class="n">exec_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">policy_config</span><span class="p">[</span><span class="s1">&#39;policies&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;execution-options&#39;</span><span class="p">,</span> <span class="p">{}))</span>
 
     <span class="c1"># if using assume role in lambda ensure that the correct</span>
     <span class="c1"># execution account is captured in options.</span>
-    <span class="k">if</span> <span class="s1">&#39;assume_role&#39;</span> <span class="ow">in</span> <span class="n">options_overrides</span><span class="p">:</span>
-        <span class="n">account_id</span> <span class="o">=</span> <span class="n">options_overrides</span><span class="p">[</span><span class="s1">&#39;assume_role&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">&#39;assume_role&#39;</span> <span class="ow">in</span> <span class="n">exec_options</span><span class="p">:</span>
+        <span class="n">account_id</span> <span class="o">=</span> <span class="n">exec_options</span><span class="p">[</span><span class="s1">&#39;assume_role&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">4</span><span class="p">]</span>
     <span class="k">elif</span> <span class="n">account_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
         <span class="n">account_id</span> <span class="o">=</span> <span class="n">get_account_id_from_sts</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+    <span class="n">exec_options</span><span class="p">[</span><span class="s1">&#39;account_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">account_id</span>
 
     <span class="c1"># Historical compatibility with manually set execution options</span>
     <span class="c1"># previously this was a boolean, its now a string value with the</span>
     <span class="c1"># boolean flag triggering a string value of &#39;aws&#39;</span>
-    <span class="k">if</span> <span class="s1">&#39;metrics_enabled&#39;</span> <span class="ow">in</span> <span class="n">options_overrides</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
-            <span class="n">options_overrides</span><span class="p">[</span><span class="s1">&#39;metrics_enabled&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="n">options_overrides</span><span class="p">[</span><span class="s1">&#39;metrics_enabled&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;aws&#39;</span>
+    <span class="k">if</span> <span class="s1">&#39;metrics_enabled&#39;</span> <span class="ow">in</span> <span class="n">exec_options</span> \
+       <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exec_options</span><span class="p">[</span><span class="s1">&#39;metrics_enabled&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)</span> \
+       <span class="ow">and</span> <span class="n">exec_options</span><span class="p">[</span><span class="s1">&#39;metrics_enabled&#39;</span><span class="p">]:</span>
+        <span class="n">exec_options</span><span class="p">[</span><span class="s1">&#39;metrics_enabled&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;aws&#39;</span>
 
-    <span class="n">options_overrides</span><span class="p">[</span><span class="s1">&#39;account_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">account_id</span>
+    <span class="k">return</span> <span class="n">Config</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="o">**</span><span class="n">exec_options</span><span class="p">)</span></div>
 
-    <span class="k">if</span> <span class="s1">&#39;output_dir&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options_overrides</span><span class="p">:</span>
-        <span class="n">options_overrides</span><span class="p">[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_dir</span>
-    <span class="n">options</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="o">**</span><span class="n">options_overrides</span><span class="p">)</span>
+
+<div class="viewcode-block" id="dispatch_event"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.handler.dispatch_event">[docs]</a><span class="k">def</span> <span class="nf">dispatch_event</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;detail&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;errorCode&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">error</span> <span class="ow">and</span> <span class="n">C7N_SKIP_EVTERR</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipping failed operation: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">error</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="n">C7N_DEBUG_EVENT</span><span class="p">:</span>
+        <span class="n">event</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Processing event</span><span class="se">\n</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">format_event</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+
+    <span class="c1"># Policies file should always be valid in lambda so do loading naively</span>
+    <span class="k">global</span> <span class="n">policy_config</span>
+    <span class="k">if</span> <span class="n">policy_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;config.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">policy_config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">policy_config</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">policy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;policies&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">options</span> <span class="o">=</span> <span class="n">init_config</span><span class="p">(</span><span class="n">policy_config</span><span class="p">)</span>
 
     <span class="n">policies</span> <span class="o">=</span> <span class="n">PolicyCollection</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">policy_config</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">policies</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">policies</span><span class="p">:</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;error during policy execution&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">C7N_CATCH_ERR</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">raise</span>
     <span class="k">return</span> <span class="kc">True</span></div>
 </pre></div>
 
