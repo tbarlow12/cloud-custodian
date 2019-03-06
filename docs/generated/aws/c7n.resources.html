@@ -1338,6 +1338,11 @@ with the extant configuration.</p>
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.ami.AMI.filter_registry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.resources.ami.AMI.get_source">
+<code class="descname">get_source</code><span class="sig-paren">(</span><em>source_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ami.html#AMI.get_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ami.AMI.get_source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="class">
 <dt id="c7n.resources.ami.AMI.resource_type">
 <em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n/resources/ami.html#AMI.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ami.AMI.resource_type" title="Permalink to this definition">¶</a></dt>
@@ -1537,6 +1542,29 @@ a filter (such as image-age)</p>
 <dt id="c7n.resources.ami.Deregister.type">
 <code class="descname">type</code><em class="property"> = 'deregister'</em><a class="headerlink" href="#c7n.resources.ami.Deregister.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.ami.DescribeImageSource">
+<em class="property">class </em><code class="descclassname">c7n.resources.ami.</code><code class="descname">DescribeImageSource</code><span class="sig-paren">(</span><em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ami.html#DescribeImageSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ami.DescribeImageSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.DescribeSource" title="c7n.query.DescribeSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.DescribeSource</span></code></a></p>
+<dl class="method">
+<dt id="c7n.resources.ami.DescribeImageSource.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><em>ids</em>, <em>cache=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ami.html#DescribeImageSource.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ami.DescribeImageSource.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.ami.ErrorHandler">
+<em class="property">class </em><code class="descclassname">c7n.resources.ami.</code><code class="descname">ErrorHandler</code><a class="reference internal" href="../../_modules/c7n/resources/ami.html#ErrorHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ami.ErrorHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="c7n.resources.ami.ErrorHandler.extract_bad_ami">
+<em class="property">static </em><code class="descname">extract_bad_ami</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ami.html#ErrorHandler.extract_bad_ami"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ami.ErrorHandler.extract_bad_ami" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle various client side errors when describing images</p>
+</dd></dl>
 
 </dd></dl>
 
