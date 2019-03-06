@@ -20683,6 +20683,50 @@ False: Filter users that do not have an inline-policy</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.iam.RoleRemoveTag">
+<em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">RoleRemoveTag</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#RoleRemoveTag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.RoleRemoveTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.tags.RemoveTag" title="c7n.tags.RemoveTag"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.tags.RemoveTag</span></code></a></p>
+<p>Remove tags from an iam role.</p>
+<dl class="attribute">
+<dt id="c7n.resources.iam.RoleRemoveTag.permissions">
+<code class="descname">permissions</code><em class="property"> = ('iam:UntagRole',)</em><a class="headerlink" href="#c7n.resources.iam.RoleRemoveTag.permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.iam.RoleRemoveTag.process_resource_set">
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>roles</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#RoleRemoveTag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.RoleRemoveTag.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.RoleRemoveTag.type">
+<code class="descname">type</code><em class="property"> = 'remove-tag'</em><a class="headerlink" href="#c7n.resources.iam.RoleRemoveTag.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.iam.RoleTag">
+<em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">RoleTag</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#RoleTag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.RoleTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.tags.Tag" title="c7n.tags.Tag"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.tags.Tag</span></code></a></p>
+<p>Tag an iam role.</p>
+<dl class="attribute">
+<dt id="c7n.resources.iam.RoleTag.permissions">
+<code class="descname">permissions</code><em class="property"> = ('iam:TagRole',)</em><a class="headerlink" href="#c7n.resources.iam.RoleTag.permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.iam.RoleTag.process_resource_set">
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>roles</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#RoleTag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.RoleTag.process_resource_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.RoleTag.type">
+<code class="descname">type</code><em class="property"> = 'tag'</em><a class="headerlink" href="#c7n.resources.iam.RoleTag.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.iam.ServerCertificate">
 <em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">ServerCertificate</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#ServerCertificate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.ServerCertificate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.QueryResourceManager" title="c7n.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.QueryResourceManager</span></code></a></p>

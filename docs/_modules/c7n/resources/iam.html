@@ -290,6 +290,34 @@
         <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;Arn&#39;</span></div></div>
 
 
+<div class="viewcode-block" id="RoleTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.RoleTag">[docs]</a><span class="nd">@Role</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RoleTag</span><span class="p">(</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tag an iam role.&quot;&quot;&quot;</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;iam:TagRole&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="RoleTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.RoleTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">roles</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">roles</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">tag_role</span><span class="p">(</span><span class="n">RoleName</span><span class="o">=</span><span class="n">role</span><span class="p">[</span><span class="s1">&#39;RoleName&#39;</span><span class="p">],</span> <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoSuchEntityException</span><span class="p">:</span>
+                <span class="k">continue</span></div></div>
+
+
+<div class="viewcode-block" id="RoleRemoveTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.RoleRemoveTag">[docs]</a><span class="nd">@Role</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RoleRemoveTag</span><span class="p">(</span><span class="n">RemoveTag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove tags from an iam role.&quot;&quot;&quot;</span>
+
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;iam:UntagRole&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="RoleRemoveTag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.RoleRemoveTag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">roles</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">roles</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">untag_role</span><span class="p">(</span><span class="n">RoleName</span><span class="o">=</span><span class="n">role</span><span class="p">[</span><span class="s1">&#39;RoleName&#39;</span><span class="p">],</span> <span class="n">TagKeys</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoSuchEntityException</span><span class="p">:</span>
+                <span class="k">continue</span></div></div>
+
+
 <div class="viewcode-block" id="User"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.User">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;iam-user&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">QueryResourceManager</span><span class="p">):</span>
 
