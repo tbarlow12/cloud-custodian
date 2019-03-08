@@ -430,11 +430,11 @@ invoke.</p>
   <span class="n">function</span><span class="p">:</span> <span class="n">my</span><span class="o">-</span><span class="n">function</span>
 </pre></div>
 </div>
-<dl class="method">
-<dt id="c7n.actions.invoke.LambdaInvoke.get_permissions">
-<code class="descname">get_permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/actions/invoke.html#LambdaInvoke.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.actions.invoke.LambdaInvoke.get_permissions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<p>Note if your synchronously invoking the lambda, you may also need
+to configure the timeout, to avoid multiple invokes. The default
+is 90s, if the lambda doesn’t respond within that time the boto
+sdk will invoke the lambda again with the same
+arguments. Alternatively use async: true</p>
 <dl class="attribute">
 <dt id="c7n.actions.invoke.LambdaInvoke.permissions">
 <code class="descname">permissions</code><em class="property"> = ('lambda:InvokeFunction',)</em><a class="headerlink" href="#c7n.actions.invoke.LambdaInvoke.permissions" title="Permalink to this definition">¶</a></dt>
@@ -447,7 +447,7 @@ invoke.</p>
 
 <dl class="attribute">
 <dt id="c7n.actions.invoke.LambdaInvoke.schema">
-<code class="descname">schema</code><em class="property"> = {'properties': {'async': {'type': 'boolean'}, 'batch_size': {'type': 'integer'}, 'function': {'type': 'string'}, 'qualifier': {'type': 'string'}, 'type': {'enum': ['invoke-lambda']}}, 'required': ['type', 'function'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.invoke.LambdaInvoke.schema" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'properties': {'async': {'type': 'boolean'}, 'batch_size': {'type': 'integer'}, 'function': {'type': 'string'}, 'qualifier': {'type': 'string'}, 'timeout': {'type': 'integer'}, 'type': {'enum': ['invoke-lambda']}}, 'required': ['type', 'function'], 'type': 'object'}</em><a class="headerlink" href="#c7n.actions.invoke.LambdaInvoke.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">

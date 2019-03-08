@@ -205,6 +205,12 @@
 <span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
 <span class="c1"># See the License for the specific language governing permissions and</span>
 <span class="c1"># limitations under the License.</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">botocore.config</span> <span class="k">import</span> <span class="n">Config</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">c7n.config</span> <span class="k">import</span> <span class="n">Bag</span> <span class="k">as</span> <span class="n">Config</span>  <span class="c1"># pragma: no cover</span>
+
 <span class="kn">from</span> <span class="nn">.core</span> <span class="k">import</span> <span class="n">EventAction</span>
 <span class="kn">from</span> <span class="nn">c7n</span> <span class="k">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
@@ -212,7 +218,7 @@
 
 
 <div class="viewcode-block" id="LambdaInvoke"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.invoke.LambdaInvoke">[docs]</a><span class="k">class</span> <span class="nc">LambdaInvoke</span><span class="p">(</span><span class="n">EventAction</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Invoke an arbitrary lambda</span>
+    <span class="sd">&quot;&quot;&quot;Invoke an arbitrary lambda</span>
 
 <span class="sd">    serialized invocation parameters</span>
 
@@ -231,6 +237,13 @@
 
 <span class="sd">     - type: invoke-lambda</span>
 <span class="sd">       function: my-function</span>
+
+<span class="sd">    Note if your synchronously invoking the lambda, you may also need</span>
+<span class="sd">    to configure the timeout, to avoid multiple invokes. The default</span>
+<span class="sd">    is 90s, if the lambda doesn&#39;t respond within that time the boto</span>
+<span class="sd">    sdk will invoke the lambda again with the same</span>
+<span class="sd">    arguments. Alternatively use async: true</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">schema_alias</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
@@ -241,27 +254,24 @@
             <span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
             <span class="s1">&#39;async&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
             <span class="s1">&#39;qualifier&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
-            <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">}</span>
+            <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">},</span>
+            <span class="s1">&#39;timeout&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">},</span>
         <span class="p">}</span>
     <span class="p">}</span>
-
-<div class="viewcode-block" id="LambdaInvoke.get_permissions"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.invoke.LambdaInvoke.get_permissions">[docs]</a>    <span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;async&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;lambda:InvokeAsync&#39;</span><span class="p">,)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;lambda:Invoke&#39;</span><span class="p">,)</span></div>
 
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;lambda:InvokeFunction&#39;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="LambdaInvoke.process"><a class="viewcode-back" href="../../../generated/aws/c7n.actions.html#c7n.actions.invoke.LambdaInvoke.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">local_session</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">)</span>
-
         <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">FunctionName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">])</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;qualifier&#39;</span><span class="p">):</span>
             <span class="n">params</span><span class="p">[</span><span class="s1">&#39;Qualifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Qualifier&#39;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;async&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
             <span class="n">params</span><span class="p">[</span><span class="s1">&#39;InvocationType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Event&#39;</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">read_timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span> <span class="mi">90</span><span class="p">))</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">local_session</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="n">VERSION</span><span class="p">,</span>
