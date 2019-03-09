@@ -28249,6 +28249,17 @@ extant notification or create one matching the bucket name.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.s3.BucketFilterBase">
+<em class="property">class </em><code class="descclassname">c7n.resources.s3.</code><code class="descname">BucketFilterBase</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/s3.html#BucketFilterBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.s3.BucketFilterBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
+<dl class="method">
+<dt id="c7n.resources.s3.BucketFilterBase.get_std_format_args">
+<code class="descname">get_std_format_args</code><span class="sig-paren">(</span><em>bucket</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/s3.html#BucketFilterBase.get_std_format_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.s3.BucketFilterBase.get_std_format_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.s3.BucketFinding">
 <em class="property">class </em><code class="descclassname">c7n.resources.s3.</code><code class="descname">BucketFinding</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/s3.html#BucketFinding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.s3.BucketFinding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.actions.html#c7n.actions.securityhub.PostFinding" title="c7n.actions.securityhub.PostFinding"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.securityhub.PostFinding</span></code></a></p>
@@ -28899,7 +28910,7 @@ generate fresh deletion markers.</p>
 <dl class="class">
 <dt id="c7n.resources.s3.HasStatementFilter">
 <em class="property">class </em><code class="descclassname">c7n.resources.s3.</code><code class="descname">HasStatementFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/s3.html#HasStatementFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.s3.HasStatementFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#c7n.resources.s3.BucketFilterBase" title="c7n.resources.s3.BucketFilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.resources.s3.BucketFilterBase</span></code></a></p>
 <p>Find buckets with set of policy statements.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

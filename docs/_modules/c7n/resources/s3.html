@@ -927,6 +927,16 @@
             <span class="k">return</span> <span class="n">results</span></div></div>
 
 
+<div class="viewcode-block" id="BucketFilterBase"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.BucketFilterBase">[docs]</a><span class="k">class</span> <span class="nc">BucketFilterBase</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
+<div class="viewcode-block" id="BucketFilterBase.get_std_format_args"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.BucketFilterBase.get_std_format_args">[docs]</a>    <span class="k">def</span> <span class="nf">get_std_format_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;account_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+            <span class="s1">&#39;region&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
+            <span class="s1">&#39;bucket_name&#39;</span><span class="p">:</span> <span class="n">bucket</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;bucket_region&#39;</span><span class="p">:</span> <span class="n">get_region</span><span class="p">(</span><span class="n">bucket</span><span class="p">)</span>
+        <span class="p">}</span></div></div>
+
+
 <div class="viewcode-block" id="BucketFinding"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.BucketFinding">[docs]</a><span class="nd">@S3</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;post-finding&quot;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">BucketFinding</span><span class="p">(</span><span class="n">PostFinding</span><span class="p">):</span>
 <div class="viewcode-block" id="BucketFinding.format_resource"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.BucketFinding.format_resource">[docs]</a>    <span class="k">def</span> <span class="nf">format_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
@@ -946,7 +956,7 @@
 
 
 <div class="viewcode-block" id="HasStatementFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.s3.HasStatementFilter">[docs]</a><span class="nd">@filters</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;has-statement&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">HasStatementFilter</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">HasStatementFilter</span><span class="p">(</span><span class="n">BucketFilterBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Find buckets with set of policy statements.</span>
 
 <span class="sd">    :example:</span>
@@ -1016,7 +1026,8 @@
             <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Sid&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">required</span><span class="p">:</span>
                 <span class="n">required</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;Sid&#39;</span><span class="p">])</span>
 
-        <span class="n">required_statements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;statements&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+        <span class="n">required_statements</span> <span class="o">=</span> <span class="n">format_string_values</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;statements&#39;</span><span class="p">,</span> <span class="p">[])),</span>
+                                                   <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">get_std_format_args</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">required_statement</span> <span class="ow">in</span> <span class="n">required_statements</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">statement</span> <span class="ow">in</span> <span class="n">statements</span><span class="p">:</span>
                 <span class="n">found</span> <span class="o">=</span> <span class="mi">0</span>
