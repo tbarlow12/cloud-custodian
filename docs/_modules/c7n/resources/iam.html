@@ -231,6 +231,7 @@
 <span class="kn">from</span> <span class="nn">c7n.actions.securityhub</span> <span class="k">import</span> <span class="n">OtherResourcePostFinding</span>
 <span class="kn">from</span> <span class="nn">c7n.exceptions</span> <span class="k">import</span> <span class="n">PolicyValidationError</span>
 <span class="kn">from</span> <span class="nn">c7n.filters</span> <span class="k">import</span> <span class="n">ValueFilter</span><span class="p">,</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">OPERATORS</span>
+<span class="kn">from</span> <span class="nn">c7n.filters.multiattr</span> <span class="k">import</span> <span class="n">MultiAttrFilter</span>
 <span class="kn">from</span> <span class="nn">c7n.filters.iamaccess</span> <span class="k">import</span> <span class="n">CrossAccountAccessFilter</span>
 <span class="kn">from</span> <span class="nn">c7n.manager</span> <span class="k">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">c7n.query</span> <span class="k">import</span> <span class="n">QueryResourceManager</span><span class="p">,</span> <span class="n">DescribeSource</span>
@@ -333,7 +334,26 @@
         <span class="n">config_type</span> <span class="o">=</span> <span class="s2">&quot;AWS::IAM::User&quot;</span>
         <span class="c1"># Denotes this resource type exists across regions</span>
         <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;Arn&#39;</span></div></div>
+        <span class="n">arn</span> <span class="o">=</span> <span class="s1">&#39;Arn&#39;</span></div>
+
+<div class="viewcode-block" id="User.get_source"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.User.get_source">[docs]</a>    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">source_type</span> <span class="o">==</span> <span class="s1">&#39;describe&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DescribeUser</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="n">source_type</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DescribeUser"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.DescribeUser">[docs]</a><span class="k">class</span> <span class="nc">DescribeUser</span><span class="p">(</span><span class="n">DescribeSource</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DescribeUser.get_resources"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.DescribeUser.get_resources">[docs]</a>    <span class="k">def</span> <span class="nf">get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_ids</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;iam&#39;</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resource_ids</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">UserName</span><span class="o">=</span><span class="n">r</span><span class="p">)[</span><span class="s1">&#39;User&#39;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoSuchEntityException</span><span class="p">:</span>
+                <span class="k">continue</span>
+        <span class="k">return</span> <span class="n">results</span></div></div>
 
 
 <div class="viewcode-block" id="UserTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.UserTag">[docs]</a><span class="nd">@User</span><span class="o">.</span><span class="n">action_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">)</span>
@@ -458,6 +478,124 @@
         <span class="n">dimension</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Denotes this resource type exists across regions</span>
         <span class="n">global_resource</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="ServiceUsage"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.ServiceUsage">[docs]</a><span class="nd">@User</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;usage&#39;</span><span class="p">)</span>
+<span class="nd">@Role</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;usage&#39;</span><span class="p">)</span>
+<span class="nd">@Group</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;usage&#39;</span><span class="p">)</span>
+<span class="nd">@Policy</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;usage&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ServiceUsage</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter iam resources by their api/service usage.</span>
+
+<span class="sd">    Note recent activity (last 4hrs) may not be shown, evaluation</span>
+<span class="sd">    is against the last 365 days of data.</span>
+
+<span class="sd">    Each service access record is evaluated against all specified</span>
+<span class="sd">    attributes.  Attribute filters can be specified in short form k:v</span>
+<span class="sd">    pairs or in long form as a value type filter.</span>
+
+<span class="sd">    match-operator allows to specify how a resource is treated across</span>
+<span class="sd">    service access record matches. &#39;any&#39; means a single matching</span>
+<span class="sd">    service record will return the policy resource as matching. &#39;all&#39;</span>
+<span class="sd">    means all service access records have to match.</span>
+
+
+<span class="sd">    Find iam users that have not used any services in the last year</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">      - name: unused-users</span>
+<span class="sd">        resource: iam-user</span>
+<span class="sd">        filters:</span>
+<span class="sd">          - type: usage</span>
+<span class="sd">            match-operator: all</span>
+<span class="sd">            LastAuthenticated: null</span>
+
+<span class="sd">    Find iam users that have used dynamodb in last 30 days</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">      - name: unused-users</span>
+<span class="sd">        resource: iam-user</span>
+<span class="sd">        filters:</span>
+<span class="sd">          - type: usage</span>
+<span class="sd">            ServiceNamespace: dynamodb</span>
+<span class="sd">            TotalAuthenticatedEntities: 1</span>
+<span class="sd">            LastAuthenticated:</span>
+<span class="sd">              type: value</span>
+<span class="sd">              value_type: age</span>
+<span class="sd">              op: less-than</span>
+<span class="sd">              value: 30</span>
+<span class="sd">            match-operator: any</span>
+
+<span class="sd">    https://aws.amazon.com/blogs/security/automate-analyzing-permissions-using-iam-access-advisor/</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">JOB_COMPLETE</span> <span class="o">=</span> <span class="s1">&#39;COMPLETED&#39;</span>
+    <span class="n">SERVICE_ATTR</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span>
+        <span class="s1">&#39;ServiceName&#39;</span><span class="p">,</span> <span class="s1">&#39;ServiceNamespace&#39;</span><span class="p">,</span> <span class="s1">&#39;TotalAuthenticatedEntities&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LastAuthenticated&#39;</span><span class="p">,</span> <span class="s1">&#39;LastAuthenticatedEntity&#39;</span><span class="p">))</span>
+
+    <span class="n">schema_attr</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">sa</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;oneOf&#39;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;null&#39;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="s1">&#39;#/definitions/filters/value&#39;</span><span class="p">}]}</span>
+        <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">SERVICE_ATTR</span><span class="p">}</span>
+    <span class="n">schema_attr</span><span class="p">[</span><span class="s1">&#39;match-operator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="s1">&#39;any&#39;</span><span class="p">]}</span>
+    <span class="n">schema_attr</span><span class="p">[</span><span class="s1">&#39;poll-delay&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">}</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;usage&#39;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;match-operator&#39;</span><span class="p">,),</span>
+        <span class="o">**</span><span class="n">schema_attr</span><span class="p">)</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;iam:GenerateServiceLastAccessedDetails&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;iam:GetServiceLastAccessedDetails&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ServiceUsage.process"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.ServiceUsage.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">local_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">session_factory</span><span class="p">)</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;iam&#39;</span><span class="p">)</span>
+
+        <span class="n">job_resource_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">arn</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_arns</span><span class="p">(</span><span class="n">resources</span><span class="p">),</span> <span class="n">resources</span><span class="p">):</span>
+            <span class="n">jid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">generate_service_last_accessed_details</span><span class="p">,</span>
+                <span class="n">Arn</span><span class="o">=</span><span class="n">arn</span><span class="p">)[</span><span class="s1">&#39;JobId&#39;</span><span class="p">]</span>
+            <span class="n">job_resource_map</span><span class="p">[</span><span class="n">jid</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+
+        <span class="n">conf</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">conf</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;match-operator&#39;</span><span class="p">)</span>
+        <span class="n">saf</span> <span class="o">=</span> <span class="n">MultiAttrFilter</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="n">saf</span><span class="o">.</span><span class="n">multi_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SERVICE_ATTR</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">match_operator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;match-operator&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="n">job_resource_map</span><span class="p">:</span>
+            <span class="n">job_results_map</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">jid</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">job_resource_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span>
+                    <span class="n">client</span><span class="o">.</span><span class="n">get_service_last_accessed_details</span><span class="p">,</span> <span class="n">JobId</span><span class="o">=</span><span class="n">jid</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;JobStatus&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">JOB_COMPLETE</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">job_results_map</span><span class="p">[</span><span class="n">jid</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;ServicesLastAccessed&#39;</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">jid</span><span class="p">,</span> <span class="n">saf_results</span> <span class="ow">in</span> <span class="n">job_results_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">job_resource_map</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">jid</span><span class="p">)</span>
+                <span class="n">saf_matches</span> <span class="o">=</span> <span class="n">saf</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">saf_results</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">match_operator</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">saf_matches</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">saf_results</span><span class="p">):</span>
+                    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">saf_matches</span><span class="p">:</span>
+                    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;poll-delay&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">results</span></div></div>
 
 
 <div class="viewcode-block" id="CheckPermissions"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.iam.CheckPermissions">[docs]</a><span class="nd">@User</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;check-permissions&#39;</span><span class="p">)</span>

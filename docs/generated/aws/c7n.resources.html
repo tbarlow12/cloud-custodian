@@ -20015,6 +20015,17 @@ into boolean values.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.iam.DescribeUser">
+<em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">DescribeUser</code><span class="sig-paren">(</span><em>manager</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#DescribeUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.DescribeUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.DescribeSource" title="c7n.query.DescribeSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.DescribeSource</span></code></a></p>
+<dl class="method">
+<dt id="c7n.resources.iam.DescribeUser.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><em>resource_ids</em>, <em>cache=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#DescribeUser.get_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.DescribeUser.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.iam.Group">
 <em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">Group</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#Group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.Group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.QueryResourceManager" title="c7n.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.QueryResourceManager</span></code></a></p>
@@ -20873,6 +20884,99 @@ False: Filter users that do not have an inline-policy</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.iam.ServiceUsage">
+<em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">ServiceUsage</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#ServiceUsage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.ServiceUsage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
+<p>Filter iam resources by their api/service usage.</p>
+<p>Note recent activity (last 4hrs) may not be shown, evaluation
+is against the last 365 days of data.</p>
+<p>Each service access record is evaluated against all specified
+attributes.  Attribute filters can be specified in short form k:v
+pairs or in long form as a value type filter.</p>
+<p>match-operator allows to specify how a resource is treated across
+service access record matches. ‘any’ means a single matching
+service record will return the policy resource as matching. ‘all’
+means all service access records have to match.</p>
+<p>Find iam users that have not used any services in the last year</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unused-users</span>
+  <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">iam-user</span>
+  <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">usage</span>
+      <span class="l l-Scalar l-Scalar-Plain">match-operator</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">all</span>
+      <span class="l l-Scalar l-Scalar-Plain">LastAuthenticated</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">null</span>
+</pre></div>
+</div>
+<p>Find iam users that have used dynamodb in last 30 days</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unused-users</span>
+  <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">iam-user</span>
+  <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">usage</span>
+      <span class="l l-Scalar l-Scalar-Plain">ServiceNamespace</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamodb</span>
+      <span class="l l-Scalar l-Scalar-Plain">TotalAuthenticatedEntities</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+      <span class="l l-Scalar l-Scalar-Plain">LastAuthenticated</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+        <span class="l l-Scalar l-Scalar-Plain">value_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">age</span>
+        <span class="l l-Scalar l-Scalar-Plain">op</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">less-than</span>
+        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
+      <span class="l l-Scalar l-Scalar-Plain">match-operator</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">any</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://aws.amazon.com/blogs/security/automate-analyzing-permissions-using-iam-access-advisor/">https://aws.amazon.com/blogs/security/automate-analyzing-permissions-using-iam-access-advisor/</a></p>
+<dl class="attribute">
+<dt id="c7n.resources.iam.ServiceUsage.JOB_COMPLETE">
+<code class="descname">JOB_COMPLETE</code><em class="property"> = 'COMPLETED'</em><a class="headerlink" href="#c7n.resources.iam.ServiceUsage.JOB_COMPLETE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.ServiceUsage.SERVICE_ATTR">
+<code class="descname">SERVICE_ATTR</code><em class="property"> = {'LastAuthenticated', 'LastAuthenticatedEntity', 'ServiceName', 'ServiceNamespace', 'TotalAuthenticatedEntities'}</em><a class="headerlink" href="#c7n.resources.iam.ServiceUsage.SERVICE_ATTR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.ServiceUsage.permissions">
+<code class="descname">permissions</code><em class="property"> = ('iam:GenerateServiceLastAccessedDetails', 'iam:GetServiceLastAccessedDetails')</em><a class="headerlink" href="#c7n.resources.iam.ServiceUsage.permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.iam.ServiceUsage.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>resources</em>, <em>event=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#ServiceUsage.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.ServiceUsage.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bulk process resources and return filtered set.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.ServiceUsage.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'LastAuthenticated': {'oneOf': [{'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}, {'$ref': '#/definitions/filters/value'}]}, 'LastAuthenticatedEntity': {'oneOf': [{'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}, {'$ref': '#/definitions/filters/value'}]}, 'ServiceName': {'oneOf': [{'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}, {'$ref': '#/definitions/filters/value'}]}, 'ServiceNamespace': {'oneOf': [{'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}, {'$ref': '#/definitions/filters/value'}]}, 'TotalAuthenticatedEntities': {'oneOf': [{'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}, {'$ref': '#/definitions/filters/value'}]}, 'match-operator': {'enum': ['all', 'any']}, 'poll-delay': {'type': 'number'}, 'type': {'enum': ['usage']}}, 'required': ('match-operator',), 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.iam.ServiceUsage.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.ServiceUsage.schema_attr">
+<code class="descname">schema_attr</code><em class="property"> = {'LastAuthenticated': {'oneOf': [{'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}, {'$ref': '#/definitions/filters/value'}]}, 'LastAuthenticatedEntity': {'oneOf': [{'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}, {'$ref': '#/definitions/filters/value'}]}, 'ServiceName': {'oneOf': [{'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}, {'$ref': '#/definitions/filters/value'}]}, 'ServiceNamespace': {'oneOf': [{'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}, {'$ref': '#/definitions/filters/value'}]}, 'TotalAuthenticatedEntities': {'oneOf': [{'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}, {'$ref': '#/definitions/filters/value'}]}, 'match-operator': {'enum': ['all', 'any']}, 'poll-delay': {'type': 'number'}}</em><a class="headerlink" href="#c7n.resources.iam.ServiceUsage.schema_attr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.iam.ServiceUsage.type">
+<code class="descname">type</code><em class="property"> = 'usage'</em><a class="headerlink" href="#c7n.resources.iam.ServiceUsage.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.iam.SetPolicy">
 <em class="property">class </em><code class="descclassname">c7n.resources.iam.</code><code class="descname">SetPolicy</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#SetPolicy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.SetPolicy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.actions.html#c7n.actions.core.Action" title="c7n.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.core.Action</span></code></a></p>
@@ -21222,6 +21326,11 @@ with the ‘state’ attribute to get unused iam roles</p>
 <dl class="attribute">
 <dt id="c7n.resources.iam.User.filter_registry">
 <code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n.resources.iam.User.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.iam.User.get_source">
+<code class="descname">get_source</code><span class="sig-paren">(</span><em>source_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/iam.html#User.get_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.iam.User.get_source" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
