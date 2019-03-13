@@ -12211,6 +12211,52 @@ Current Generation Instances (2017-2)
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.ebs.SnapshotUnusedFilter">
+<em class="property">class </em><code class="descclassname">c7n.resources.ebs.</code><code class="descname">SnapshotUnusedFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#SnapshotUnusedFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.SnapshotUnusedFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.core.Filter" title="c7n.filters.core.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.core.Filter</span></code></a></p>
+<p>Filters snapshots based on usage</p>
+<p>true: snapshot is not used by launch-template, launch-config, or ami.</p>
+<p>false: snapshot is being used by launch-template, launch-config, or ami.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">snapshot-unused</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ebs-snapshot</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unused</span>
+        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="c7n.resources.ebs.SnapshotUnusedFilter.get_permissions">
+<code class="descname">get_permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#SnapshotUnusedFilter.get_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.SnapshotUnusedFilter.get_permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.ebs.SnapshotUnusedFilter.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>resources</em>, <em>event=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#SnapshotUnusedFilter.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.SnapshotUnusedFilter.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bulk process resources and return filtered set.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ebs.SnapshotUnusedFilter.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'type': {'enum': ['unused']}, 'value': {'type': 'boolean'}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.ebs.SnapshotUnusedFilter.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.ebs.SnapshotUnusedFilter.type">
+<code class="descname">type</code><em class="property"> = 'unused'</em><a class="headerlink" href="#c7n.resources.ebs.SnapshotUnusedFilter.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.ebs.VolumeDetach">
 <em class="property">class </em><code class="descclassname">c7n.resources.ebs.</code><code class="descname">VolumeDetach</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/ebs.html#VolumeDetach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.ebs.VolumeDetach" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.actions.html#c7n.actions.core.Action" title="c7n.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.core.Action</span></code></a></p>
