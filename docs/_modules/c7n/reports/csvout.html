@@ -291,10 +291,13 @@
         <span class="n">records</span> <span class="o">+=</span> <span class="n">policy_records</span>
 
     <span class="n">rows</span> <span class="o">=</span> <span class="n">formatter</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;csv&#39;</span><span class="p">:</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="n">UnicodeWriter</span><span class="p">(</span><span class="n">output_fh</span><span class="p">,</span> <span class="n">formatter</span><span class="o">.</span><span class="n">headers</span><span class="p">())</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">formatter</span><span class="o">.</span><span class="n">headers</span><span class="p">())</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">options</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">dumps</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># We special case CSV, and for other formats we pass to tabulate</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">formatter</span><span class="o">.</span><span class="n">headers</span><span class="p">(),</span> <span class="n">tablefmt</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">format</span><span class="p">))</span>
