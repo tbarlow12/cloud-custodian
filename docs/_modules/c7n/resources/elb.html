@@ -359,9 +359,10 @@
     <span class="n">permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;elasticloadbalancing:AddTags&#39;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="Tag.process_resource_set"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.Tag.process_resource_set">[docs]</a>    <span class="k">def</span> <span class="nf">process_resource_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">resource_set</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">add_tags</span><span class="p">(</span>
-            <span class="n">LoadBalancerNames</span><span class="o">=</span><span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resource_set</span><span class="p">],</span>
-            <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resource_set</span><span class="p">:</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">add_tags</span><span class="p">(</span>
+                <span class="n">LoadBalancerNames</span><span class="o">=</span><span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;LoadBalancerName&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resource_set</span><span class="p">],</span>
+                <span class="n">Tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="RemoveTag"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.elb.RemoveTag">[docs]</a><span class="nd">@actions</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;remove-tag&#39;</span><span class="p">)</span>

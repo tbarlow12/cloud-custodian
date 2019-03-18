@@ -4650,8 +4650,8 @@ account for compliance.</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="c7n.resources.asg.RemoveTag.process_asg_set">
-<code class="descname">process_asg_set</code><span class="sig-paren">(</span><em>client</em>, <em>asgs</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#RemoveTag.process_asg_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.RemoveTag.process_asg_set" title="Permalink to this definition">¶</a></dt>
+<dt id="c7n.resources.asg.RemoveTag.process_resource_set">
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>asgs</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#RemoveTag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.RemoveTag.process_resource_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -5014,6 +5014,11 @@ to the ASG itself.</p>
 <code class="descname">batch_size</code><em class="property"> = 1</em><a class="headerlink" href="#c7n.resources.asg.Tag.batch_size" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="c7n.resources.asg.Tag.get_tag_set">
+<code class="descname">get_tag_set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Tag.get_tag_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Tag.get_tag_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="c7n.resources.asg.Tag.permissions">
 <code class="descname">permissions</code><em class="property"> = ('autoscaling:CreateOrUpdateTags',)</em><a class="headerlink" href="#c7n.resources.asg.Tag.permissions" title="Permalink to this definition">¶</a></dt>
@@ -5025,18 +5030,13 @@ to the ASG itself.</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="c7n.resources.asg.Tag.process_asg_set">
-<code class="descname">process_asg_set</code><span class="sig-paren">(</span><em>client</em>, <em>asgs</em>, <em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Tag.process_asg_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Tag.process_asg_set" title="Permalink to this definition">¶</a></dt>
+<dt id="c7n.resources.asg.Tag.process_resource_set">
+<code class="descname">process_resource_set</code><span class="sig-paren">(</span><em>client</em>, <em>asgs</em>, <em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Tag.process_resource_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Tag.process_resource_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="c7n.resources.asg.Tag.schema">
-<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'key': {'type': 'string'}, 'msg': {'type': 'string'}, 'propagate': {'type': 'boolean'}, 'tag': {'type': 'string'}, 'type': {'enum': ['tag', 'mark']}, 'value': {'type': 'string'}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.asg.Tag.schema" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="c7n.resources.asg.Tag.tag">
-<code class="descname">tag</code><span class="sig-paren">(</span><em>asgs</em>, <em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/asg.html#Tag.tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.asg.Tag.tag" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'key': {'type': 'string'}, 'msg': {'type': 'string'}, 'propagate': {'type': 'boolean'}, 'tag': {'type': 'string'}, 'tags': {'type': 'object'}, 'type': {'enum': ['tag', 'mark']}, 'value': {'type': 'string'}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.asg.Tag.schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
