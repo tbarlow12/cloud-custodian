@@ -221,7 +221,8 @@
         <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;compute&#39;</span>
         <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;v1&#39;</span>
         <span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;networks&#39;</span>
-        <span class="n">scope_template</span> <span class="o">=</span> <span class="s2">&quot;projects/</span><span class="si">{}</span><span class="s2">/global/networks&quot;</span></div></div>
+        <span class="n">scope_template</span> <span class="o">=</span> <span class="s2">&quot;projects/</span><span class="si">{}</span><span class="s2">/global/networks&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span></div></div>
 
 
 <div class="viewcode-block" id="Subnet"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.resources.html#c7n_gcp.resources.network.Subnet">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;subnet&#39;</span><span class="p">)</span>
@@ -232,6 +233,7 @@
         <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;v1&#39;</span>
         <span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;subnetworks&#39;</span>
         <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;aggregatedList&#39;</span><span class="p">,</span> <span class="s1">&#39;items.*.subnetworks[]&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
 
 <div class="viewcode-block" id="Subnet.resource_type.get"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.resources.html#c7n_gcp.resources.network.Subnet.resource_type.get">[docs]</a>        <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">resource_info</span><span class="p">):</span>
@@ -305,6 +307,7 @@
         <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;compute&#39;</span>
         <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;v1&#39;</span>
         <span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;firewalls&#39;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
 
 <div class="viewcode-block" id="Firewall.resource_type.get"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.resources.html#c7n_gcp.resources.network.Firewall.resource_type.get">[docs]</a>        <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">resource_info</span><span class="p">):</span>
@@ -321,7 +324,8 @@
         <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;v1&#39;</span>
         <span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;routers&#39;</span>
         <span class="n">enum_spec</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;aggregatedList&#39;</span><span class="p">,</span> <span class="s1">&#39;items.*.routers[]&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">scope_template</span> <span class="o">=</span> <span class="s2">&quot;projects/</span><span class="si">{}</span><span class="s2">/aggregated/routers&quot;</span></div></div>
+        <span class="n">scope_template</span> <span class="o">=</span> <span class="s2">&quot;projects/</span><span class="si">{}</span><span class="s2">/aggregated/routers&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span></div></div>
 
 
 <div class="viewcode-block" id="Route"><a class="viewcode-back" href="../../../generated/gcp/c7n_gcp.resources.html#c7n_gcp.resources.network.Route">[docs]</a><span class="nd">@resources</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;route&#39;</span><span class="p">)</span>
@@ -331,7 +335,8 @@
         <span class="n">service</span> <span class="o">=</span> <span class="s1">&#39;compute&#39;</span>
         <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;v1&#39;</span>
         <span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;routes&#39;</span>
-        <span class="n">scope_template</span> <span class="o">=</span> <span class="s2">&quot;projects/</span><span class="si">{}</span><span class="s2">/global/routes&quot;</span></div></div>
+        <span class="n">scope_template</span> <span class="o">=</span> <span class="s2">&quot;projects/</span><span class="si">{}</span><span class="s2">/global/routes&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span></div></div>
 </pre></div>
 
            </div>
