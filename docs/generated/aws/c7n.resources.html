@@ -25474,6 +25474,67 @@ filter to the rule</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.rdscluster.ModifyDbCluster">
+<em class="property">class </em><code class="descclassname">c7n.resources.rdscluster.</code><code class="descname">ModifyDbCluster</code><span class="sig-paren">(</span><em>data=None</em>, <em>manager=None</em>, <em>log_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/rdscluster.html#ModifyDbCluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.rdscluster.ModifyDbCluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.actions.html#c7n.actions.core.Action" title="c7n.actions.core.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.actions.core.Action</span></code></a></p>
+<p>Modifies an RDS instance based on specified parameter
+using ModifyDbInstance.</p>
+<p>‘Immediate” determines whether the modification is applied immediately
+or not. If ‘immediate’ is not specified, default is false.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">disable-db-cluster-deletion-protection</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rds-cluster</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">DeletionProtection</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">PubliclyAccessible</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">modify-db-cluster</span>
+        <span class="l l-Scalar l-Scalar-Plain">attributes</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">CopyTagsToSnapshot</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+            <span class="l l-Scalar l-Scalar-Plain">DeletionProtection</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="c7n.resources.rdscluster.ModifyDbCluster.permissions">
+<code class="descname">permissions</code><em class="property"> = ('rds:ModifyDBCluster',)</em><a class="headerlink" href="#c7n.resources.rdscluster.ModifyDbCluster.permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.rdscluster.ModifyDbCluster.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>clusters</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/rdscluster.html#ModifyDbCluster.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.rdscluster.ModifyDbCluster.process" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.rdscluster.ModifyDbCluster.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'attributes': {'type': 'object'}, 'type': {'enum': ['modify-db-cluster']}}, 'required': ('attributes',), 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.rdscluster.ModifyDbCluster.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.rdscluster.ModifyDbCluster.shape">
+<code class="descname">shape</code><em class="property"> = 'ModifyDBClusterMessage'</em><a class="headerlink" href="#c7n.resources.rdscluster.ModifyDbCluster.shape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.rdscluster.ModifyDbCluster.type">
+<code class="descname">type</code><em class="property"> = 'modify-db-cluster'</em><a class="headerlink" href="#c7n.resources.rdscluster.ModifyDbCluster.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.rdscluster.ModifyDbCluster.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/rdscluster.html#ModifyDbCluster.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.rdscluster.ModifyDbCluster.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.rdscluster.RDSCluster">
 <em class="property">class </em><code class="descclassname">c7n.resources.rdscluster.</code><code class="descname">RDSCluster</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/rdscluster.html#RDSCluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.rdscluster.RDSCluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.html#c7n.query.QueryResourceManager" title="c7n.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.query.QueryResourceManager</span></code></a></p>
