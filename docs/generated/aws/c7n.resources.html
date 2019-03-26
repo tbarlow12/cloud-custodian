@@ -35886,6 +35886,114 @@ workflows.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n.resources.vpc.VpcInternetGatewayFilter">
+<em class="property">class </em><code class="descclassname">c7n.resources.vpc.</code><code class="descname">VpcInternetGatewayFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#VpcInternetGatewayFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.VpcInternetGatewayFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.related.RelatedResourceFilter" title="c7n.filters.related.RelatedResourceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.related.RelatedResourceFilter</span></code></a></p>
+<p>Filter VPCs based on Internet Gateway attributes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">gray-vpcs</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">vpc</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">internet-gateway</span>
+        <span class="l l-Scalar l-Scalar-Plain">key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag:Color</span>
+        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Gray</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcInternetGatewayFilter.AnnotationKey">
+<code class="descname">AnnotationKey</code><em class="property"> = 'MatchedVpcsIgws'</em><a class="headerlink" href="#c7n.resources.vpc.VpcInternetGatewayFilter.AnnotationKey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcInternetGatewayFilter.RelatedIdsExpression">
+<code class="descname">RelatedIdsExpression</code><em class="property"> = '[InternetGateways][].InternetGatewayId'</em><a class="headerlink" href="#c7n.resources.vpc.VpcInternetGatewayFilter.RelatedIdsExpression" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcInternetGatewayFilter.RelatedResource">
+<code class="descname">RelatedResource</code><em class="property"> = 'c7n.resources.vpc.InternetGateway'</em><a class="headerlink" href="#c7n.resources.vpc.VpcInternetGatewayFilter.RelatedResource" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.vpc.VpcInternetGatewayFilter.get_related_ids">
+<code class="descname">get_related_ids</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#VpcInternetGatewayFilter.get_related_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.VpcInternetGatewayFilter.get_related_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcInternetGatewayFilter.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'default': {'type': 'object'}, 'key': {'type': 'string'}, 'match-resource': {'type': 'boolean'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'regex-case', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'operator': {'enum': ['and', 'or']}, 'type': {'enum': ['internet-gateway']}, 'value': {'oneOf': [{'type': 'array'}, {'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}]}, 'value_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'value_type': {'enum': ['age', 'integer', 'expiration', 'normalize', 'size', 'cidr', 'cidr_size', 'swap', 'resource_count', 'expr', 'unique_size']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.vpc.VpcInternetGatewayFilter.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcInternetGatewayFilter.type">
+<code class="descname">type</code><em class="property"> = 'internet-gateway'</em><a class="headerlink" href="#c7n.resources.vpc.VpcInternetGatewayFilter.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.vpc.VpcNatGatewayFilter">
+<em class="property">class </em><code class="descclassname">c7n.resources.vpc.</code><code class="descname">VpcNatGatewayFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#VpcNatGatewayFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.VpcNatGatewayFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.related.RelatedResourceFilter" title="c7n.filters.related.RelatedResourceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.related.RelatedResourceFilter</span></code></a></p>
+<p>Filter VPCs based on NAT Gateway attributes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">gray-vpcs</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">vpc</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">nat-gateway</span>
+        <span class="l l-Scalar l-Scalar-Plain">key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag:Color</span>
+        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Gray</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcNatGatewayFilter.AnnotationKey">
+<code class="descname">AnnotationKey</code><em class="property"> = 'MatchedVpcsNatGateways'</em><a class="headerlink" href="#c7n.resources.vpc.VpcNatGatewayFilter.AnnotationKey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcNatGatewayFilter.RelatedIdsExpression">
+<code class="descname">RelatedIdsExpression</code><em class="property"> = '[NatGateways][].NatGatewayId'</em><a class="headerlink" href="#c7n.resources.vpc.VpcNatGatewayFilter.RelatedIdsExpression" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcNatGatewayFilter.RelatedResource">
+<code class="descname">RelatedResource</code><em class="property"> = 'c7n.resources.vpc.NATGateway'</em><a class="headerlink" href="#c7n.resources.vpc.VpcNatGatewayFilter.RelatedResource" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.vpc.VpcNatGatewayFilter.get_related_ids">
+<code class="descname">get_related_ids</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#VpcNatGatewayFilter.get_related_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.VpcNatGatewayFilter.get_related_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcNatGatewayFilter.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'default': {'type': 'object'}, 'key': {'type': 'string'}, 'match-resource': {'type': 'boolean'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'regex-case', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'operator': {'enum': ['and', 'or']}, 'type': {'enum': ['nat-gateway']}, 'value': {'oneOf': [{'type': 'array'}, {'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}]}, 'value_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'value_type': {'enum': ['age', 'integer', 'expiration', 'normalize', 'size', 'cidr', 'cidr_size', 'swap', 'resource_count', 'expr', 'unique_size']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.vpc.VpcNatGatewayFilter.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcNatGatewayFilter.type">
+<code class="descname">type</code><em class="property"> = 'nat-gateway'</em><a class="headerlink" href="#c7n.resources.vpc.VpcNatGatewayFilter.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n.resources.vpc.VpcSecurityGroupFilter">
 <em class="property">class </em><code class="descclassname">c7n.resources.vpc.</code><code class="descname">VpcSecurityGroupFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#VpcSecurityGroupFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.VpcSecurityGroupFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.related.RelatedResourceFilter" title="c7n.filters.related.RelatedResourceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.related.RelatedResourceFilter</span></code></a></p>
@@ -35935,6 +36043,60 @@ workflows.</p>
 <dl class="attribute">
 <dt id="c7n.resources.vpc.VpcSecurityGroupFilter.type">
 <code class="descname">type</code><em class="property"> = 'security-group'</em><a class="headerlink" href="#c7n.resources.vpc.VpcSecurityGroupFilter.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n.resources.vpc.VpcSubnetFilter">
+<em class="property">class </em><code class="descclassname">c7n.resources.vpc.</code><code class="descname">VpcSubnetFilter</code><span class="sig-paren">(</span><em>data</em>, <em>manager=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#VpcSubnetFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.VpcSubnetFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n.filters.html#c7n.filters.related.RelatedResourceFilter" title="c7n.filters.related.RelatedResourceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n.filters.related.RelatedResourceFilter</span></code></a></p>
+<p>Filter VPCs based on Subnet attributes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">gray-vpcs</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">vpc</span>
+    <span class="l l-Scalar l-Scalar-Plain">filters</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">subnet</span>
+        <span class="l l-Scalar l-Scalar-Plain">key</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag:Color</span>
+        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Gray</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcSubnetFilter.AnnotationKey">
+<code class="descname">AnnotationKey</code><em class="property"> = 'MatchedVpcsSubnets'</em><a class="headerlink" href="#c7n.resources.vpc.VpcSubnetFilter.AnnotationKey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcSubnetFilter.RelatedIdsExpression">
+<code class="descname">RelatedIdsExpression</code><em class="property"> = '[Subnets][].SubnetId'</em><a class="headerlink" href="#c7n.resources.vpc.VpcSubnetFilter.RelatedIdsExpression" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcSubnetFilter.RelatedResource">
+<code class="descname">RelatedResource</code><em class="property"> = 'c7n.resources.vpc.Subnet'</em><a class="headerlink" href="#c7n.resources.vpc.VpcSubnetFilter.RelatedResource" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.resources.vpc.VpcSubnetFilter.get_related_ids">
+<code class="descname">get_related_ids</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/resources/vpc.html#VpcSubnetFilter.get_related_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.resources.vpc.VpcSubnetFilter.get_related_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcSubnetFilter.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'properties': {'default': {'type': 'object'}, 'key': {'type': 'string'}, 'match-resource': {'type': 'boolean'}, 'op': {'enum': ['eq', 'equal', 'ne', 'not-equal', 'gt', 'greater-than', 'ge', 'gte', 'le', 'lte', 'lt', 'less-than', 'glob', 'regex', 'regex-case', 'in', 'ni', 'not-in', 'contains', 'difference', 'intersect']}, 'operator': {'enum': ['and', 'or']}, 'type': {'enum': ['subnet']}, 'value': {'oneOf': [{'type': 'array'}, {'type': 'string'}, {'type': 'boolean'}, {'type': 'number'}, {'type': 'null'}]}, 'value_from': {'additionalProperties': 'False', 'properties': {'expr': {'oneOf': [{'type': 'integer'}, {'type': 'string'}]}, 'format': {'enum': ['csv', 'json', 'txt', 'csv2dict']}, 'url': {'type': 'string'}}, 'required': ['url'], 'type': 'object'}, 'value_type': {'enum': ['age', 'integer', 'expiration', 'normalize', 'size', 'cidr', 'cidr_size', 'swap', 'resource_count', 'expr', 'unique_size']}}, 'required': ['type'], 'type': 'object'}</em><a class="headerlink" href="#c7n.resources.vpc.VpcSubnetFilter.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n.resources.vpc.VpcSubnetFilter.type">
+<code class="descname">type</code><em class="property"> = 'subnet'</em><a class="headerlink" href="#c7n.resources.vpc.VpcSubnetFilter.type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

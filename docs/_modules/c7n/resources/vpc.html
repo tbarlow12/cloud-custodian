@@ -400,6 +400,108 @@
         <span class="k">return</span> <span class="n">vpc_group_ids</span></div></div>
 
 
+<div class="viewcode-block" id="VpcSubnetFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.VpcSubnetFilter">[docs]</a><span class="nd">@Vpc</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;subnet&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VpcSubnetFilter</span><span class="p">(</span><span class="n">RelatedResourceFilter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter VPCs based on Subnet attributes</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: gray-vpcs</span>
+<span class="sd">                resource: vpc</span>
+<span class="sd">                filters:</span>
+<span class="sd">                  - type: subnet</span>
+<span class="sd">                    key: tag:Color</span>
+<span class="sd">                    value: Gray</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;subnet&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">ValueFilter</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;match-resource&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+           <span class="s1">&#39;operator&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;and&#39;</span><span class="p">,</span> <span class="s1">&#39;or&#39;</span><span class="p">]}})</span>
+    <span class="n">RelatedResource</span> <span class="o">=</span> <span class="s2">&quot;c7n.resources.vpc.Subnet&quot;</span>
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s1">&#39;[Subnets][].SubnetId&#39;</span>
+    <span class="n">AnnotationKey</span> <span class="o">=</span> <span class="s2">&quot;MatchedVpcsSubnets&quot;</span>
+
+<div class="viewcode-block" id="VpcSubnetFilter.get_related_ids"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.VpcSubnetFilter.get_related_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_related_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">vpc_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">vpc</span><span class="p">[</span><span class="s1">&#39;VpcId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">vpc</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">]</span>
+        <span class="n">vpc_subnet_ids</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">g</span><span class="p">[</span><span class="s1">&#39;SubnetId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;subnet&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">resources</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;VpcId&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">vpc_ids</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">vpc_subnet_ids</span></div></div>
+
+
+<div class="viewcode-block" id="VpcNatGatewayFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.VpcNatGatewayFilter">[docs]</a><span class="nd">@Vpc</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;nat-gateway&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VpcNatGatewayFilter</span><span class="p">(</span><span class="n">RelatedResourceFilter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter VPCs based on NAT Gateway attributes</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: gray-vpcs</span>
+<span class="sd">                resource: vpc</span>
+<span class="sd">                filters:</span>
+<span class="sd">                  - type: nat-gateway</span>
+<span class="sd">                    key: tag:Color</span>
+<span class="sd">                    value: Gray</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;nat-gateway&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">ValueFilter</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;match-resource&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+           <span class="s1">&#39;operator&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;and&#39;</span><span class="p">,</span> <span class="s1">&#39;or&#39;</span><span class="p">]}})</span>
+    <span class="n">RelatedResource</span> <span class="o">=</span> <span class="s2">&quot;c7n.resources.vpc.NATGateway&quot;</span>
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s1">&#39;[NatGateways][].NatGatewayId&#39;</span>
+    <span class="n">AnnotationKey</span> <span class="o">=</span> <span class="s2">&quot;MatchedVpcsNatGateways&quot;</span>
+
+<div class="viewcode-block" id="VpcNatGatewayFilter.get_related_ids"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.VpcNatGatewayFilter.get_related_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_related_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">vpc_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">vpc</span><span class="p">[</span><span class="s1">&#39;VpcId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">vpc</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">]</span>
+        <span class="n">vpc_natgw_ids</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">g</span><span class="p">[</span><span class="s1">&#39;NatGatewayId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;nat-gateway&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">resources</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;VpcId&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">vpc_ids</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">vpc_natgw_ids</span></div></div>
+
+
+<div class="viewcode-block" id="VpcInternetGatewayFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.VpcInternetGatewayFilter">[docs]</a><span class="nd">@Vpc</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;internet-gateway&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VpcInternetGatewayFilter</span><span class="p">(</span><span class="n">RelatedResourceFilter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter VPCs based on Internet Gateway attributes</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: gray-vpcs</span>
+<span class="sd">                resource: vpc</span>
+<span class="sd">                filters:</span>
+<span class="sd">                  - type: internet-gateway</span>
+<span class="sd">                    key: tag:Color</span>
+<span class="sd">                    value: Gray</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
+        <span class="s1">&#39;internet-gateway&#39;</span><span class="p">,</span> <span class="n">rinherit</span><span class="o">=</span><span class="n">ValueFilter</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;match-resource&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+           <span class="s1">&#39;operator&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;and&#39;</span><span class="p">,</span> <span class="s1">&#39;or&#39;</span><span class="p">]}})</span>
+    <span class="n">RelatedResource</span> <span class="o">=</span> <span class="s2">&quot;c7n.resources.vpc.InternetGateway&quot;</span>
+    <span class="n">RelatedIdsExpression</span> <span class="o">=</span> <span class="s1">&#39;[InternetGateways][].InternetGatewayId&#39;</span>
+    <span class="n">AnnotationKey</span> <span class="o">=</span> <span class="s2">&quot;MatchedVpcsIgws&quot;</span>
+
+<div class="viewcode-block" id="VpcInternetGatewayFilter.get_related_ids"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.VpcInternetGatewayFilter.get_related_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_related_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resources</span><span class="p">):</span>
+        <span class="n">vpc_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">vpc</span><span class="p">[</span><span class="s1">&#39;VpcId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">vpc</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">]</span>
+        <span class="n">vpc_igw_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">igw</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">get_resource_manager</span><span class="p">(</span><span class="s1">&#39;internet-gateway&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">resources</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">attachment</span> <span class="ow">in</span> <span class="n">igw</span><span class="p">[</span><span class="s1">&#39;Attachments&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">attachment</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;VpcId&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">vpc_ids</span><span class="p">:</span>
+                    <span class="n">vpc_igw_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">igw</span><span class="p">[</span><span class="s1">&#39;InternetGatewayId&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">vpc_igw_ids</span></div></div>
+
+
 <div class="viewcode-block" id="AttributesFilter"><a class="viewcode-back" href="../../../generated/aws/c7n.resources.html#c7n.resources.vpc.AttributesFilter">[docs]</a><span class="nd">@Vpc</span><span class="o">.</span><span class="n">filter_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;vpc-attributes&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">AttributesFilter</span><span class="p">(</span><span class="n">Filter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filters VPCs based on their DNS attributes</span>
