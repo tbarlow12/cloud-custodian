@@ -504,9 +504,10 @@
 <span class="sd">                    key: Attributes.&quot;access_logs.s3.enabled&quot;</span>
 <span class="sd">                    value: False</span>
 <span class="sd">                actions:</span>
-<span class="sd">                  - type: enable-s3-logging</span>
+<span class="sd">                  - type: set-s3-logging</span>
 <span class="sd">                    bucket: elbv2logtest</span>
 <span class="sd">                    prefix: dahlogs</span>
+<span class="sd">                    state: enabled</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">schema</span> <span class="o">=</span> <span class="n">type_schema</span><span class="p">(</span>
         <span class="s1">&#39;set-s3-logging&#39;</span><span class="p">,</span>
