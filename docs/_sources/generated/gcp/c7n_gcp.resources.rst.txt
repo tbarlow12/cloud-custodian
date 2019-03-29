@@ -28,6 +28,14 @@ c7n\_gcp.resources.compute module
     :undoc-members:
     :show-inheritance:
 
+c7n\_gcp.resources.dataflow module
+----------------------------------
+
+.. automodule:: c7n_gcp.resources.dataflow
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 c7n\_gcp.resources.dns module
 -----------------------------
 
