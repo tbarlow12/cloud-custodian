@@ -1741,6 +1741,125 @@
 <div class="section" id="module-c7n_gcp.resources.pubsub">
 <span id="c7n-gcp-resources-pubsub-module"></span><h2>c7n_gcp.resources.pubsub module<a class="headerlink" href="#module-c7n_gcp.resources.pubsub" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot">
+<em class="property">class </em><code class="descclassname">c7n_gcp.resources.pubsub.</code><code class="descname">PubSubSnapshot</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/pubsub.html#PubSubSnapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n_gcp/resources/pubsub.html#PubSubSnapshot.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.TypeInfo" title="c7n_gcp.query.TypeInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.TypeInfo</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.component">
+<code class="descname">component</code><em class="property"> = 'projects.snapshots'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('list', 'snapshots[]', None)</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.id">
+<code class="descname">id</code><em class="property"> = 'name'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.scope_template">
+<code class="descname">scope_template</code><em class="property"> = 'projects/{}'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.scope_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'pubsub'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.version">
+<code class="descname">version</code><em class="property"> = 'v1'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot.resource_type.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSnapshot.type">
+<code class="descname">type</code><em class="property"> = 'pubsub-snapshot'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSnapshot.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription">
+<em class="property">class </em><code class="descclassname">c7n_gcp.resources.pubsub.</code><code class="descname">PubSubSubscription</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/pubsub.html#PubSubSubscription"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n_gcp/resources/pubsub.html#PubSubSubscription.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.TypeInfo" title="c7n_gcp.query.TypeInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.TypeInfo</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.component">
+<code class="descname">component</code><em class="property"> = 'projects.subscriptions'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('list', 'subscriptions[]', None)</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.get">
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><em>client</em>, <em>resource_info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/pubsub.html#PubSubSubscription.resource_type.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.id">
+<code class="descname">id</code><em class="property"> = 'name'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.scope_template">
+<code class="descname">scope_template</code><em class="property"> = 'projects/{}'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.scope_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'pubsub'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.version">
+<code class="descname">version</code><em class="property"> = 'v1'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.resource_type.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.pubsub.PubSubSubscription.type">
+<code class="descname">type</code><em class="property"> = 'pubsub-subscription'</em><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubSubscription.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n_gcp.resources.pubsub.PubSubTopic">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.pubsub.</code><code class="descname">PubSubTopic</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/pubsub.html#PubSubTopic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.pubsub.PubSubTopic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
