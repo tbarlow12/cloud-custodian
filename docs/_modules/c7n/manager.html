@@ -223,6 +223,9 @@
 
 
 <div class="viewcode-block" id="ResourceManager"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.manager.ResourceManager">[docs]</a><span class="k">class</span> <span class="nc">ResourceManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Cloud Custodian resource</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">filter_registry</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">action_registry</span> <span class="o">=</span> <span class="kc">None</span>
@@ -318,7 +321,27 @@
                     <span class="n">queue</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">gf</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">filters</span><span class="p">:</span>
                     <span class="n">queue</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
-            <span class="k">yield</span> <span class="n">f</span></div></div>
+            <span class="k">yield</span> <span class="n">f</span></div>
+
+<div class="viewcode-block" id="ResourceManager.validate"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.manager.ResourceManager.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates resource definition, does NOT validate filters, actions, modes.</span>
+
+<span class="sd">        Example use case: A resource type that requires an additional query</span>
+
+<span class="sd">        :example:</span>
+
+<span class="sd">        .. code-block:: yaml</span>
+
+<span class="sd">            policies:</span>
+<span class="sd">              - name: k8s-custom-resource</span>
+<span class="sd">                resource: k8s.custom-namespaced-resource</span>
+<span class="sd">                query:</span>
+<span class="sd">                  - version: v1</span>
+<span class="sd">                    group stable.example.com</span>
+<span class="sd">                    plural: crontabs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
 </pre></div>
 
            </div>

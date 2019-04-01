@@ -1032,6 +1032,7 @@ of PolicyExecutionMode.get_logs()</p>
 <dt id="c7n.manager.ResourceManager">
 <em class="property">class </em><code class="descclassname">c7n.manager.</code><code class="descname">ResourceManager</code><span class="sig-paren">(</span><em>ctx</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/manager.html#ResourceManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.manager.ResourceManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A Cloud Custodian resource</p>
 <dl class="attribute">
 <dt id="c7n.manager.ResourceManager.action_registry">
 <code class="descname">action_registry</code><em class="property"> = None</em><a class="headerlink" href="#c7n.manager.ResourceManager.action_registry" title="Permalink to this definition">¶</a></dt>
@@ -1102,6 +1103,30 @@ of PolicyExecutionMode.get_logs()</p>
 <dt id="c7n.manager.ResourceManager.retry">
 <code class="descname">retry</code><em class="property"> = None</em><a class="headerlink" href="#c7n.manager.ResourceManager.retry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="c7n.manager.ResourceManager.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n/manager.html#ResourceManager.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n.manager.ResourceManager.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates resource definition, does NOT validate filters, actions, modes.</p>
+<p>Example use case: A resource type that requires an additional query</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">policies</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">k8s-custom-resource</span>
+    <span class="l l-Scalar l-Scalar-Plain">resource</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">k8s.custom-namespaced-resource</span>
+    <span class="l l-Scalar l-Scalar-Plain">query</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+        <span class="l l-Scalar l-Scalar-Plain">group stable.example.com</span>
+        <span class="l l-Scalar l-Scalar-Plain">plural</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">crontabs</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </dd></dl>
 
