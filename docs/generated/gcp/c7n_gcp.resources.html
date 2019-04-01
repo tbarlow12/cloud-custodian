@@ -1245,6 +1245,68 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="c7n_gcp.resources.iam.Role">
+<em class="property">class </em><code class="descclassname">c7n_gcp.resources.iam.</code><code class="descname">Role</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/iam.html#Role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.iam.Role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.Role.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.iam.Role.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.Role.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.iam.Role.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.iam.Role.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n_gcp/resources/iam.html#Role.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.iam.Role.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.TypeInfo" title="c7n_gcp.query.TypeInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.TypeInfo</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.Role.resource_type.component">
+<code class="descname">component</code><em class="property"> = 'roles'</em><a class="headerlink" href="#c7n_gcp.resources.iam.Role.resource_type.component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.Role.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('list', 'roles[]', None)</em><a class="headerlink" href="#c7n_gcp.resources.iam.Role.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="c7n_gcp.resources.iam.Role.resource_type.get">
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><em>client</em>, <em>resource_info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/iam.html#Role.resource_type.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.iam.Role.resource_type.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.Role.resource_type.id">
+<code class="descname">id</code><em class="property"> = 'name'</em><a class="headerlink" href="#c7n_gcp.resources.iam.Role.resource_type.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.Role.resource_type.scope">
+<code class="descname">scope</code><em class="property"> = 'global'</em><a class="headerlink" href="#c7n_gcp.resources.iam.Role.resource_type.scope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.Role.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'iam'</em><a class="headerlink" href="#c7n_gcp.resources.iam.Role.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.Role.resource_type.version">
+<code class="descname">version</code><em class="property"> = 'v1'</em><a class="headerlink" href="#c7n_gcp.resources.iam.Role.resource_type.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.iam.Role.type">
+<code class="descname">type</code><em class="property"> = 'iam-role'</em><a class="headerlink" href="#c7n_gcp.resources.iam.Role.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n_gcp.resources.iam.ServiceAccount">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.iam.</code><code class="descname">ServiceAccount</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/iam.html#ServiceAccount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.iam.ServiceAccount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
