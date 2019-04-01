@@ -571,6 +571,7 @@
         <span class="k">return</span>
 
     <span class="n">load_resources</span><span class="p">()</span>
+
     <span class="n">resource_mapping</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">resource_vocabulary</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">summary</span><span class="p">:</span>
         <span class="n">schema</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">resource_mapping</span><span class="p">)</span>
@@ -583,6 +584,8 @@
     <span class="c1">#   - List all available RESOURCES for supplied PROVIDER</span>
     <span class="c1"># - RESOURCE</span>
     <span class="c1">#   - List all available actions and filters for supplied RESOURCE</span>
+    <span class="c1"># - MODE</span>
+    <span class="c1">#   - List all available MODES</span>
     <span class="c1"># - RESOURCE.actions</span>
     <span class="c1">#   - List all available actions for supplied RESOURCE</span>
     <span class="c1"># - RESOURCE.actions.ACTION</span>
@@ -610,9 +613,33 @@
         <span class="n">resource_mapping</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">resource_vocabulary</span><span class="p">(</span>
             <span class="n">cloud_provider</span><span class="p">)</span>
         <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cloud_provider</span><span class="p">,</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">resource_vocabulary</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">resource_mapping</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">resource_vocabulary</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">resource_mapping</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">resource_vocabulary</span><span class="p">(</span><span class="s1">&#39;aws&#39;</span><span class="p">)</span>
         <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;aws.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Handle mode</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;mode&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">{</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="nb">list</span><span class="p">(</span><span class="n">resource_mapping</span><span class="p">[</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">())}</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resource_mapping</span><span class="p">[</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]]:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid mode&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">_print_cls_schema</span><span class="p">(</span><span class="n">resource_mapping</span><span class="p">[</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+            <span class="k">return</span>
+
+        <span class="c1"># We received too much (e.g. mode.actions.foo)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Invalid selector &#39;</span><span class="si">{}</span><span class="s2">&#39;. Valid options are &#39;mode&#39; &quot;</span>
+                  <span class="s2">&quot;or &#39;mode.TYPE&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">resource</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="c1">#</span>
     <span class="c1"># Handle resource</span>
     <span class="c1">#</span>
@@ -653,33 +680,38 @@
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
         <span class="bp">cls</span> <span class="o">=</span> <span class="n">resource_mapping</span><span class="p">[</span><span class="n">resource</span><span class="p">][</span><span class="s1">&#39;classes&#39;</span><span class="p">][</span><span class="n">category</span><span class="p">][</span><span class="n">item</span><span class="p">]</span>
+        <span class="n">_print_cls_schema</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
 
-        <span class="c1"># Print docstring</span>
-        <span class="n">docstring</span> <span class="o">=</span> <span class="n">_schema_get_docstring</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Help</span><span class="se">\n</span><span class="s2">----</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">docstring</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">docstring</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Shouldn&#39;t ever hit this, so exclude from cover</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No help is available for this item.&quot;</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
-
-        <span class="c1"># Print schema</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Schema</span><span class="se">\n</span><span class="s2">------</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s1">&#39;schema&#39;</span><span class="p">):</span>
-            <span class="n">component_schema</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
-            <span class="n">component_schema</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;additionalProperties&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">component_schema</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">component_schema</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Shouldn&#39;t ever hit this, so exclude from cover</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No schema is available for this item.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">sterr</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="c1"># We received too much (e.g. s3.actions.foo.bar)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Invalid selector &#39;</span><span class="si">{}</span><span class="s2">&#39;.  Max of 3 components in the &quot;</span>
               <span class="s2">&quot;format RESOURCE.CATEGORY.ITEM&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">resource</span><span class="p">))</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_print_cls_schema</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="c1"># Print docstring</span>
+    <span class="n">docstring</span> <span class="o">=</span> <span class="n">_schema_get_docstring</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Help</span><span class="se">\n</span><span class="s2">----</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">docstring</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">docstring</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Shouldn&#39;t ever hit this, so exclude from cover</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No help is available for this item.&quot;</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="c1"># Print schema</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Schema</span><span class="se">\n</span><span class="s2">------</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s1">&#39;schema&#39;</span><span class="p">):</span>
+        <span class="n">component_schema</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+        <span class="n">component_schema</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;additionalProperties&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">component_schema</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">component_schema</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Shouldn&#39;t ever hit this, so exclude from cover</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No schema is available for this item.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">sterr</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">return</span>
 
 
 <span class="k">def</span> <span class="nf">_metrics_get_endpoints</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>

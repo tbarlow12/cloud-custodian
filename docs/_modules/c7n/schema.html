@@ -583,27 +583,40 @@
             <span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">actions</span><span class="p">),</span>
             <span class="s1">&#39;classes&#39;</span><span class="p">:</span> <span class="n">classes</span><span class="p">,</span>
         <span class="p">}</span>
+
+    <span class="n">vocabulary</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">mode_name</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">execution</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">vocabulary</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">][</span><span class="n">mode_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span>
+
     <span class="k">return</span> <span class="n">vocabulary</span></div>
 
 
 <div class="viewcode-block" id="summary"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.schema.summary">[docs]</a><span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">):</span>
     <span class="n">providers</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">non_providers</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">for</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">rv</span> <span class="ow">in</span> <span class="n">vocabulary</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">provider</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">type_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">stats</span> <span class="o">=</span> <span class="n">providers</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="p">{</span>
-            <span class="s1">&#39;resources&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="n">Counter</span><span class="p">(),</span> <span class="s1">&#39;filters&#39;</span><span class="p">:</span> <span class="n">Counter</span><span class="p">()})</span>
-        <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;resources&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">rv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;actions&#39;</span><span class="p">):</span>
-            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">][</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">rv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filters&#39;</span><span class="p">):</span>
-            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;filters&#39;</span><span class="p">][</span><span class="n">f</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">type_name</span><span class="p">:</span>
+            <span class="n">non_providers</span><span class="p">[</span><span class="n">type_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">provider</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">type_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">stats</span> <span class="o">=</span> <span class="n">providers</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s1">&#39;resources&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="n">Counter</span><span class="p">(),</span> <span class="s1">&#39;filters&#39;</span><span class="p">:</span> <span class="n">Counter</span><span class="p">()})</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;resources&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">rv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;actions&#39;</span><span class="p">):</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">][</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">rv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filters&#39;</span><span class="p">):</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;filters&#39;</span><span class="p">][</span><span class="n">f</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="k">for</span> <span class="n">provider</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="n">providers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:&quot;</span> <span class="o">%</span> <span class="n">provider</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; resource count: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;resources&#39;</span><span class="p">])</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; actions: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">]))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; filters: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;filters&#39;</span><span class="p">]))</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; filters: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;filters&#39;</span><span class="p">]))</span>
+
+    <span class="k">for</span> <span class="n">non_providers_type</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">non_providers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:&quot;</span> <span class="o">%</span> <span class="n">non_providers_type</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; count: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">length</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="json_dump"><a class="viewcode-back" href="../../generated/aws/c7n.html#c7n.schema.json_dump">[docs]</a><span class="k">def</span> <span class="nf">json_dump</span><span class="p">(</span><span class="n">resource</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
