@@ -224,6 +224,130 @@
 <div class="section" id="module-c7n_gcp.resources.bigquery">
 <span id="c7n-gcp-resources-bigquery-module"></span><h2>c7n_gcp.resources.bigquery module<a class="headerlink" href="#module-c7n_gcp.resources.bigquery" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob">
+<em class="property">class </em><code class="descclassname">c7n_gcp.resources.bigquery.</code><code class="descname">BigQueryJob</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/bigquery.html#BigQueryJob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n_gcp/resources/bigquery.html#BigQueryJob.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.TypeInfo" title="c7n_gcp.query.TypeInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.TypeInfo</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.resource_type.component">
+<code class="descname">component</code><em class="property"> = 'jobs'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.resource_type.component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('list', 'jobs[]', {'allUsers': True})</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.resource_type.get">
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><em>client</em>, <em>resource_info</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/bigquery.html#BigQueryJob.resource_type.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.resource_type.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.resource_type.id">
+<code class="descname">id</code><em class="property"> = 'id'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.resource_type.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.resource_type.scope">
+<code class="descname">scope</code><em class="property"> = 'project'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.resource_type.scope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.resource_type.scope_key">
+<code class="descname">scope_key</code><em class="property"> = 'projectId'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.resource_type.scope_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'bigquery'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.resource_type.version">
+<code class="descname">version</code><em class="property"> = 'v2'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.resource_type.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryJob.type">
+<code class="descname">type</code><em class="property"> = 'bq-job'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryJob.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject">
+<em class="property">class </em><code class="descclassname">c7n_gcp.resources.bigquery.</code><code class="descname">BigQueryProject</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/bigquery.html#BigQueryProject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject.action_registry">
+<code class="descname">action_registry</code><em class="property"> = &lt;c7n.actions.core.ActionRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject.action_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject.filter_registry">
+<code class="descname">filter_registry</code><em class="property"> = &lt;c7n.filters.core.FilterRegistry object&gt;</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject.filter_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject.resource_type">
+<em class="property">class </em><code class="descname">resource_type</code><a class="reference internal" href="../../_modules/c7n_gcp/resources/bigquery.html#BigQueryProject.resource_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject.resource_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.TypeInfo" title="c7n_gcp.query.TypeInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.TypeInfo</span></code></a></p>
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject.resource_type.component">
+<code class="descname">component</code><em class="property"> = 'projects'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject.resource_type.component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject.resource_type.enum_spec">
+<code class="descname">enum_spec</code><em class="property"> = ('list', 'projects[]', None)</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject.resource_type.enum_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject.resource_type.id">
+<code class="descname">id</code><em class="property"> = 'id'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject.resource_type.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject.resource_type.scope">
+<code class="descname">scope</code><em class="property"> = 'global'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject.resource_type.scope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject.resource_type.service">
+<code class="descname">service</code><em class="property"> = 'bigquery'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject.resource_type.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject.resource_type.version">
+<code class="descname">version</code><em class="property"> = 'v2'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject.resource_type.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="c7n_gcp.resources.bigquery.BigQueryProject.type">
+<code class="descname">type</code><em class="property"> = 'bq-project'</em><a class="headerlink" href="#c7n_gcp.resources.bigquery.BigQueryProject.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="c7n_gcp.resources.bigquery.DataSet">
 <em class="property">class </em><code class="descclassname">c7n_gcp.resources.bigquery.</code><code class="descname">DataSet</code><span class="sig-paren">(</span><em>data</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/c7n_gcp/resources/bigquery.html#DataSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#c7n_gcp.resources.bigquery.DataSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="c7n_gcp.html#c7n_gcp.query.QueryResourceManager" title="c7n_gcp.query.QueryResourceManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">c7n_gcp.query.QueryResourceManager</span></code></a></p>
