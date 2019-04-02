@@ -33,6 +33,7 @@ import c7n_azure.resources.network_interface
 import c7n_azure.resources.disk
 import c7n_azure.resources.cognitive_service
 import c7n_azure.resources.data_factory
+import c7n_azure.resources.hd_insight
 import c7n_azure.resources.iot_hub
 import c7n_azure.resources.cdn
 import c7n_azure.resources.container_registry
